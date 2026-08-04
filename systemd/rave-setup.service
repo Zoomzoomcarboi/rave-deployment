@@ -1,0 +1,15 @@
+[Unit]
+Description=RAVE First-Boot Setup Portal
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=rave
+Group=rave
+ExecStart=/opt/rave/venv/bin/uvicorn setup_ui.app:app --app-dir /usr/lib/rave/setup-ui --host 0.0.0.0 --port 8080
+Restart=on-failure
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

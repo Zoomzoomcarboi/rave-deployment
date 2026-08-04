@@ -1,0 +1,21 @@
+[Unit]
+Description=RAVE Edge Perception Service
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/etc/rave/rave.toml
+
+[Service]
+Type=simple
+User=rave
+Group=rave
+ExecStart=/usr/bin/rave-edge --config /etc/rave/rave.toml
+Restart=on-failure
+RestartSec=2
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/rave /var/log/rave
+
+[Install]
+WantedBy=multi-user.target

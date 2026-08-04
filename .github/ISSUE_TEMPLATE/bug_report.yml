@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible RAVE software problem
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: "Do not use this tracker for an active driving emergency. This repository is an architecture prototype."
+  - type: input
+    id: version
+    attributes:
+      label: RAVE version
+    validations:
+      required: true
+  - type: dropdown
+    id: hardware
+    attributes:
+      label: Hardware profile
+      options:
+        - pi5-hailo8-26tops
+        - unsupported/other
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized diagnostics
+      description: Remove video, credentials, vehicle identifiers, and pairing secrets.
