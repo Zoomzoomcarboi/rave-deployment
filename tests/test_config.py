@@ -1,8 +1,8 @@
 from pathlib import Path
+
 import pytest
 from pydantic import ValidationError
-
-from rave_edge.config import load_config, NetworkConfig, SafetyConfig
+from rave_edge.config import NetworkConfig, SafetyConfig, load_config
 
 
 def test_example_configuration_loads() -> None:

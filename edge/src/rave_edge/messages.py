@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, asdict
 import json
 import time
+from dataclasses import asdict, dataclass
 
 # Internal mock/debug JSON schema version. This is not a network protocol version.
 MOCK_JSON_VERSION = 1

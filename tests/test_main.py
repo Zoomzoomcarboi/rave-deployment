@@ -1,5 +1,4 @@
 import pytest
-
 from rave_edge.config import load_config
 from rave_edge.main import authorize_development_mock
 

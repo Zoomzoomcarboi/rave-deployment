@@ -1,7 +1,8 @@
 from __future__ import annotations
 
-from pathlib import Path
 import tomllib
+from pathlib import Path
+
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -13,7 +14,7 @@ class DeviceConfig(BaseModel):
     release_channel: str
 
     @model_validator(mode="after")
-    def supported_mode(self) -> "DeviceConfig":
+    def supported_mode(self) -> DeviceConfig:
         if self.mode != "development_mock":
             raise ValueError("only explicit development_mock mode is currently implemented")
         return self
@@ -32,7 +33,7 @@ class CameraConfig(BaseModel):
     orientation: str = "normal"
 
     @model_validator(mode="after")
-    def crop_fits_frame(self) -> "CameraConfig":
+    def crop_fits_frame(self) -> CameraConfig:
         if self.crop_x + self.crop_width > self.width:
             raise ValueError("camera crop exceeds frame width")
         if self.crop_y + self.crop_height > self.height:
@@ -48,7 +49,7 @@ class InferenceConfig(BaseModel):
     max_frame_age_ms: int = Field(gt=0)
 
     @model_validator(mode="after")
-    def mock_only(self) -> "InferenceConfig":
+    def mock_only(self) -> InferenceConfig:
         if self.backend != "mock":
             raise ValueError("no production inference backend is currently implemented")
         return self
@@ -65,7 +66,7 @@ class NetworkConfig(BaseModel):
     stale_after_ms: int = Field(gt=0)
 
     @model_validator(mode="after")
-    def validate_timing_and_ports(self) -> "NetworkConfig":
+    def validate_timing_and_ports(self) -> NetworkConfig:
         if self.detection_port == self.management_port:
             raise ValueError("detection and management ports must differ")
         if self.stale_after_ms <= self.heartbeat_interval_ms:
@@ -79,7 +80,7 @@ class SafetyConfig(BaseModel):
     fail_closed_to_unavailable: bool = True
 
     @model_validator(mode="after")
-    def reject_control(self) -> "SafetyConfig":
+    def reject_control(self) -> SafetyConfig:
         if self.allow_vehicle_control:
             raise ValueError("RAVE edge must never be configured for vehicle control")
         return self
