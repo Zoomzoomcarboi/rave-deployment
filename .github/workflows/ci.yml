@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  repository-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: python -m pip install --upgrade pip
+      - run: python -m pip install -e ".[dev]"
+      - name: Ruff
+        run: ruff check edge tests
+      - name: Python tests
+        run: pytest -q
+      - name: Shell syntax
+        run: bash -n scripts/*.sh
+      - name: YAML parsing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import yaml
+
+          paths = [*Path(".github").rglob("*.yml"), *Path("image").rglob("*.yml")]
+          for path in paths:
+              with path.open(encoding="utf-8") as handle:
+                  yaml.safe_load(handle)
+          print(f"Parsed {len(paths)} YAML files")
+          PY
+      - name: systemd unit verification
+        run: |
+          if command -v systemd-analyze >/dev/null 2>&1; then
+            mkdir -p /tmp/rave-ci-units
+            for unit in systemd/*.service; do
+              sed -E \
+                -e 's|^ExecStart=.*|ExecStart=/usr/bin/true|' \
+                -e 's|^User=.*|User=root|' \
+                -e 's|^Group=.*|Group=root|' \
+                "$unit" > "/tmp/rave-ci-units/$(basename "$unit")"
+            done
+            systemd-analyze verify /tmp/rave-ci-units/*.service
+          else
+            echo "systemd-analyze unavailable; unit verification skipped"
+          fi
+      - name: Repository safety policy
+        run: |
+          tests/test_repository_safety.sh
+          scripts/check-repository-safety.sh

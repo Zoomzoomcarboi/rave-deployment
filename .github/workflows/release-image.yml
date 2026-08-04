@@ -1,0 +1,16 @@
+name: Release RAVE OS image (not implemented)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  unavailable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report unavailable release pipeline
+        run: |
+          echo "Release image creation is not implemented; no artifacts were produced." >&2
+          exit 1

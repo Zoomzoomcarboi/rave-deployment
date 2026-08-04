@@ -1,0 +1,2 @@
+# Replace IDs after validating the production camera.
+# SUBSYSTEM=="video4linux", ATTRS{idVendor}=="0000", ATTRS{idProduct}=="0000", SYMLINK+="rave-camera"

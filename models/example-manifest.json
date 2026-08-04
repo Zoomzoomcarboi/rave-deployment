@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "model_version": "0.0.1-mock",
+  "git_commit": "REPLACED_DURING_RELEASE",
+  "accelerator": "hailo8",
+  "input": {"width": 960, "height": 960},
+  "classes": ["car", "truck", "bus", "motorcycle"],
+  "calibration_dataset": "not-included",
+  "hailort": {"minimum": "PIN_ME", "maximum": "PIN_ME"},
+  "files": {},
+  "validation": {"status": "not_validated"}
+}
