@@ -1,6 +1,10 @@
 syntax = "proto3";
 package rave.v1;
 
+// PROPOSAL ONLY: future wire schema. No transport, authentication implementation,
+// receiver, or generated bindings exist. Internal development JSON does not use this
+// schema as a wire protocol.
+
 message Detection {
   uint64 track_id = 1;
   string object_class = 2;
@@ -22,6 +26,8 @@ message FrameMessage {
   float processing_latency_ms = 6;
   repeated Detection detections = 7;
   bytes authentication_tag = 8;
+  // Unpredictable identity regenerated on every sender boot/session.
+  bytes session_id = 9;
 }
 
 message Heartbeat {
@@ -34,4 +40,6 @@ message Heartbeat {
   float device_temperature_c = 7;
   string model_version = 8;
   bytes authentication_tag = 9;
+  // Unpredictable identity regenerated on every sender boot/session.
+  bytes session_id = 10;
 }

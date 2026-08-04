@@ -9,7 +9,6 @@ packages:
   - hailo-runtime-pinned-placeholder
 services:
   enable:
-    - rave-edge.service
     - rave-setup.service
 overlays:
   - network/

@@ -13,7 +13,7 @@ doctor:
 	rave doctor --config config/rave.toml.example
 
 run:
-	rave-edge --config config/rave.toml.example
+	rave-edge --config config/rave.toml.example --development-mock
 
 setup-ui:
 	uvicorn setup_ui.app:app --app-dir setup-ui --host 0.0.0.0 --port 8080

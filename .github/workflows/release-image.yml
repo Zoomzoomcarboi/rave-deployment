@@ -1,37 +1,16 @@
-name: Release RAVE OS image
+name: Release RAVE OS image (not implemented)
 
 on:
   workflow_dispatch:
-  push:
-    tags: ['v*']
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  build-package:
-    runs-on: ubuntu-24.04-arm
+  unavailable:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Build Debian package
+      - name: Report unavailable release pipeline
         run: |
-          echo "TODO: build signed arm64 rave-edge package"
-          exit 1
-
-  build-image:
-    needs: build-package
-    runs-on: [self-hosted, linux, arm64, rave-image-builder]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build reproducible RAVE OS image
-        run: |
-          echo "TODO: invoke pinned rpi-image-gen build"
-          exit 1
-      - name: Hardware smoke test
-        run: |
-          echo "TODO: flash/test on Pi 5 + Hailo + approved camera"
-          exit 1
-      - name: Publish signed release artifacts
-        run: |
-          echo "TODO: checksum, sign, and upload release assets"
+          echo "Release image creation is not implemented; no artifacts were produced." >&2
           exit 1

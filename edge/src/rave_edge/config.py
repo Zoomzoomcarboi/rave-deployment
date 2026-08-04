@@ -5,6 +5,20 @@ import tomllib
 from pydantic import BaseModel, Field, model_validator
 
 
+class DeviceConfig(BaseModel):
+    name: str
+    mode: str
+    hardware_profile: str
+    vehicle_profile: str
+    release_channel: str
+
+    @model_validator(mode="after")
+    def supported_mode(self) -> "DeviceConfig":
+        if self.mode != "development_mock":
+            raise ValueError("only explicit development_mock mode is currently implemented")
+        return self
+
+
 class CameraConfig(BaseModel):
     device: str
     width: int = Field(gt=0)
@@ -33,6 +47,12 @@ class InferenceConfig(BaseModel):
     confidence_threshold: float = Field(ge=0, le=1)
     max_frame_age_ms: int = Field(gt=0)
 
+    @model_validator(mode="after")
+    def mock_only(self) -> "InferenceConfig":
+        if self.backend != "mock":
+            raise ValueError("no production inference backend is currently implemented")
+        return self
+
 
 class NetworkConfig(BaseModel):
     interface: str
@@ -43,6 +63,14 @@ class NetworkConfig(BaseModel):
     management_port: int = Field(gt=0, le=65535)
     heartbeat_interval_ms: int = Field(gt=0)
     stale_after_ms: int = Field(gt=0)
+
+    @model_validator(mode="after")
+    def validate_timing_and_ports(self) -> "NetworkConfig":
+        if self.detection_port == self.management_port:
+            raise ValueError("detection and management ports must differ")
+        if self.stale_after_ms <= self.heartbeat_interval_ms:
+            raise ValueError("stale_after_ms must exceed heartbeat_interval_ms")
+        return self
 
 
 class SafetyConfig(BaseModel):
@@ -58,7 +86,7 @@ class SafetyConfig(BaseModel):
 
 
 class RaveConfig(BaseModel):
-    device: dict
+    device: DeviceConfig
     camera: CameraConfig
     inference: InferenceConfig
     tracking: dict

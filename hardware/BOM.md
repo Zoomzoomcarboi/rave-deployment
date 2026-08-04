@@ -1,19 +1,23 @@
-# Approved hardware matrix
+# Candidate hardware matrix
 
-No part is approved until it has passed bench, thermal, electrical, camera, networking, and vehicle testing.
+Every item below is candidate hardware. Nothing is approved until it passes bench,
+thermal, electrical, camera, networking, installation, and vehicle-environment tests.
+In particular, there is no approved production camera.
 
-| Component | Candidate | Status | Validation required |
+| Component | Candidate hardware | Status | Validation required |
 |---|---|---:|---|
-| Computer | Raspberry Pi 5, 8 GB | Candidate | boot, thermal, USB load, storage endurance |
-| Accelerator | Raspberry Pi AI HAT+ 26 TOPS / Hailo-8 | Candidate | exact SKU and runtime compatibility |
-| Camera | RAVE production rear camera | TBD | VID/PID, FOV, exposure, low light, crop |
-| Storage | 64 GB high-endurance microSD | TBD | sustained writes, power-loss behavior |
-| Cooling | Active cooler/case | TBD | enclosed-car thermal soak |
-| Pi power | Automotive regulated 5 V supply | TBD | crank, load dump, brownout, shutdown |
-| Comma adapter | USB-C to Ethernet | TBD | AGNOS enumeration and link recovery |
-| Ethernet | Short shielded/unshielded cable | TBD | EMI and installation durability |
-| Mount | High-center rear-glass mount | TBD | vibration, temperature, field of view |
+| Computer | Candidate Raspberry Pi 5, 8 GB | Candidate / unvalidated | boot, thermal, USB load, storage endurance |
+| Accelerator | Candidate Raspberry Pi AI HAT+ 26 TOPS / Hailo-8 | Candidate / unvalidated | exact SKU and runtime compatibility |
+| Camera | Candidate rear-facing camera, not selected | Candidate / unvalidated | VID/PID, FOV, exposure, low light, crop |
+| Storage | Candidate 64 GB high-endurance microSD | Candidate / unvalidated | sustained writes, power-loss behavior |
+| Cooling | Candidate active cooler/case | Candidate / unvalidated | enclosed-car thermal soak |
+| Pi power | Candidate automotive regulated 5 V supply | Candidate / unvalidated | crank, load dump, brownout, shutdown |
+| Comma adapter | Candidate USB-C-to-Ethernet adapter | Candidate / unvalidated | platform enumeration and link recovery |
+| Ethernet | Candidate short Ethernet cable | Candidate / unvalidated | EMI and installation durability |
+| Mount | Candidate high-center rear-glass mount | Candidate / unvalidated | vibration, temperature, field of view |
 
-## Release rule
+## Future release rule
 
-A public RAVE OS image must declare the exact supported hardware profile. Unsupported substitutions should produce a clear warning or prevent activation when they could invalidate safety or performance assumptions.
+Any future public image must name an exact validated hardware profile and reject or
+clearly warn about unsupported substitutions. This repository does not currently
+produce such an image.

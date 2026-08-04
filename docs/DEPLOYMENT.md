@@ -1,19 +1,20 @@
-# Deployment workflow
+# Proposed deployment workflow
 
-## Customer path
+There is no customer deployment today: no hardware profile or camera is approved, no
+release image is built, and no Comma receiver or pairing flow exists.
 
-1. Assemble only the approved hardware profile.
-2. Select **RAVE OS Stable** in Raspberry Pi Imager, or flash the `.img.xz` release asset with **Use Custom**.
-3. Insert storage and connect camera, Ethernet, and power.
-4. Connect a phone to the temporary `RAVE-SETUP-*` network.
-5. Open the setup portal and complete hardware checks.
-6. Enable RAVE in a compatible Starpilot build and enter the displayed pairing code.
-7. Confirm that both systems report **Ready** before use.
+A future deployment may provide a signed image, guided setup, candidate-hardware
+validation, and a separately reviewed receiver. Those are plans, not instructions
+that can currently be followed.
 
-## Developer path
+## Development path
 
-Developers may install the Debian package on the pinned Raspberry Pi OS release using `scripts/install.sh`. This is not the supported customer path.
+Developers can validate configuration and run the explicitly gated mock as described
+in the repository README. `scripts/install.sh`, Debian packaging, systemd services,
+and image files are scaffolding and do not install a working perception service.
 
-## Updates
+## Future update requirements
 
-Normal application and model updates should be signed, atomic, reversible, and blocked while the vehicle is moving or the perception service is active. Major base-OS migrations may require reflashing.
+Application and model updates would need to be signed, atomic, reversible, and
+subject to safety-state controls. No download, signing, update, or release pipeline
+is implemented.

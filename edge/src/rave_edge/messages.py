@@ -4,7 +4,8 @@ from dataclasses import dataclass, asdict
 import json
 import time
 
-PROTOCOL_VERSION = 1
+# Internal mock/debug JSON schema version. This is not a network protocol version.
+MOCK_JSON_VERSION = 1
 
 
 @dataclass(frozen=True)
@@ -36,7 +37,7 @@ class FrameMessage:
 
 def mock_message(frame_id: int) -> FrameMessage:
     return FrameMessage(
-        protocol_version=PROTOCOL_VERSION,
+        protocol_version=MOCK_JSON_VERSION,
         device_id="rave-edge-dev",
         model_version="mock-0.0.1",
         frame_id=frame_id,
