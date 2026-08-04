@@ -1,0 +1,21 @@
+# Architecture sketch, not an executable rpi-image-gen file.
+image:
+  name: rave-os
+  base: raspberry-pi-os-lite-64
+  release: trixie
+  target: raspberry-pi-5
+packages:
+  - rave-edge
+  - hailo-runtime-pinned-placeholder
+services:
+  enable:
+    - rave-setup.service
+overlays:
+  - network/
+  - udev/
+  - config/
+release:
+  outputs:
+    - image
+    - sha256
+    - manifest

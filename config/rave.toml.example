@@ -1,0 +1,51 @@
+[device]
+name = "rave-edge-dev"
+# Explicitly permits development scaffolding. This is not a production profile.
+mode = "development_mock"
+hardware_profile = "pi5-hailo8-26tops"
+vehicle_profile = "generic-rear-center"
+release_channel = "beta"
+
+[camera]
+# UNVALIDATED EXAMPLE: no production camera, format, resolution, or crop is approved.
+device = "/dev/rave-camera"
+width = 1920
+height = 1080
+fps = 30
+pixel_format = "MJPG"
+crop_x = 0
+crop_y = 300
+crop_width = 1920
+crop_height = 391
+orientation = "normal"
+
+[inference]
+# UNVALIDATED EXAMPLE: mock emits no real inference. Model and threshold are placeholders.
+backend = "mock"
+model_bundle = "/opt/rave/models/current"
+input_size = 960
+confidence_threshold = 0.05
+max_frame_age_ms = 150
+
+[tracking]
+backend = "bytetrack"
+track_activation_threshold = 0.10
+lost_track_buffer = 30
+minimum_consecutive_frames = 3
+
+[network]
+# UNVALIDATED EXAMPLE: no RAVE transport or receiver is implemented.
+interface = "eth0"
+pi_address = "10.42.0.1/24"
+# Documentation-only address-planning examples. RAVE does not apply a DHCP range.
+dhcp_start = "10.42.0.10"
+dhcp_end = "10.42.0.20"
+detection_port = 42001
+management_port = 42002
+heartbeat_interval_ms = 250
+stale_after_ms = 750
+
+[safety]
+require_paired_bridge = true
+allow_vehicle_control = false
+fail_closed_to_unavailable = true

@@ -1,0 +1,13 @@
+Source: rave-edge
+Section: misc
+Priority: optional
+Maintainer: RAVE Project <maintainers@example.invalid>
+Build-Depends: debhelper-compat (= 13), dh-python, pybuild-plugin-pyproject, python3-all
+Standards-Version: 4.6.2
+Rules-Requires-Root: no
+
+Package: rave-edge
+Architecture: arm64
+Depends: ${misc:Depends}, ${python3:Depends}, python3-pydantic, python3-typer
+Description: RAVE edge-perception appliance service
+ Mock packaging definition for the RAVE Raspberry Pi deployment stack.
