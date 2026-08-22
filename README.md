@@ -8,30 +8,38 @@ perception system. This repository defines the deployment boundary, safety rules
 hardware profile, packaging direction, and reproducible validation records.
 
 The original edge runtime in this repository is still development scaffolding.
-However, camera/inference work on the ZBook and dedicated-Ethernet/StarPilot work on
-the Comma 3X have now produced hardware-validated baselines that are recorded in
-[`docs/VALIDATED_BASELINES.md`](docs/VALIDATED_BASELINES.md).
+However, camera/inference work, dedicated-Ethernet/StarPilot work, and the Pi 5 V5
+camera-to-Hailo benchmark have now produced hardware-validated component baselines.
+See [`docs/VALIDATED_BASELINES.md`](docs/VALIDATED_BASELINES.md) and
+[`docs/PERCEPTION_V5_BASELINE.md`](docs/PERCEPTION_V5_BASELINE.md).
 
 ## Current status
 
-Validated outside the Pi deployment runtime:
+Hardware-validated component baselines now include:
 
 - Arducam B0589 USB/UVC capture at 1920x1080 MJPEG 60 FPS;
-- the current ZBook live-inference baseline, including the 1920x391 software crop and
-  YOLO input size 960;
+- the canonical 1920x391 `y=300:691` RAVE crop and YOLO input size 960;
+- Raspberry Pi 5 + AI HAT+ / Hailo-8 execution of the actual RAVE YOLO26n 960 HEF;
+- V5 capture-driven, latest-frame, approximately 30 Hz scheduling with a 5 ms
+  stale-input guard and no growing frame queue;
+- a 20-second V5 Pi benchmark at 29.49 raw results/s with userspace-arrival to raw
+  Hailo result latency of 36.076 ms p50, 41.675 ms p95, and 44.582 ms p99;
 - real-time vehicle-tracking benchmark data on the ZBook;
 - a dedicated `10.77.0.0/24` wired RAVE link to the Comma 3X;
 - Comma-side safe Ethernet provisioning with bounded Params status;
 - native StarPilot/Aether RAVE settings/status UI groundwork;
-- ASIX AX88179/AX88179A and Realtek RTL8153 C3X Ethernet paths as hardware-validated, including reboot persistence.
+- ASIX AX88179/AX88179A and Realtek RTL8153 C3X Ethernet paths as hardware-validated,
+  including reboot persistence.
 
-Still scaffolding or not yet validated on the Pi 5 hard target:
+Still scaffolding, incomplete, or outside the validated V5 benchmark boundary:
 
-- Pi camera/inference/tracking runtime and thermal/performance envelope;
-- Hailo/accelerator execution in the production deployment stack;
+- production Pi perception service integration and lifecycle management;
+- YOLO26 raw-head decode/postprocessing on the Pi;
+- production vehicle tracking, temporal/danger-state logic, and their end-to-end
+  Pi frame-age/headroom validation;
 - production RAVE metadata transport, pairing, authentication, replay protection,
   freshness enforcement, and receiver;
-- final danger-zone/temporal-state model;
+- final model calibration/accuracy qualification;
 - installer, OS image, Debian packaging, production systemd services, signed updates,
   and rollback;
 - automotive power/shutdown and complete vehicle-environment validation.
@@ -58,6 +66,12 @@ over nominal FPS, drops stale frames rather than queuing them, preserves compute
 headroom, and only spends additional compute on temporal/model complexity after Pi 5
 headroom is measured.
 
+The V5 scheduling baseline is now frozen for production-runtime implementation:
+capture-driven eligibility, one-slot latest-frame storage, approximately 30 Hz accepted
+work, and rejection of frames already older than 5 ms at decode eligibility. Do not
+replace this with a timer-driven backlog or queued-frame design without new measured
+evidence and regression testing.
+
 ## Development-only mock
 
 Install development dependencies in a virtual environment, then run checks:
@@ -83,6 +97,13 @@ does not pass the flag, has no automatic restart policy, and has no install targ
 It therefore remains inactive by default and cannot masquerade as a production
 runtime.
 
+## Pi V5 benchmark reference
+
+`scripts/benchmarks/rave_v5_pi_benchmark.py` records the benchmark/reference code for
+the frozen V5 camera-to-Hailo stage. It requires the Pi-side GStreamer, OpenCV, NumPy,
+and Hailo Python runtime already present on the validated development Pi. It is not
+installed or launched by the production service scaffolding.
+
 ## Repository map
 
 ```text
@@ -93,7 +114,7 @@ image/                OS image configuration scaffolding
 packaging/            Debian packaging scaffolding
 hardware/             Candidate and partially validated hardware notes
 models/               Model bundle format examples; no production weights
-scripts/              Installer and diagnostics scaffolding
+scripts/              Installer, diagnostics, and benchmark/reference utilities
 systemd/              Inactive-by-capability service definitions
 tests/                Unit tests
 docs/                  Architecture, deployment, roadmap, validation baselines

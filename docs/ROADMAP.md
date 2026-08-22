@@ -1,7 +1,9 @@
 # Roadmap
 
-The project now has validated development-host and Comma networking/UI baselines, but
-the Pi 5 perception appliance and production metadata receiver remain incomplete.
+The project now has validated development-host, Comma networking/UI, and Pi 5
+camera-to-Hailo scheduling/performance baselines. The production Pi perception
+service, postprocessing/tracking/temporal stack, and production metadata receiver
+remain incomplete.
 
 ## M0 — Architecture foundation — complete
 - Repository layout
@@ -15,7 +17,6 @@ the Pi 5 perception appliance and production metadata receiver remain incomplete
 - Current 1920x391 software crop and YOLO input 960 baseline
 - Live inference runner and performance logging
 - Vehicle-tracking benchmark
-- **Not yet Pi 5 performance validation**
 
 ## Gate 2A — dedicated Comma Ethernet provisioning — pass
 - `10.77.0.2/24`, no gateway/DNS, never-default, IPv6 disabled
@@ -30,18 +31,39 @@ the Pi 5 perception appliance and production metadata receiver remain incomplete
 - no UI-owned NetworkManager/D-Bus/`nmcli` work
 - managed-runtime focused tests/compile validation
 
-## Gate 2C — next
-- define and validate the next Comma/RAVE integration increment without expanding the
-  Pi trust boundary or making the perception pipeline depend on Comma state
-- preserve the simple, low-latency interface and explicit unavailable/failure behavior
+## Gate 2C — RX-only runtime/UI contract — validated external integration baseline
+- preserve RAVE as optional/advisory information
+- no continuous Comma -> Pi vehicle-state dependency
+- `vehicleStateTxHz = 0.0` runtime invariant
+- fail-dark warning semantics and simple WATCH/WARNING/NONE presentation
+- no generic openpilot `commIssue` dependency on RAVE availability
 
-## M2 — Pi 5 perception runtime
-- camera capture and latest-frame buffering
-- optimized inference on the selected accelerator/runtime
+## M2A — Pi 5 camera-to-Hailo V5 architecture — hardware-validated baseline
+- Raspberry Pi 5 + AI HAT+ 26 TOPS / Hailo-8
+- actual RAVE YOLO26n detector at input size 960
+- 1920x1080 MJPEG 60 FPS camera transport
+- native JPEG 1/2 decode to 960x540
+- capture-driven, one-slot latest-frame scheduler
+- approximately 30 Hz accepted work
+- hard 5 ms stale-input guard before decode
+- no prepared-input queue
+- V5 result rate 29.49 FPS
+- userspace arrival -> raw Hailo result: 36.076 ms p50, 41.675 ms p95,
+  44.582 ms p99
+- benchmark/reference code and full measurement record in
+  `PERCEPTION_V5_BASELINE.md`
+
+## M2B — production Pi perception runtime — next
+- integrate the frozen V5 scheduling/preprocess architecture into one canonical
+  production runtime
+- implement and validate YOLO26 raw-head decode/postprocessing
 - vehicle tracking
 - temporal state/danger-zone determination
-- frame-age, latency, CPU/accelerator, memory, and thermal telemetry
+- frame-age, tracker-age, output-age, CPU/accelerator, memory, and thermal telemetry
+- fail-unavailable behavior for camera/decode/inference stalls
 - prove compute headroom before adding heavier temporal features
+- keep model-training/calibration refinement independent of deployment work while
+  preserving the reviewed runtime contract
 
 ## M3 — authenticated metadata transport and receiver
 - production wire schema
@@ -63,6 +85,6 @@ the Pi 5 perception appliance and production metadata receiver remain incomplete
 - simulation
 - replay
 - fault injection
-- thermal and power testing
+- sustained thermal/USB/I/O/headroom testing
 - closed-course testing
 - controlled road testing
