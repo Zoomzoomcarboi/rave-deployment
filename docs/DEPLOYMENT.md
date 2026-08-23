@@ -71,9 +71,11 @@ Production integration of V5 must receive exact changed-file review, syntax/stat
 checks, relevant unit tests, Pi benchmark regression, and failure-path review before it
 can replace the mock-only runtime boundary.
 
-The Gate-1 `rave-webd` API/static shell and current-format `rpi-image-gen` layer
-definition are implemented and host-testable. The image has not been built, flashed,
-Pi-validated, or integrated with privileged networking.
+The Gate-1 `rave-webd` API/static shell and seven-layer image definition are
+implemented. Gate 2A pins `rpi-image-gen` v2.7.0, has generated a real final compressed
+Raspberry Pi 5 image, and has inspected its root filesystem and clone-safety state.
+See `RAVE_OS_GATE2A_BUILD.md` for the exact build record. The image has not been
+flashed, booted, Pi-validated, or integrated with privileged networking.
 
 ## Release/update requirements
 

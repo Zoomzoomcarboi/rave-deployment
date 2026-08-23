@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/raspberrypi/rpi-image-gen.git",
+  "tag": "v2.7.0",
+  "commit": "a7b6d4806183195f3efadb533f58c8e46393d057",
+  "container_image": "docker.io/library/debian@sha256:34cd9e9fd437c0a095ec39cb2e73422c9f30821b0d0848ed74fd0d43bae4d958"
+}

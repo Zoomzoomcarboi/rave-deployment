@@ -22,4 +22,4 @@ package:
 	@echo "TODO: invoke Debian package build"
 
 image:
-	@echo "Gate 1 definition only: use a reviewed rpi-image-gen release with -S image -c config/rave-os-gate1.yaml"
+	./scripts/build-rave-os.sh

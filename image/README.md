@@ -1,37 +1,57 @@
-# RAVE OS image foundation
+# RAVE OS image build
 
-Gate 1 follows the current upstream `rpi-image-gen` v2 model: YAML configuration,
-metadata-bearing composable layers, and an external source directory supplied with
-`-S image`. It replaces the previous descriptive mock, but it is still an **unbuilt
-definition**, not a distributable or validated RAVE OS image.
+Gate 1 established the seven-layer declarative image definition, but it had not been
+built. Gate 2A pins `raspberrypi/rpi-image-gen` v2.7.0 at commit
+`a7b6d4806183195f3efadb533f58c8e46393d057` and has generated and inspected a real
+Raspberry Pi 5 image. This is image-build evidence only: the image has not been
+flashed, booted, or validated on a Pi.
+
+The pin, including the digest-pinned Debian builder container, is recorded in
+`rpi-image-gen.lock.json`. The single build entry point is:
+
+```sh
+./scripts/build-rave-os.sh
+```
+
+An optional argument selects the output directory. The default is
+`build/rave-os-gate2a/`, covered by the repository's narrow `build/` ignore. The
+script clones only the pinned tag into that output directory, verifies its full
+commit, and uses the repository's `image/` source tree. It runs upstream's required
+host tools in a digest-pinned privileged container without passing a block device. It
+does not flash media or change host networking. Docker, Git, Python 3, network access
+to upstream source/package repositories, and sufficient disk space are prerequisites.
+
+The known-good upstream invocation, run inside that controlled container, is:
+
+```sh
+/builder/rpi-image-gen build -B /out/work -S /rave/image \
+  -c rave-os-gate1.yaml -- IGconf_artefact_version=gate2a-<rave-commit>
+```
+
+With `-S /rave/image`, v2.7.0 resolves configuration names below that source tree's
+`config/` directory, so `-c config/rave-os-gate1.yaml` is invalid. Compression is a
+deployment setting in this release (`deploy.compression: zstd`); the former
+`image.compression` key did not control the deployed artifact.
+
+The build produces the compressed image below `work/deploy-<version>/`, an artifact
+safety report, and `provenance.json`. The verifier checks clone identity, credentials,
+logs/caches, filesystem ownership, installed web content/dependencies, loopback-only
+service configuration, and the deliberately disabled `rave-webd` unit before
+provenance is written.
+
+## Composition and limits
 
 The composition starts from upstream `trixie-minbase.yaml`, targets the upstream Pi 5
 and Raspberry Pi OS image layers, and adds `rave-base`, `rave-identity`, `rave-network`,
-`rave-hailo`, `rave-runtime`, `rave-web`, and `rave-update`. Product layers that write
-RAVE-owned paths depend directly on `rave-base`; no artificial chain encodes ordering. Only
-the filesystem/service identity and clone-safety boundary are substantive in Gate 1;
-the other layers carry explicit incomplete markers.
+`rave-hailo`, `rave-runtime`, `rave-web`, and `rave-update`. Hailo, perception,
+network actuation, provisioning, and updating remain explicit non-integrated markers.
 
-The validated development evidence remains kernel `6.18.39+rpt-rpi-2712`, HailoRT
-`4.23.0`, Hailo-8, Raspberry Pi 5, and Debian 13 Trixie. This definition deliberately
-does not fetch Hailo packages or encode a kernel upgrade/downgrade. A compatible pinned
-package source and redistribution review are prerequisites for that layer.
+The procedure pins builder source and the container base. Debian and Raspberry Pi
+package repositories are not snapshot-pinned, and filesystem/image timestamps are not
+normalized. Gate 2A therefore establishes a reproducible procedure and provenance,
+not bit-for-bit reproducibility.
 
-After selecting and recording an upstream `rpi-image-gen` release, the intended command
-shape is `rpi-image-gen build -S image -c config/rave-os-gate1.yaml`. This is not a
-successful build record. Before any image claim, lint the custom layers with the chosen
-release, build from clean inputs, scan the rootfs/artifact, flash supported hardware,
-and complete the applicable acceptance gate.
-
-## First-boot identity boundary
-
-The generic image must ship with an empty `/etc/machine-id`, no SSH host keys, no RAVE
-device/private identity, no NetworkManager user profiles, no pairing/session material,
-and no logs/cache. System boot may generate machine identity and SSH host keys through
-the selected base image's reviewed mechanisms. RAVE cryptographic identity formats and
-reset-preservation policy are intentionally not invented in Gate 1.
-
-The `rave-identity` scrub uses the current upstream `mmdebstrap` `cleanup-hooks` phase,
-which runs after package installation and every normal customization hook. This makes
-the final root filesystem clone-safe even when an earlier package or layer created
-machine-specific state.
+The final `rave-identity` cleanup runs after package and customization hooks. The
+generic image ends with an empty `/etc/machine-id`, no SSH host keys, no RAVE private
+identity/pairing/session state, no NetworkManager user profiles, and no carried
+logs/caches. First-boot identity behavior still requires Pi boot validation.

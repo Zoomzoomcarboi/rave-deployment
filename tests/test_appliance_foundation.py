@@ -1,4 +1,5 @@
 import inspect
+import json
 from pathlib import Path
 
 import yaml
@@ -19,6 +20,9 @@ def test_image_composes_all_gate_one_layers() -> None:
     config = yaml.safe_load((ROOT / "image/config/rave-os-gate1.yaml").read_text())
     assert config["include"]["file"] == "trixie-minbase.yaml"
     assert config["device"]["layer"] == "rpi5"
+    assert config["device"]["hostname"] == "rave-pi"
+    assert config["image"] == {"layer": "image-rpios", "name": "rave-os-gate2a"}
+    assert config["deploy"] == {"compression": "zstd"}
     assert list(config["layer"].values()) == [
         "rave-base",
         "rave-identity",
@@ -28,6 +32,41 @@ def test_image_composes_all_gate_one_layers() -> None:
         "rave-web",
         "rave-update",
     ]
+
+
+def test_gate_two_a_builder_is_exactly_pinned() -> None:
+    lock = json.loads((ROOT / "image/rpi-image-gen.lock.json").read_text())
+    assert lock == {
+        "repository": "https://github.com/raspberrypi/rpi-image-gen.git",
+        "tag": "v2.7.0",
+        "commit": "a7b6d4806183195f3efadb533f58c8e46393d057",
+        "container_image": (
+            "docker.io/library/debian@"
+            "sha256:34cd9e9fd437c0a095ec39cb2e73422c9f30821b0d0848ed74fd0d43bae4d958"
+        ),
+    }
+
+
+def test_gate_two_a_entrypoint_uses_source_tree_and_relative_config_name() -> None:
+    script = (ROOT / "scripts/build-rave-os.sh").read_text()
+    assert 'resolved_commit == "$builder_commit"' in script
+    assert "-S /rave/image -c rave-os-gate1.yaml" in script
+    assert "--device" not in script
+    assert "RAVE_ARTIFACT_DENYLIST" in script
+
+
+def test_gate_two_a_entrypoint_initializes_fresh_unprivileged_build_tree() -> None:
+    script = (ROOT / "scripts/build-rave-os.sh").read_text()
+    create_output = script.index("install -d -m 0755 /out/work /out/work/cache")
+    create_config = script.index("/tmp/rave-builder-home/.config/containers")
+    create_local = script.index("/tmp/rave-builder-home/.local/share/containers")
+    normalize_owner = script.index("chown -R 1000:1000 /out /tmp/rave-builder-home")
+    unprivileged_build = script.index("setpriv --reuid=1000 --regid=1000 --init-groups")
+
+    assert create_output < normalize_owner < unprivileged_build
+    assert create_config < normalize_owner
+    assert create_local < normalize_owner
+    assert "chmod 0777" not in script
 
 
 def test_runtime_paths_and_service_identity_are_product_scoped() -> None:

@@ -1,12 +1,15 @@
-# Gate-1 composition for current rpi-image-gen (v2 YAML/layer model).
-# This definition has not been built or Pi-validated.
+# RAVE OS Gate-2A composition for pinned rpi-image-gen v2.7.0.
+# This definition is image-build validated, not booted or Pi-validated.
 include:
   file: trixie-minbase.yaml
 device:
   layer: rpi5
+  hostname: rave-pi
 image:
   layer: image-rpios
-  compression: xz
+  name: rave-os-gate2a
+deploy:
+  compression: zstd
 layer:
   rave_base: rave-base
   rave_identity: rave-identity

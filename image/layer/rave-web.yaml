@@ -1,11 +1,12 @@
 # METABEGIN
 # X-Env-Layer-Name: rave-web
-# X-Env-Layer-Desc: RAVE web package boundary; package feed integration incomplete
+# X-Env-Layer-Desc: RAVE local management web service and static assets
 # X-Env-Layer-Version: 0.1.0
 # X-Env-Layer-Requires: rave-base
 # METAEND
 ---
 mmdebstrap:
+  packages: [python3-fastapi, python3-pydantic, python3-uvicorn]
   customize-hooks:
     - |-
       set -eu
@@ -15,4 +16,3 @@ mmdebstrap:
       test "$rootfs" != "/"
       test -d "$rootfs"
       mkdir -p "$rootfs/opt/rave/web"
-      touch "$rootfs/opt/rave/web/WEB_PACKAGE_NOT_INSTALLED"
