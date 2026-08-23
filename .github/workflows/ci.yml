@@ -19,7 +19,7 @@ jobs:
       - run: python -m pip install --upgrade pip
       - run: python -m pip install -e ".[dev,setup]"
       - name: Ruff
-        run: ruff check edge tests setup-ui tests
+        run: ruff check edge setup-ui tests
       - name: Python tests
         run: pytest -q
       - name: Shell syntax
