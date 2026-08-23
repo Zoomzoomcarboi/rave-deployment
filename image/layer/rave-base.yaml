@@ -1,0 +1,23 @@
+# METABEGIN
+# X-Env-Layer-Name: rave-base
+# X-Env-Layer-Desc: Gate-1 RAVE filesystem and least-privilege service identity
+# X-Env-Layer-Version: 0.1.0
+# METAEND
+---
+mmdebstrap:
+  packages: [ca-certificates, systemd]
+  customize-hooks:
+    - |-
+      set -eu
+      rootfs_input=${1:?missing target rootfs}
+      rootfs=$(realpath -e -- "$rootfs_input")
+      test -n "$rootfs"
+      test "$rootfs" != "/"
+      test -d "$rootfs"
+      mkdir -p "$rootfs/opt/rave" "$rootfs/etc/rave" "$rootfs/var/lib/rave" "$rootfs/var/log/rave" "$rootfs/usr/lib/tmpfiles.d"
+      chroot "$rootfs" /usr/sbin/groupadd --system rave
+      chroot "$rootfs" /usr/sbin/useradd --system --gid rave --home-dir /var/lib/rave --no-create-home --shell /usr/sbin/nologin rave
+      chroot "$rootfs" /bin/chown rave:rave /var/lib/rave /var/log/rave
+      chroot "$rootfs" /bin/chmod 0755 /opt/rave /etc/rave
+      chroot "$rootfs" /bin/chmod 0750 /var/lib/rave /var/log/rave
+      printf 'd /run/rave 0750 rave rave -\n' > "$rootfs/usr/lib/tmpfiles.d/rave.conf"

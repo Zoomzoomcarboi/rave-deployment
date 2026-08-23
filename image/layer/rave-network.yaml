@@ -1,0 +1,19 @@
+# METABEGIN
+# X-Env-Layer-Name: rave-network
+# X-Env-Layer-Desc: Gate-1 network dependency and policy boundary (no provisioning actuation)
+# X-Env-Layer-Version: 0.1.0
+# X-Env-Layer-Requires: rave-base
+# METAEND
+---
+mmdebstrap:
+  packages: [network-manager]
+  customize-hooks:
+    - |-
+      set -eu
+      rootfs_input=${1:?missing target rootfs}
+      rootfs=$(realpath -e -- "$rootfs_input")
+      test -n "$rootfs"
+      test "$rootfs" != "/"
+      test -d "$rootfs"
+      mkdir -p "$rootfs/etc/rave/network"
+      touch "$rootfs/etc/rave/network/GATE1_NO_NETWORK_ACTUATION"

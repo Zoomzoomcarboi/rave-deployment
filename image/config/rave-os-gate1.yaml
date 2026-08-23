@@ -1,0 +1,17 @@
+# Gate-1 composition for current rpi-image-gen (v2 YAML/layer model).
+# This definition has not been built or Pi-validated.
+include:
+  file: trixie-minbase.yaml
+device:
+  layer: rpi5
+image:
+  layer: image-rpios
+  compression: xz
+layer:
+  rave_base: rave-base
+  rave_identity: rave-identity
+  rave_network: rave-network
+  rave_hailo: rave-hailo
+  rave_runtime: rave-runtime
+  rave_web: rave-web
+  rave_update: rave-update

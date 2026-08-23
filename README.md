@@ -48,6 +48,12 @@ The repository's synthetic loop and JSON debug path remain development-only.
 `protocol/rave.proto` is still a proposed schema and is not a production wire
 contract.
 
+The management foundation now includes an unprivileged `rave-webd` package, a static
+Galaxy-language shell, and read-only `/api/v1` status/network/system schemas. All real
+hardware/link/update providers remain unavailable/not integrated. The image directory
+contains current-format modular `rpi-image-gen` Gate-1 layers, but no image build or Pi
+validation has been completed.
+
 ## Enforced safety boundary
 
 The Raspberry Pi is a stand-alone perception sensor. It must never access Panda,
@@ -109,8 +115,8 @@ installed or launched by the production service scaffolding.
 ```text
 edge/                 Configuration, health checks, and mock-only runtime
 protocol/             Proposed future wire schema (source only)
-setup-ui/             First-boot UI scaffolding
-image/                OS image configuration scaffolding
+setup-ui/             Permanent local management API and static browser shell foundation
+image/                Unbuilt modular rpi-image-gen Gate-1 definition
 packaging/            Debian packaging scaffolding
 hardware/             Candidate and partially validated hardware notes
 models/               Model bundle format examples; no production weights

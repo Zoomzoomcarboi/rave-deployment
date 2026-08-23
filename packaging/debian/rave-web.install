@@ -1,0 +1,3 @@
+setup-ui/rave_web /opt/rave/web
+systemd/rave-webd.service /lib/systemd/system
+THIRD_PARTY_NOTICES.md /usr/share/doc/rave-web

@@ -1,0 +1,28 @@
+[Unit]
+Description=RAVE local management web service
+After=network.target
+
+[Service]
+Type=simple
+User=rave
+Group=rave
+ExecStart=/usr/bin/python3 -m uvicorn rave_web.app:app --app-dir /opt/rave/web --host 127.0.0.1 --port 8080 --no-access-log
+Restart=on-failure
+RestartSec=5s
+NoNewPrivileges=true
+PrivateDevices=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictNamespaces=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

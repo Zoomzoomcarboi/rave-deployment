@@ -11,3 +11,9 @@ Architecture: arm64
 Depends: ${misc:Depends}, ${python3:Depends}, python3-pydantic, python3-typer
 Description: RAVE edge-perception appliance service
  Mock packaging definition for the RAVE Raspberry Pi deployment stack.
+
+Package: rave-web
+Architecture: all
+Depends: python3-fastapi, python3-pydantic, python3-uvicorn, ${misc:Depends}, ${python3:Depends}
+Description: RAVE local management web foundation
+ Unprivileged Gate-1 management API and static browser shell.

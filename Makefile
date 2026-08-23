@@ -7,7 +7,7 @@ test:
 	pytest -q
 
 lint:
-	ruff check edge tests
+	ruff check edge setup-ui tests
 
 doctor:
 	rave doctor --config config/rave.toml.example
@@ -16,10 +16,10 @@ run:
 	rave-edge --config config/rave.toml.example --development-mock
 
 setup-ui:
-	uvicorn setup_ui.app:app --app-dir setup-ui --host 0.0.0.0 --port 8080
+	uvicorn rave_web.app:app --app-dir setup-ui --host 127.0.0.1 --port 8080
 
 package:
 	@echo "TODO: invoke Debian package build"
 
 image:
-	@echo "TODO: invoke pinned rpi-image-gen container/toolchain"
+	@echo "Gate 1 definition only: use a reviewed rpi-image-gen release with -S image -c config/rave-os-gate1.yaml"

@@ -1,0 +1,27 @@
+# METABEGIN
+# X-Env-Layer-Name: rave-identity
+# X-Env-Layer-Desc: Remove cloned identity and mutable host state from the image
+# X-Env-Layer-Version: 0.1.0
+# X-Env-Layer-Requires: rave-base
+# METAEND
+---
+mmdebstrap:
+  cleanup-hooks:
+    - |-
+      set -eu
+      rootfs_input=${1:?missing target rootfs}
+      rootfs=$(realpath -e -- "$rootfs_input")
+      test -n "$rootfs"
+      test "$rootfs" != "/"
+      test -d "$rootfs/etc"
+      test -d "$rootfs/var"
+      rm -f -- "$rootfs/etc/machine-id" "$rootfs/var/lib/dbus/machine-id"
+      install -m 0444 /dev/null "$rootfs/etc/machine-id"
+      if [ -d "$rootfs/etc/ssh" ]; then find "$rootfs/etc/ssh" -maxdepth 1 -name 'ssh_host_*' -delete; fi
+      if [ -d "$rootfs/etc/NetworkManager/system-connections" ]; then find "$rootfs/etc/NetworkManager/system-connections" -mindepth 1 -maxdepth 1 -delete; fi
+      rm -rf -- "$rootfs/var/lib/rave/identity" "$rootfs/var/lib/rave/pairing" "$rootfs/var/lib/rave/session"
+      if [ -d "$rootfs/var/log" ]; then find "$rootfs/var/log" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +; fi
+      if [ -d "$rootfs/var/cache" ]; then find "$rootfs/var/cache" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +; fi
+      mkdir -p "$rootfs/var/log/rave"
+      chroot "$rootfs" /bin/chown rave:rave /var/log/rave
+      chroot "$rootfs" /bin/chmod 0750 /var/log/rave

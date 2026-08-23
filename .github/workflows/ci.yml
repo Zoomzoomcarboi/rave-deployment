@@ -52,6 +52,8 @@ jobs:
             echo "systemd-analyze unavailable; unit verification skipped"
           fi
       - name: Repository safety policy
+        env:
+          RAVE_IDENTITY_DENYLIST: ${{ secrets.RAVE_IDENTITY_DENYLIST }}
         run: |
           tests/test_repository_safety.sh
           scripts/check-repository-safety.sh

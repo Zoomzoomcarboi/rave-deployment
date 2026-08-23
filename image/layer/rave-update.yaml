@@ -1,0 +1,18 @@
+# METABEGIN
+# X-Env-Layer-Name: rave-update
+# X-Env-Layer-Desc: Signed atomic update boundary; implementation intentionally absent
+# X-Env-Layer-Version: 0.1.0
+# X-Env-Layer-Requires: rave-base
+# METAEND
+---
+mmdebstrap:
+  customize-hooks:
+    - |-
+      set -eu
+      rootfs_input=${1:?missing target rootfs}
+      rootfs=$(realpath -e -- "$rootfs_input")
+      test -n "$rootfs"
+      test "$rootfs" != "/"
+      test -d "$rootfs"
+      mkdir -p "$rootfs/var/lib/rave/update"
+      touch "$rootfs/var/lib/rave/update/UPDATE_SERVICE_NOT_INTEGRATED"

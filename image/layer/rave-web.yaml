@@ -1,0 +1,18 @@
+# METABEGIN
+# X-Env-Layer-Name: rave-web
+# X-Env-Layer-Desc: RAVE web package boundary; package feed integration incomplete
+# X-Env-Layer-Version: 0.1.0
+# X-Env-Layer-Requires: rave-base
+# METAEND
+---
+mmdebstrap:
+  customize-hooks:
+    - |-
+      set -eu
+      rootfs_input=${1:?missing target rootfs}
+      rootfs=$(realpath -e -- "$rootfs_input")
+      test -n "$rootfs"
+      test "$rootfs" != "/"
+      test -d "$rootfs"
+      mkdir -p "$rootfs/opt/rave/web"
+      touch "$rootfs/opt/rave/web/WEB_PACKAGE_NOT_INSTALLED"

@@ -71,6 +71,10 @@ Production integration of V5 must receive exact changed-file review, syntax/stat
 checks, relevant unit tests, Pi benchmark regression, and failure-path review before it
 can replace the mock-only runtime boundary.
 
+The Gate-1 `rave-webd` API/static shell and current-format `rpi-image-gen` layer
+definition are implemented and host-testable. The image has not been built, flashed,
+Pi-validated, or integrated with privileged networking.
+
 ## Release/update requirements
 
 Application and model updates must eventually be signed, atomic, reversible, and

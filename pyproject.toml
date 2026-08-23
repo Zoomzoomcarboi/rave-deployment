@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rave-edge"
 version = "0.0.1"
-description = "Mock deployment architecture for RAVE Rear Awareness Vision Engine"
+description = "Raspberry Pi 5 deployment foundation for RAVE"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
@@ -40,3 +40,4 @@ testpaths = ["tests"]
 
 [tool.ruff]
 line-length = 100
+extend-exclude = ["setup-ui/rave_web/static"]

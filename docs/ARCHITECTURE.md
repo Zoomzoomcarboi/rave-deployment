@@ -13,6 +13,12 @@ camera-to-raw-inference stage, ZBook inference/tracking, the dedicated C3X Ether
 path, and StarPilot network/UI integration. See `VALIDATED_BASELINES.md` and
 `PERCEPTION_V5_BASELINE.md`.
 
+Gate 1 adds an unprivileged `rave-webd` foundation with a versioned read-only API,
+static local browser shell, typed availability/network states, and replaceable provider
+interfaces. Its providers report camera, perception, Hailo, Comma link, updates, and
+system measurements as unavailable/not integrated. It neither accesses hardware nor
+actuates networking. See `MANAGEMENT_NETWORK.md`.
+
 ## Hard target and real-time architecture
 
 Raspberry Pi 5 is the hard deployment target. Architecture decisions must satisfy the

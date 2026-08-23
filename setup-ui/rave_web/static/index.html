@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#8b6cc5">
+    <title>RAVE</title>
+    <link rel="stylesheet" href="/static/app.css">
+    <script type="module" src="/static/app.js"></script>
+  </head>
+  <body>
+    <button class="menu-button" type="button" aria-controls="sidebar" aria-expanded="false">
+      <span aria-hidden="true">☰</span><span class="sr-only">Open navigation</span>
+    </button>
+    <div class="underlay" hidden></div>
+    <aside class="sidebar" id="sidebar">
+      <header class="product-mark">
+        <div class="product-glyph" aria-hidden="true">R</div>
+        <div><strong>RAVE</strong><small>Rear Awareness</small></div>
+      </header>
+      <nav aria-label="Primary">
+        <p class="nav-label">Appliance</p>
+        <a href="#dashboard" data-view="dashboard" class="active">Dashboard</a>
+        <a href="#network" data-view="network">Network</a>
+        <a href="#system" data-view="system">System</a>
+        <a href="#diagnostics" data-view="diagnostics">Diagnostics</a>
+      </nav>
+      <footer><span class="status-dot unavailable"></span>Gate 1 foundation</footer>
+    </aside>
+    <main class="content" id="content" tabindex="-1">
+      <section class="page" data-page="dashboard">
+        <header class="page-header">
+          <div><p class="eyebrow">Appliance overview</p><h1>Dashboard</h1></div>
+          <span class="pill unavailable" id="overall-state">Unavailable</span>
+        </header>
+        <div class="notice"><span class="status-dot unavailable"></span><div><strong>Integration is incomplete</strong><p>Gate 1 does not connect to camera, perception, Hailo, or the Comma link.</p></div></div>
+        <div class="card-grid" id="component-cards" aria-live="polite"></div>
+      </section>
+      <section class="page" data-page="network" hidden>
+        <header class="page-header"><div><p class="eyebrow">Management plane</p><h1>Network</h1></div></header>
+        <article class="card"><p class="card-kicker">Management Wi-Fi</p><h2 id="network-mode">Unconfigured</h2><p id="network-detail">Network actuation is unavailable in Gate 1.</p></article>
+        <article class="card"><p class="card-kicker">Dedicated runtime link</p><h2>10.77.0.0/24</h2><p>Separate from management Wi-Fi. No bridge, gateway, DNS, or web listener is configured here by Gate 1.</p></article>
+      </section>
+      <section class="page" data-page="system" hidden>
+        <header class="page-header"><div><p class="eyebrow">RAVE OS</p><h1>System</h1></div></header>
+        <div class="card-grid"><article class="card"><p class="card-kicker">RAVE OS</p><h2 id="os-version">Unavailable</h2><p>No built image version provider is integrated.</p></article><article class="card"><p class="card-kicker">Updates</p><h2 id="update-state">Unavailable</h2><p>Model and OS update services are not integrated.</p></article></div>
+      </section>
+      <section class="page" data-page="diagnostics" hidden>
+        <header class="page-header"><div><p class="eyebrow">Engineering detail</p><h1>Diagnostics</h1></div></header>
+        <article class="card"><p class="card-kicker">Provider status</p><h2>No diagnostics provider</h2><p>This view intentionally exposes no fabricated counters, logs, or hardware readings.</p></article>
+      </section>
+    </main>
+  </body>
+</html>
