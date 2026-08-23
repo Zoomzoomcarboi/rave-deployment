@@ -1,0 +1,24 @@
+{
+  "name": "RAVE OS Gate 2B Test",
+  "release_tag": "rave-os-gate2b-test-2026-08-23",
+  "status": "prerelease",
+  "target": "Raspberry Pi 5",
+  "architecture": "arm64",
+  "image": "RAVE-OS-Pi5-Gate2B-Test.img.xz",
+  "image_download_size": 32,
+  "image_download_sha256": "0040f94d11d0039505328a90b2ff48968db873e9e7967307631bf40ef5679275",
+  "extract_size": 0,
+  "extract_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "init_format": "none",
+  "image_source_commit": "e6dbcfa6f4031639db2c224d2145f36cb022749c",
+  "rpi_image_gen": {
+    "tag": "v2.7.0",
+    "commit": "a7b6d4806183195f3efadb533f58c8e46393d057"
+  },
+  "validation": {
+    "gate_2a": "PASS",
+    "physical_pi_boot": "NOT_YET_VALIDATED",
+    "production_ready": false,
+    "road_ready": false
+  }
+}

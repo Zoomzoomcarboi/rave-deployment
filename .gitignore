@@ -95,3 +95,8 @@ rave-model-*.tar.*
 models/releases/
 *.model.tar
 *.model.tar.*
+
+# RAVE OS binaries are published as GitHub Release assets
+release/*.img
+release/*.img.xz
+release/*.img.zst

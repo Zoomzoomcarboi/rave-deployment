@@ -13,6 +13,15 @@ camera-to-Hailo benchmark have now produced hardware-validated component baselin
 See [`docs/VALIDATED_BASELINES.md`](docs/VALIDATED_BASELINES.md) and
 [`docs/PERCEPTION_V5_BASELINE.md`](docs/PERCEPTION_V5_BASELINE.md).
 
+## Install RAVE OS
+
+End-user images and flashing instructions are available in
+**[release/](release/README.md)**.
+
+The current image is a **Gate 2B test prerelease**. It has passed image-build and
+artifact validation but has not yet completed physical Raspberry Pi 5 boot
+qualification.
+
 ## Current status
 
 Hardware-validated component baselines now include:
@@ -50,9 +59,7 @@ contract.
 
 The management foundation now includes an unprivileged `rave-webd` package, a static
 Galaxy-language shell, and read-only `/api/v1` status/network/system schemas. All real
-hardware/link/update providers remain unavailable/not integrated. The image directory
-contains current-format modular `rpi-image-gen` Gate-1 layers, but no image build or Pi
-validation has been completed.
+hardware/link/update providers remain unavailable/not integrated. The image directory contains the pinned Gate 2A `rpi-image-gen` image definition and build entry point. A real Raspberry Pi 5 image has passed build and artifact validation; physical Pi boot validation remains Gate 2B.
 
 ## Enforced safety boundary
 
@@ -116,7 +123,7 @@ installed or launched by the production service scaffolding.
 edge/                 Configuration, health checks, and mock-only runtime
 protocol/             Proposed future wire schema (source only)
 setup-ui/             Permanent local management API and static browser shell foundation
-image/                Unbuilt modular rpi-image-gen Gate-1 definition
+image/                Pinned RAVE OS image definition and build tooling
 packaging/            Debian packaging scaffolding
 hardware/             Candidate and partially validated hardware notes
 models/               Model bundle format examples; no production weights
