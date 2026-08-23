@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "name": "RAVE OS Gate 2B Candidate",
+  "release_tag": null,
+  "status": "candidate_not_published",
+  "target": "Raspberry Pi 5",
+  "architecture": "arm64",
+  "image": "RAVE-OS-Pi5-Gate2B-Candidate.img.xz",
+  "image_download_size": "generated from the candidate image",
+  "image_download_sha256": "generated from the candidate image",
+  "extract_size": "generated from the extracted raw image",
+  "extract_sha256": "generated from the extracted raw image",
+  "image_source_commit": "copied from build provenance",
+  "image_source_worktree_dirty": "copied from build provenance",
+  "source_artifact": {
+    "filename": "copied from build provenance",
+    "size": "copied from and verified against build provenance",
+    "sha256": "copied from and verified against build provenance"
+  },
+  "build_provenance": "exact validated build provenance record",
+  "validation": {
+    "gate_2b_image_build": "PASS",
+    "artifact_verifier": "PASS",
+    "physical_pi_boot": "NOT_YET_VALIDATED",
+    "production_ready": false,
+    "road_ready": false
+  }
+}

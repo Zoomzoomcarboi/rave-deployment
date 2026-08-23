@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import configparser
 import hashlib
 import json
 import os
@@ -31,6 +32,7 @@ HOME_PATH = re.compile(
     + WINDOWS_HOME_PREFIX
     + rb"[^\\\s]+)[/\\]"
 )
+ALLOWED_NM_PROFILE = "rave-setup.nmconnection"
 
 
 class VerificationError(RuntimeError):
@@ -83,9 +85,14 @@ def verify_clone_safety(rootfs: Path) -> None:
                 "developer SSH private key is present",
             )
     nm = rootfs / "etc/NetworkManager/system-connections"
-    require(not nm.exists() or not any(nm.iterdir()), "NetworkManager connection profile is present")
+    profiles = sorted(path.name for path in nm.iterdir()) if nm.exists() else []
+    require(profiles in ([], [ALLOWED_NM_PROFILE]), f"unexpected NetworkManager profiles: {profiles}")
     for relative in ("var/lib/rave/identity", "var/lib/rave/pairing", "var/lib/rave/session"):
         require(not (rootfs / relative).exists(), f"cloned RAVE state present: /{relative}")
+    shadow = (rootfs / "etc/shadow").read_text(encoding="utf-8")
+    for line in shadow.splitlines():
+        account, password, *_ = line.split(":")
+        require(password.startswith(("!", "*")), f"account has usable cloned credentials: {account}")
     require(not any((rootfs / "var/log/rave").iterdir()), "RAVE logs are not empty")
     for relative in ("var/log", "var/cache"):
         base = rootfs / relative
@@ -110,11 +117,23 @@ def verify_clone_safety(rootfs: Path) -> None:
     require(not violations, "; ".join(violations[:20]))
 
 
+def verify_gate2b_us_regulatory_domain(rootfs: Path) -> None:
+    regulatory = (rootfs / "etc/modprobe.d/cfg80211_regdomain.conf").read_text(
+        encoding="utf-8"
+    )
+    require(
+        regulatory.strip() == "options cfg80211 ieee80211_regdom=US",
+        "Wi-Fi regulatory domain is not explicitly US",
+    )
+    require("ieee80211_regdom=GB" not in regulatory, "Wi-Fi regulatory domain fell back to GB")
+
+
 def verify_rootfs(rootfs: Path) -> dict[str, object]:
     rootfs = rootfs.resolve(strict=True)
     require(rootfs != Path("/"), "refusing to verify host root")
     require((rootfs / "etc").is_dir() and (rootfs / "var").is_dir(), "implausible rootfs")
     verify_clone_safety(rootfs)
+    verify_gate2b_us_regulatory_domain(rootfs)
 
     rave_uid, rave_gid = target_accounts(rootfs)
     required_modes = {
@@ -133,12 +152,19 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     required_files = (
         "usr/lib/tmpfiles.d/rave.conf",
         "usr/lib/systemd/system/rave-webd.service",
+        "usr/lib/systemd/system/rave-management-dhcp.service",
         "opt/rave/web/rave_web/app.py",
         "opt/rave/web/rave_web/static/index.html",
         "opt/rave/web/rave_web/static/app.css",
         "opt/rave/web/rave_web/static/app.js",
         "usr/share/doc/rave-web/THIRD_PARTY_NOTICES.md",
-        "etc/rave/network/GATE1_NO_NETWORK_ACTUATION",
+        "etc/NetworkManager/system-connections/rave-setup.nmconnection",
+        "etc/rave/network/dnsmasq.conf",
+        "etc/sysctl.d/90-rave-network-isolation.conf",
+        "etc/systemd/network/10-rave-ethernet.network",
+        "etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf",
+        "etc/NetworkManager/conf.d/20-rave-wifi-backend.conf",
+        "opt/rave/web/rave_web/providers.py",
         "etc/rave/compatibility/HAILO_STACK_NOT_INTEGRATED",
         "opt/rave/runtime/PERCEPTION_NOT_INTEGRATED",
         "var/lib/rave/update/UPDATE_SERVICE_NOT_INTEGRATED",
@@ -148,7 +174,14 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     require(not (rootfs / "opt/rave/web/WEB_PACKAGE_NOT_INSTALLED").exists(), "web install marker remains")
 
     package_status = (rootfs / "var/lib/dpkg/status").read_text(encoding="utf-8")
-    for package in ("python3-fastapi", "python3-pydantic", "python3-uvicorn"):
+    for package in (
+        "python3-fastapi",
+        "python3-pydantic",
+        "python3-uvicorn",
+        "network-manager",
+        "wpasupplicant",
+        "dnsmasq-base",
+    ):
         stanza = next(
             (block for block in package_status.split("\n\n") if block.startswith(f"Package: {package}\n")),
             "",
@@ -159,12 +192,97 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
         )
 
     unit = (rootfs / "usr/lib/systemd/system/rave-webd.service").read_text(encoding="utf-8")
-    require("--host 127.0.0.1" in unit, "rave-webd is not loopback-only")
+    require("--host 192.168.77.1" in unit, "rave-webd is not bound to the management address")
+    require("RAVE_PROVIDER=pi" in unit, "rave-webd does not explicitly select the Pi provider")
+    require("--host 0.0.0.0" not in unit and "--host eth0" not in unit, "unsafe web exposure")
+    require("User=rave" in unit and "Group=rave" in unit, "rave-webd service identity changed")
+    require("NoNewPrivileges=true" in unit, "rave-webd privilege boundary changed")
     require("RuntimeDirectory=" not in unit, "rave-webd owns a shared runtime directory")
+    wants = rootfs / "etc/systemd/system/multi-user.target.wants"
+    for service in (
+        "rave-webd.service",
+        "rave-management-dhcp.service",
+        "NetworkManager.service",
+        "systemd-networkd.service",
+    ):
+        require((wants / service).is_symlink(), f"service is not enabled at boot: {service}")
     require(
-        not (rootfs / "etc/systemd/system/multi-user.target.wants/rave-webd.service").exists(),
-        "rave-webd must remain disabled in Gate 2A",
+        (rootfs / "etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service").is_symlink(),
+        "NetworkManager wait-online is not enabled",
     )
+    nm_wait = (rootfs / "usr/lib/systemd/system/NetworkManager-wait-online.service").read_text(
+        encoding="utf-8"
+    )
+    require("Requires=NetworkManager.service" in nm_wait, "NM wait-online does not require NetworkManager")
+    require("Before=network-online.target" in nm_wait, "NM wait-online does not gate network-online")
+    require("ExecStart=/usr/bin/nm-online -s -q" in nm_wait, "NM startup completion is not awaited")
+    dhcp_unit = (rootfs / "usr/lib/systemd/system/rave-management-dhcp.service").read_text(
+        encoding="utf-8"
+    )
+    for consumer_unit, name in ((dhcp_unit, "DHCP"), (unit, "web")):
+        require("Wants=network-online.target" in consumer_unit, f"{name} does not pull network-online")
+        require("After=network-online.target NetworkManager-wait-online.service" in consumer_unit, f"{name} starts before AP activation settles")
+    require("Before=rave-webd.service" in dhcp_unit, "DHCP is not ordered before the web service")
+    require(not (rootfs / "etc/systemd/network/02-wlan0.network").exists(), "systemd-networkd also owns wlan0")
+    require(not (rootfs / "etc/systemd/network/01-eth0.network").exists(), "unreviewed generated eth0 policy remains")
+    iwd_mask = rootfs / "etc/systemd/system/iwd.service"
+    require(iwd_mask.is_symlink() and os.readlink(iwd_mask) == "/dev/null", "standalone iwd is not masked")
+    runtime_network = (rootfs / "etc/systemd/network/10-rave-ethernet.network").read_text(encoding="utf-8")
+    for expected in ("Name=eth0", "Address=10.77.0.1/24", "DHCP=no", "IPMasquerade=no"):
+        require(expected in runtime_network, f"invalid runtime Ethernet policy: {expected}")
+    for forbidden in ("Gateway=", "DNS=", "DHCPServer=yes"):
+        require(forbidden not in runtime_network, f"runtime Ethernet has forbidden setting: {forbidden}")
+    nm_unmanaged = (rootfs / "etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf").read_text(encoding="utf-8")
+    require("unmanaged-devices=interface-name:eth0" in nm_unmanaged, "NetworkManager may own runtime Ethernet")
+    wifi_backend = (rootfs / "etc/NetworkManager/conf.d/20-rave-wifi-backend.conf").read_text(
+        encoding="utf-8"
+    )
+    require("wifi.backend=wpa_supplicant" in wifi_backend, "NetworkManager Wi-Fi backend is not explicit")
+    require((rootfs / "usr/sbin/wpa_supplicant").is_file(), "wpa_supplicant backend binary is missing")
+
+    profile_path = rootfs / "etc/NetworkManager/system-connections/rave-setup.nmconnection"
+    require(stat.S_IMODE(profile_path.stat().st_mode) == 0o600, "RAVE-Setup profile permissions are unsafe")
+    profile = configparser.ConfigParser(interpolation=None)
+    profile.read(profile_path, encoding="utf-8")
+    require(profile.get("connection", "id") == "RAVE-Setup", "wrong provisioning profile id")
+    require(profile.get("connection", "interface-name") == "wlan0", "AP is not scoped to wlan0")
+    require(profile.getboolean("connection", "autoconnect"), "AP profile is not enabled")
+    require(
+        profile.getint("connection", "wait-device-timeout") == 15000,
+        "AP device wait is not explicitly bounded to 15000 ms",
+    )
+    require(profile.get("wifi", "ssid") == "RAVE-Setup", "wrong provisioning SSID")
+    require(profile.get("wifi", "mode") == "ap", "provisioning profile is not an AP")
+    require(profile.get("ipv4", "method") == "manual", "AP must use manual IPv4")
+    require(profile.get("ipv4", "address1") == "192.168.77.1/24", "wrong management address/subnet")
+    require(profile.getboolean("ipv4", "never-default"), "AP may install a default route")
+    require(not profile.getboolean("ipv4", "may-fail"), "AP IPv4 configuration is optional")
+    require(not profile.get("ipv4", "gateway", fallback=""), "AP gateway must be empty")
+    require(profile.get("ipv6", "method") == "disabled", "AP IPv6 is not disabled")
+    require(not profile.has_section("wifi-security"), "provisioning profile contains Wi-Fi security material")
+    profile_text = profile_path.read_text(encoding="utf-8")
+    require("method=shared" not in profile_text, "NetworkManager shared/NAT mode is forbidden")
+    require("bridge" not in profile_text.lower(), "management profile configures a bridge")
+
+    dnsmasq = (rootfs / "etc/rave/network/dnsmasq.conf").read_text(encoding="utf-8")
+    for expected in (
+        "interface=wlan0",
+        "listen-address=192.168.77.1",
+        "bind-interfaces",
+        "port=0",
+        "dhcp-range=192.168.77.100,192.168.77.199,255.255.255.0,12h",
+        "dhcp-option=3",
+        "dhcp-option=6",
+    ):
+        require(expected in dnsmasq.splitlines(), f"missing bounded DHCP setting: {expected}")
+    require("eth0" not in dnsmasq, "DHCP listens on runtime Ethernet")
+
+    sysctl = (rootfs / "etc/sysctl.d/90-rave-network-isolation.conf").read_text(encoding="utf-8")
+    require("net.ipv4.ip_forward=0" in sysctl, "IPv4 forwarding is not disabled")
+    require("net.ipv6.conf.all.forwarding=0" in sysctl, "IPv6 forwarding is not disabled")
+    network_text = f"{profile_text}\n{dnsmasq}\n{sysctl}\n{unit}".lower()
+    for forbidden in ("masquerade", "snat", "dnat", "iptables", "nft ", "0.0.0.0"):
+        require(forbidden not in network_text, f"forbidden management exposure/NAT setting: {forbidden}")
 
     return {
         "status": "pass",
@@ -173,12 +291,23 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
             "rave_account": "pass",
             "filesystem_contract": "pass",
             "web_content": "pass",
-            "loopback_only_webd": "pass",
+            "management_address_only_webd": "pass",
+            "web_not_exposed_on_eth0": "pass",
+            "management_boot_enablement": "pass",
+            "ap_web_boot_order": "pass",
+            "single_wlan_owner": "pass",
+            "networkmanager_wifi_backend": "pass",
+            "isolated_runtime_ethernet": "pass",
+            "provisioning_ap_profile": "pass",
+            "bounded_dhcp": "pass",
+            "no_bridge_forwarding_or_nat": "pass",
+            "pi_provider_selected": "pass",
             "machine_id_uninitialized": "pass",
             "ssh_host_keys_absent": "pass",
-            "network_profiles_absent": "pass",
+            "only_reviewed_network_profile": "pass",
             "rave_private_state_absent": "pass",
             "identity_and_secret_scan": "pass",
+            "gate2b_us_regulatory_domain": "pass",
         },
     }
 
@@ -193,6 +322,7 @@ def sha256(path: Path) -> str:
 
 def write_provenance(args: argparse.Namespace) -> None:
     artifact = args.artifact.resolve(strict=True)
+    require(artifact.is_file() and artifact.stat().st_size > 0, "provenance artifact is empty")
     record = {
         "schema_version": 1,
         "rave_repository_commit": args.rave_commit,

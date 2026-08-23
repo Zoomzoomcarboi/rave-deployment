@@ -1,0 +1,40 @@
+#!/bin/sh
+set -eu
+
+rootfs_input=${1:?missing target rootfs}
+rootfs=$(realpath -e -- "$rootfs_input")
+test -n "$rootfs"
+test "$rootfs" != "/"
+test -d "$rootfs/etc"
+
+source_root=${SRCROOT:?missing rpi-image-gen source root}
+repository_root=$(realpath -e -- "$source_root/..")
+profile="$repository_root/image/overlays/etc/NetworkManager/system-connections/rave-setup.nmconnection"
+dnsmasq="$repository_root/image/overlays/etc/rave/network/dnsmasq.conf"
+sysctl="$repository_root/image/overlays/etc/sysctl.d/90-rave-network-isolation.conf"
+runtime_network="$repository_root/image/overlays/etc/systemd/network/10-rave-ethernet.network"
+nm_unmanaged="$repository_root/image/overlays/etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf"
+nm_wifi_backend="$repository_root/image/overlays/etc/NetworkManager/conf.d/20-rave-wifi-backend.conf"
+test -f "$profile"
+test -f "$dnsmasq"
+test -f "$sysctl"
+test -f "$runtime_network"
+test -f "$nm_unmanaged"
+test -f "$nm_wifi_backend"
+rm -f -- "$rootfs/etc/systemd/network/01-eth0.network"
+rm -f -- "$rootfs/etc/systemd/network/02-wlan0.network"
+rm -f -- "$rootfs/etc/systemd/system/multi-user.target.wants/iwd.service"
+ln -sf /dev/null "$rootfs/etc/systemd/system/iwd.service"
+install -d -m 0700 "$rootfs/etc/NetworkManager/system-connections"
+install -d -m 0755 "$rootfs/etc/NetworkManager/conf.d" "$rootfs/etc/systemd/network"
+install -d -m 0755 "$rootfs/etc/rave/network" "$rootfs/etc/sysctl.d"
+install -m 0600 "$profile" "$rootfs/etc/NetworkManager/system-connections/rave-setup.nmconnection"
+install -m 0644 "$dnsmasq" "$rootfs/etc/rave/network/dnsmasq.conf"
+install -m 0644 "$sysctl" "$rootfs/etc/sysctl.d/90-rave-network-isolation.conf"
+install -m 0644 "$runtime_network" "$rootfs/etc/systemd/network/10-rave-ethernet.network"
+install -m 0644 "$nm_unmanaged" "$rootfs/etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf"
+install -m 0644 "$nm_wifi_backend" "$rootfs/etc/NetworkManager/conf.d/20-rave-wifi-backend.conf"
+install -d -m 0755 "$rootfs/etc/systemd/system/multi-user.target.wants" "$rootfs/etc/systemd/system/network-online.target.wants"
+ln -sf /usr/lib/systemd/system/NetworkManager.service "$rootfs/etc/systemd/system/multi-user.target.wants/NetworkManager.service"
+ln -sf /usr/lib/systemd/system/systemd-networkd.service "$rootfs/etc/systemd/system/multi-user.target.wants/systemd-networkd.service"
+ln -sf /usr/lib/systemd/system/NetworkManager-wait-online.service "$rootfs/etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service"

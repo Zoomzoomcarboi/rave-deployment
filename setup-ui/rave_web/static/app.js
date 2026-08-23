@@ -63,6 +63,8 @@ function invalidateDynamic(reason, availability = "unavailable") {
   setDynamicState("#network-mode", "Unavailable");
   document.querySelector("#network-detail").textContent = "Management network status unavailable.";
   setDynamicState("#os-version", "Unavailable");
+  setDynamicState("#management-state", "Unavailable");
+  setDynamicState("#temperature", "Unavailable");
   setDynamicState("#update-state", "Unavailable");
 }
 
@@ -111,9 +113,13 @@ async function refreshState() {
     const cards = document.querySelector("#component-cards");
     cards.replaceChildren(...["camera", "perception", "hailo", "comma_link"].map((key) => componentCard(label(key), status[key])));
     setDynamicState("#network-mode", label(network.mode), network.availability);
-    document.querySelector("#network-detail").textContent = network.actuation_available ? "Network provider available." : "Network actuation is unavailable in Gate 1.";
+    const managementInterface = network.management_interface || "Unavailable";
+    document.querySelector("#network-detail").textContent = `${label(network.mode)} on ${managementInterface}. Read-only management state.`;
     setDynamicState("#os-version", system.os_version || "Unavailable", system.availability);
+    setDynamicState("#management-state", label(system.availability), system.availability);
     setDynamicState("#update-state", label(system.update_status.availability), system.update_status.availability);
+    const temperature = system.temperature_c === null ? "Unavailable" : `${system.temperature_c.toFixed(1)} °C`;
+    setDynamicState("#temperature", temperature, system.temperature_c === null ? "degraded" : system.availability);
     installFreshness(status.valid_for_ms);
     nextRefreshMs = Math.max(MIN_POLL_MS, Math.min(MAX_POLL_MS, Math.floor(status.valid_for_ms / 2)));
   } catch (error) {

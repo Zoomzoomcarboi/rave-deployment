@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.responses import HTMLResponse, Response
 
 from .models import NetworkResponse, StatusResponse, SystemResponse
-from .providers import GateOneProvider, StatusProvider
+from .providers import StatusProvider, configured_provider
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 INDEX_HTML = (STATIC_DIR / "index.html").read_text(encoding="utf-8")
@@ -15,7 +15,7 @@ APP_JS = (STATIC_DIR / "app.js").read_text(encoding="utf-8")
 
 
 def create_app(provider: StatusProvider | None = None) -> FastAPI:
-    state_provider = provider or GateOneProvider()
+    state_provider = provider or configured_provider()
     app = FastAPI(
         title="RAVE Management API",
         version="0.1.0",
@@ -23,6 +23,7 @@ def create_app(provider: StatusProvider | None = None) -> FastAPI:
         redoc_url=None,
         openapi_url="/api/v1/openapi.json",
     )
+
     @app.get("/", include_in_schema=False)
     async def index() -> HTMLResponse:
         return HTMLResponse(INDEX_HTML)

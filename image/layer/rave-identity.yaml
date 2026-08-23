@@ -18,7 +18,10 @@ mmdebstrap:
       rm -f -- "$rootfs/etc/machine-id" "$rootfs/var/lib/dbus/machine-id"
       install -m 0444 /dev/null "$rootfs/etc/machine-id"
       if [ -d "$rootfs/etc/ssh" ]; then find "$rootfs/etc/ssh" -maxdepth 1 -name 'ssh_host_*' -delete; fi
-      if [ -d "$rootfs/etc/NetworkManager/system-connections" ]; then find "$rootfs/etc/NetworkManager/system-connections" -mindepth 1 -maxdepth 1 -delete; fi
+      if [ -d "$rootfs/etc/NetworkManager/system-connections" ]; then
+        find "$rootfs/etc/NetworkManager/system-connections" -mindepth 1 -maxdepth 1 ! -name 'rave-setup.nmconnection' -delete
+        if [ -f "$rootfs/etc/NetworkManager/system-connections/rave-setup.nmconnection" ]; then chmod 0600 "$rootfs/etc/NetworkManager/system-connections/rave-setup.nmconnection"; fi
+      fi
       rm -rf -- "$rootfs/var/lib/rave/identity" "$rootfs/var/lib/rave/pairing" "$rootfs/var/lib/rave/session"
       if [ -d "$rootfs/var/log" ]; then find "$rootfs/var/log" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +; fi
       if [ -d "$rootfs/var/cache" ]; then find "$rootfs/var/cache" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +; fi

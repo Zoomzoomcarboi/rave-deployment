@@ -1,7 +1,7 @@
 # METABEGIN
 # X-Env-Layer-Name: rave-web
 # X-Env-Layer-Desc: RAVE local management web service and static assets
-# X-Env-Layer-Version: 0.1.0
+# X-Env-Layer-Version: 0.2.0
 # X-Env-Layer-Requires: rave-base
 # METAEND
 ---

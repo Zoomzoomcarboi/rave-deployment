@@ -57,9 +57,10 @@ The repository's synthetic loop and JSON debug path remain development-only.
 `protocol/rave.proto` is still a proposed schema and is not a production wire
 contract.
 
-The management foundation now includes an unprivileged `rave-webd` package, a static
-Galaxy-language shell, and read-only `/api/v1` status/network/system schemas. All real
-hardware/link/update providers remain unavailable/not integrated. The image directory contains the pinned Gate 2A `rpi-image-gen` image definition and build entry point. A real Raspberry Pi 5 image has passed build and artifact validation; physical Pi boot validation remains Gate 2B.
+The Gate 2B management candidate includes an unprivileged `rave-webd`, the static
+Galaxy-language UI, a read-only Pi management provider, and an isolated first-boot
+`RAVE-Setup` AP. Camera, perception, Hailo, Comma-link, and update integrations remain
+truthfully unavailable. Physical Pi boot/AP validation is still pending.
 
 ## Enforced safety boundary
 

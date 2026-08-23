@@ -25,6 +25,17 @@ done
 printf '%s\n' "models/example-manifest.json" |
   scripts/check-repository-safety.sh --artifact-paths-from-stdin
 
+if scripts/package-release-candidate.sh "$PWD/does-not-exist.img.zst" "$PWD/does-not-exist-provenance.json" "$PWD/build/guard-fixture" >/dev/null 2>&1; then
+  printf 'Expected missing release source artifact to fail\n' >&2
+  exit 1
+fi
+empty_source=$(mktemp)
+if scripts/package-release-candidate.sh "$empty_source" "$PWD/does-not-exist-provenance.json" "$PWD/build/guard-fixture" >/dev/null 2>&1; then
+  printf 'Expected empty release source artifact to fail\n' >&2
+  exit 1
+fi
+rm -f "$empty_source"
+
 fixture_root=$(mktemp -d)
 trap 'rm -rf "$fixture_root"' EXIT
 mkdir -p "$fixture_root/pass/etc/rave" "$fixture_root/fail/etc/rave"

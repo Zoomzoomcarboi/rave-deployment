@@ -1,14 +1,12 @@
 [Unit]
-Description=RAVE local management web service
+Description=RAVE provisioning AP bounded DHCP service
 Wants=network-online.target
 After=network-online.target NetworkManager-wait-online.service
+Before=rave-webd.service
 
 [Service]
 Type=simple
-User=rave
-Group=rave
-Environment=RAVE_PROVIDER=pi
-ExecStart=/usr/bin/python3 -m uvicorn rave_web.app:app --app-dir /opt/rave/web --host 192.168.77.1 --port 8080 --no-access-log
+ExecStart=/usr/sbin/dnsmasq --keep-in-foreground --conf-file=/etc/rave/network/dnsmasq.conf --no-hosts --no-resolv
 Restart=on-failure
 RestartSec=5s
 NoNewPrivileges=true
@@ -19,12 +17,11 @@ ProtectSystem=strict
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectControlGroups=true
-RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictAddressFamilies=AF_UNIX AF_INET AF_NETLINK AF_PACKET
 RestrictNamespaces=true
 LockPersonality=true
 MemoryDenyWriteExecute=true
 SystemCallArchitectures=native
-UMask=0077
 
 [Install]
 WantedBy=multi-user.target

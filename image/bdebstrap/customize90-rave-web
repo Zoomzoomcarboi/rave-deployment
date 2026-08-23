@@ -12,6 +12,7 @@ source_root=${SRCROOT:?missing rpi-image-gen source root}
 repository_root=$(realpath -e -- "$source_root/..")
 test -d "$repository_root/setup-ui/rave_web"
 test -f "$repository_root/systemd/rave-webd.service"
+test -f "$repository_root/systemd/rave-management-dhcp.service"
 test -f "$repository_root/THIRD_PARTY_NOTICES.md"
 
 install -d -m 0755 \
@@ -24,5 +25,12 @@ find "$rootfs/opt/rave/web/rave_web" -type d -exec chmod 0755 {} +
 find "$rootfs/opt/rave/web/rave_web" -type f -exec chmod 0644 {} +
 install -m 0644 "$repository_root/systemd/rave-webd.service" \
   "$rootfs/usr/lib/systemd/system/rave-webd.service"
+install -m 0644 "$repository_root/systemd/rave-management-dhcp.service" \
+  "$rootfs/usr/lib/systemd/system/rave-management-dhcp.service"
+install -d -m 0755 "$rootfs/etc/systemd/system/multi-user.target.wants"
+ln -s /usr/lib/systemd/system/rave-webd.service \
+  "$rootfs/etc/systemd/system/multi-user.target.wants/rave-webd.service"
+ln -s /usr/lib/systemd/system/rave-management-dhcp.service \
+  "$rootfs/etc/systemd/system/multi-user.target.wants/rave-management-dhcp.service"
 install -m 0644 "$repository_root/THIRD_PARTY_NOTICES.md" \
   "$rootfs/usr/share/doc/rave-web/THIRD_PARTY_NOTICES.md"

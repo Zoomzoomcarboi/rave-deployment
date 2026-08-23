@@ -5,7 +5,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from scripts.verify_rave_image import VerificationError, verify_clone_safety, verify_rootfs
+from scripts.verify_rave_image import (
+    VerificationError,
+    verify_clone_safety,
+    verify_gate2b_us_regulatory_domain,
+    verify_rootfs,
+)
 
 
 def minimal_rootfs(tmp_path: Path) -> Path:
@@ -14,6 +19,7 @@ def minimal_rootfs(tmp_path: Path) -> Path:
         (root / relative).mkdir(parents=True, exist_ok=True)
     (root / "etc/passwd").write_text("rave:x:1000:1000::/var/lib/rave:/usr/sbin/nologin\n")
     (root / "etc/group").write_text("rave:x:1000:\n")
+    (root / "etc/shadow").write_text("rave:!:20000::::::\n")
     (root / "etc/machine-id").touch()
     return root
 
@@ -79,3 +85,20 @@ def test_verifier_rejects_token_assignment(tmp_path: Path) -> None:
     (root / "etc/unsafe.conf").write_text(f"{field}=synthetic-credential\n")
     with pytest.raises(VerificationError, match="token or credential"):
         verify_clone_safety(root)
+
+
+def regulatory_rootfs(tmp_path: Path, *, regdom: str = "US") -> Path:
+    root = tmp_path / "regulatory-rootfs"
+    regulatory = root / "etc/modprobe.d/cfg80211_regdomain.conf"
+    regulatory.parent.mkdir(parents=True)
+    regulatory.write_text(f"options cfg80211 ieee80211_regdom={regdom}\n", encoding="utf-8")
+    return root
+
+
+def test_gate2b_us_regulatory_domain_accepts_explicit_us_setting(tmp_path: Path) -> None:
+    verify_gate2b_us_regulatory_domain(regulatory_rootfs(tmp_path))
+
+
+def test_gate2b_us_regulatory_domain_rejects_gb_fallback(tmp_path: Path) -> None:
+    with pytest.raises(VerificationError, match="regulatory domain"):
+        verify_gate2b_us_regulatory_domain(regulatory_rootfs(tmp_path, regdom="GB"))

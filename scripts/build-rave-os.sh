@@ -3,7 +3,7 @@ set -euo pipefail
 
 repository_root=$(realpath -e -- "$(dirname -- "${BASH_SOURCE[0]}")/..")
 lock_file="$repository_root/image/rpi-image-gen.lock.json"
-output_input=${1:-"$repository_root/build/rave-os-gate2a"}
+output_input=${1:-"$repository_root/build/rave-os-gate2b"}
 
 command -v docker >/dev/null || { printf 'error: docker is required\n' >&2; exit 2; }
 command -v git >/dev/null || { printf 'error: git is required\n' >&2; exit 2; }
@@ -52,7 +52,7 @@ resolved_commit=$(git -C "$builder_dir" rev-parse HEAD)
 rave_commit=$(git -C "$repository_root" rev-parse HEAD)
 rave_dirty=false
 [[ -z $(git -C "$repository_root" status --porcelain) ]] || rave_dirty=true
-version="gate2a-${rave_commit:0:12}"
+version="gate2b-${rave_commit:0:12}"
 artifact_denylist=$(printf '%s\n%s\n%s\n%s\n' \
   "${USER:-${LOGNAME:-}}" "${HOME:-}" "${HOSTNAME:-}" "$repository_root")
 
@@ -88,7 +88,7 @@ docker run --rm --privileged \
       /builder/rpi-image-gen build -B /out/work -S /rave/image -c rave-os-gate1.yaml -- \
       "IGconf_artefact_version=$1"
     rootfs="/out/work/chroot-$1/filesystem"
-    artifact="/out/work/deploy-$1/rave-os-gate2a.img.zst"
+    artifact="/out/work/deploy-$1/rave-os-gate2b.img.zst"
     setpriv --reuid=1000 --regid=1000 --init-groups \
       env HOME=/tmp/rave-builder-home PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
       podman unshare python3 /rave/scripts/verify_rave_image.py \
@@ -100,5 +100,5 @@ docker run --rm --privileged \
   ' -- "$version" "$rave_commit" "$rave_dirty" "$builder_tag" "$builder_commit" "$container_image"
 
 printf 'Build, artifact verification, and provenance generation completed.\n'
-printf 'Artifact: %s/work/deploy-%s/rave-os-gate2a.img.zst\n' "$output_dir" "$version"
+printf 'Artifact: %s/work/deploy-%s/rave-os-gate2b.img.zst\n' "$output_dir" "$version"
 printf 'Provenance: %s/provenance.json\n' "$output_dir"

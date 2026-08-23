@@ -1,7 +1,14 @@
 # RAVE OS Gate 2B Test
 
-This is the first end-user-style RAVE OS image prepared for physical
-Raspberry Pi 5 first-boot validation.
+This is source scaffolding for an unpublished Gate 2B candidate intended for
+physical Raspberry Pi 5 first-boot validation. Local development builds have
+passed artifact verification, but no clean-HEAD Gate 2B release artifact or
+public release exists yet.
+
+Candidate packaging generates the image, `SHA256SUMS`, and `release.json` under
+the selected ignored `build/<build-name>/candidate/` directory. Artifact hashes,
+sizes, source commit, and dirty-worktree state come from the validated artifact
+and its matching build provenance; build-specific metadata is not tracked here.
 
 Gate 2A passed:
 
@@ -12,7 +19,7 @@ Gate 2A passed:
 - clone-safety verification
 - empty generic machine identity
 - no SSH host keys carried into the generic image
-- no user NetworkManager profiles
+- only the reviewed open RAVE-Setup product NetworkManager profile
 - no RAVE private/pairing/session state
 - artifact-integrity verification
 - machine-readable provenance
@@ -24,8 +31,7 @@ Not yet validated:
 - first-boot machine-id generation
 - first-boot SSH host-key generation
 - root filesystem expansion
-- service startup posture
-- management networking
+- physical AP and service startup behavior
 - Hailo-8 / AI HAT+
 - Arducam B0589
 - production perception runtime

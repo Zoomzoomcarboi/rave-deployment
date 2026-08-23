@@ -68,7 +68,7 @@ def test_static_galaxy_shell_is_served_locally() -> None:
     assert "controller.abort();" in script_text
     assert "Promise.all([" not in script_text
     assert script_text.index("Promise.allSettled(requests)") < script_text.index("scheduleRefresh(nextRefreshMs)")
-    for selector in ("#component-cards", "#network-mode", "#os-version", "#update-state"):
+    for selector in ("#component-cards", "#network-mode", "#management-state", "#os-version", "#temperature", "#update-state"):
         assert selector in script_text
 
 

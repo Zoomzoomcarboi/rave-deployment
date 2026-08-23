@@ -25,7 +25,7 @@
         <a href="#system" data-view="system">System</a>
         <a href="#diagnostics" data-view="diagnostics">Diagnostics</a>
       </nav>
-      <footer><span class="status-dot unavailable"></span>Gate 1 foundation</footer>
+      <footer><span class="status-dot ready"></span>Gate 2B candidate</footer>
     </aside>
     <main class="content" id="content" tabindex="-1">
       <section class="page" data-page="dashboard">
@@ -33,17 +33,17 @@
           <div><p class="eyebrow">Appliance overview</p><h1>Dashboard</h1></div>
           <span class="pill unavailable" id="overall-state">Unavailable</span>
         </header>
-        <div class="notice"><span class="status-dot unavailable"></span><div><strong>Integration is incomplete</strong><p>Gate 1 does not connect to camera, perception, Hailo, or the Comma link.</p></div></div>
+        <div class="notice"><span class="status-dot unavailable"></span><div><strong>Perception integration is incomplete</strong><p>Management is available; camera, perception, Hailo, and the Comma link remain intentionally unavailable.</p></div></div>
         <div class="card-grid" id="component-cards" aria-live="polite"></div>
       </section>
       <section class="page" data-page="network" hidden>
         <header class="page-header"><div><p class="eyebrow">Management plane</p><h1>Network</h1></div></header>
-        <article class="card"><p class="card-kicker">Management Wi-Fi</p><h2 id="network-mode">Unconfigured</h2><p id="network-detail">Network actuation is unavailable in Gate 1.</p></article>
-        <article class="card"><p class="card-kicker">Dedicated runtime link</p><h2>10.77.0.0/24</h2><p>Separate from management Wi-Fi. No bridge, gateway, DNS, or web listener is configured here by Gate 1.</p></article>
+        <article class="card"><p class="card-kicker">Management Wi-Fi</p><h2 id="network-mode">Starting</h2><p id="network-detail">Waiting for the read-only appliance provider.</p></article>
+        <article class="card"><p class="card-kicker">Dedicated runtime link</p><h2>10.77.0.0/24</h2><p>Separate from management Wi-Fi. No bridge, gateway, DNS, forwarding, NAT, or web listener is configured here.</p></article>
       </section>
       <section class="page" data-page="system" hidden>
         <header class="page-header"><div><p class="eyebrow">RAVE OS</p><h1>System</h1></div></header>
-        <div class="card-grid"><article class="card"><p class="card-kicker">RAVE OS</p><h2 id="os-version">Unavailable</h2><p>No built image version provider is integrated.</p></article><article class="card"><p class="card-kicker">Updates</p><h2 id="update-state">Unavailable</h2><p>Model and OS update services are not integrated.</p></article></div>
+        <div class="card-grid"><article class="card"><p class="card-kicker">Management system</p><h2 id="management-state">Starting</h2><p>Read-only appliance provider health.</p></article><article class="card"><p class="card-kicker">Operating system</p><h2 id="os-version">Starting</h2><p>Read from the appliance OS release identity.</p></article><article class="card"><p class="card-kicker">CPU temperature</p><h2 id="temperature">Starting</h2><p>Actual Raspberry Pi thermal-zone reading when available.</p></article><article class="card"><p class="card-kicker">Updates</p><h2 id="update-state">Unavailable</h2><p>Model and OS update services are not integrated.</p></article></div>
       </section>
       <section class="page" data-page="diagnostics" hidden>
         <header class="page-header"><div><p class="eyebrow">Engineering detail</p><h1>Diagnostics</h1></div></header>

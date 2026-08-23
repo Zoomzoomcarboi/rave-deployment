@@ -14,7 +14,7 @@ The pin, including the digest-pinned Debian builder container, is recorded in
 ```
 
 An optional argument selects the output directory. The default is
-`build/rave-os-gate2a/`, covered by the repository's narrow `build/` ignore. The
+`build/rave-os-gate2b/`, covered by the repository's narrow `build/` ignore. The
 script clones only the pinned tag into that output directory, verifies its full
 commit, and uses the repository's `image/` source tree. It runs upstream's required
 host tools in a digest-pinned privileged container without passing a block device. It
@@ -25,7 +25,7 @@ The known-good upstream invocation, run inside that controlled container, is:
 
 ```sh
 /builder/rpi-image-gen build -B /out/work -S /rave/image \
-  -c rave-os-gate1.yaml -- IGconf_artefact_version=gate2a-<rave-commit>
+  -c rave-os-gate1.yaml -- IGconf_artefact_version=gate2b-<rave-commit>
 ```
 
 With `-S /rave/image`, v2.7.0 resolves configuration names below that source tree's
@@ -35,16 +35,23 @@ deployment setting in this release (`deploy.compression: zstd`); the former
 
 The build produces the compressed image below `work/deploy-<version>/`, an artifact
 safety report, and `provenance.json`. The verifier checks clone identity, credentials,
-logs/caches, filesystem ownership, installed web content/dependencies, loopback-only
-service configuration, and the deliberately disabled `rave-webd` unit before
-provenance is written.
+logs/caches, filesystem ownership, installed web content/dependencies, the exact
+management-only listener/AP/DHCP policy, and required boot enablement before provenance
+is written.
 
 ## Composition and limits
 
 The composition starts from upstream `trixie-minbase.yaml`, targets the upstream Pi 5
 and Raspberry Pi OS image layers, and adds `rave-base`, `rave-identity`, `rave-network`,
 `rave-hailo`, `rave-runtime`, `rave-web`, and `rave-update`. Hailo, perception,
-network actuation, provisioning, and updating remain explicit non-integrated markers.
+perception and updating remain explicit non-integrated markers. Gate 2B adds only the
+isolated first-boot management AP and read-only Pi management observations.
+
+Gate 2B explicitly sets the Wi-Fi regulatory domain to `US` for physical validation
+units operated in the United States. Locale, timezone, keyboard, and first-boot region
+selection remain next-revision work, so this gate retains upstream locale behavior.
+A future public release requires an explicit country-appropriate regulatory-domain
+and onboarding policy; no single Wi-Fi regulatory domain is valid everywhere.
 
 The procedure pins builder source and the container base. Debian and Raspberry Pi
 package repositories are not snapshot-pinned, and filesystem/image timestamps are not
@@ -53,5 +60,6 @@ not bit-for-bit reproducibility.
 
 The final `rave-identity` cleanup runs after package and customization hooks. The
 generic image ends with an empty `/etc/machine-id`, no SSH host keys, no RAVE private
-identity/pairing/session state, no NetworkManager user profiles, and no carried
-logs/caches. First-boot identity behavior still requires Pi boot validation.
+identity/pairing/session state, exactly one reviewed product AP profile (and no user
+profiles), and no carried logs/caches. First-boot identity behavior still requires Pi
+boot validation.

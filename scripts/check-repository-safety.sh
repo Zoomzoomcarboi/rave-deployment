@@ -63,6 +63,8 @@ scan_file() {
   local display=$1 file=$2 basename value
   basename=${file##*/}
   case "$file" in
+    image/overlays/etc/NetworkManager/system-connections/rave-setup.nmconnection|etc/NetworkManager/system-connections/rave-setup.nmconnection)
+      ;;
     *.nmconnection|*/NetworkManager/system-connections/*)
       printf 'Unintended NetworkManager profile: %s\n' "$display" >&2; fail=1 ;;
   esac

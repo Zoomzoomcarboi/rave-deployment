@@ -1,4 +1,4 @@
-# RAVE OS Gate-2A composition for pinned rpi-image-gen v2.7.0.
+# RAVE OS Gate-2B composition for pinned rpi-image-gen v2.7.0.
 # This definition is image-build validated, not booted or Pi-validated.
 include:
   file: trixie-minbase.yaml
@@ -7,7 +7,9 @@ device:
   hostname: rave-pi
 image:
   layer: image-rpios
-  name: rave-os-gate2a
+  name: rave-os-gate2b
+ieee80211:
+  regdom: US
 deploy:
   compression: zstd
 layer:

@@ -1,7 +1,9 @@
-# Management network architecture (Gate 1)
+# Management network architecture (Gate 2B candidate)
 
-Gate 1 defines state and service boundaries only. It does not change host networking,
-create an AP, call `nmcli`, use NetworkManager D-Bus, or store credentials.
+Gate 2B installs one product-owned open `RAVE-Setup` NetworkManager AP profile on
+`wlan0`. It uses `192.168.77.1/24`, no gateway/default route, disabled IPv6, and a
+bounded dnsmasq DHCP scope of `192.168.77.100-192.168.77.199`. IPv4/IPv6 forwarding,
+bridging, NAT, DNS forwarding, and Internet sharing are forbidden.
 
 ```text
 boot -> try saved management Wi-Fi
@@ -12,8 +14,8 @@ boot -> try saved management Wi-Fi
      -> bounded failure: recover provisioning AP
 ```
 
-`rave_web.network_policy` models these transitions as pure logic. Timeouts belong to a
-future privileged service and must be monotonic, bounded, and independently supervised.
+Gate 2B implements only the deterministic first-boot AP portion of this future flow.
+Station scanning and credential-based transition are not integrated yet.
 
 ## Privilege boundary
 
@@ -23,9 +25,12 @@ management network, and start/stop a provisioning AP. Its IPC must be typed, bou
 locally authenticated, and never return stored credentials. It must not accept arbitrary
 shell commands, paths, NetworkManager properties, or D-Bus calls from the browser.
 
-The web listener requires a reviewed management-interface binding strategy before
-deployment. Gate 1 binds loopback only, avoiding accidental exposure while that policy
-is unresolved.
+The web listener is bound only to `192.168.77.1:8080`; it never binds the wildcard or
+the dedicated Ethernet address. The installed service explicitly selects the Pi
+read-only provider with `RAVE_PROVIDER=pi` and remains `User=rave`, `Group=rave`.
+
+The open AP is permitted only for Gate 2B prerelease hardware validation. Secure,
+per-device onboarding remains mandatory before production/public release qualification.
 
 ## Runtime-link isolation
 

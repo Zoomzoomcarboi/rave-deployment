@@ -7,7 +7,7 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_gate_one_web_has_no_privileged_network_or_hardware_calls() -> None:
+def test_management_provider_has_no_privileged_network_or_hardware_calls() -> None:
     source = "\n".join(
         path.read_text(encoding="utf-8")
         for path in (ROOT / "setup-ui" / "rave_web").glob("*.py")
@@ -21,7 +21,7 @@ def test_image_composes_all_gate_one_layers() -> None:
     assert config["include"]["file"] == "trixie-minbase.yaml"
     assert config["device"]["layer"] == "rpi5"
     assert config["device"]["hostname"] == "rave-pi"
-    assert config["image"] == {"layer": "image-rpios", "name": "rave-os-gate2a"}
+    assert config["image"] == {"layer": "image-rpios", "name": "rave-os-gate2b"}
     assert config["deploy"] == {"compression": "zstd"}
     assert list(config["layer"].values()) == [
         "rave-base",
@@ -76,7 +76,9 @@ def test_runtime_paths_and_service_identity_are_product_scoped() -> None:
         assert path in base
     assert "User=rave" in unit and "Group=rave" in unit
     assert "PrivateDevices=true" in unit
-    assert "--host 127.0.0.1" in unit
+    assert "--host 192.168.77.1" in unit
+    assert "--host 0.0.0.0" not in unit
+    assert "RAVE_PROVIDER=pi" in unit
     assert "RuntimeDirectory=" not in unit
 
 
@@ -168,3 +170,68 @@ def test_provider_routes_use_fastapi_sync_execution_contract() -> None:
     endpoints = {route.path: route.endpoint for route in create_app().routes if route.path in provider_paths}
     assert endpoints.keys() == provider_paths
     assert all(not inspect.iscoroutinefunction(endpoint) for endpoint in endpoints.values())
+
+
+def test_gate_two_b_management_network_is_exact_and_isolated() -> None:
+    profile = (ROOT / "image/overlays/etc/NetworkManager/system-connections/rave-setup.nmconnection").read_text()
+    dhcp = (ROOT / "image/overlays/etc/rave/network/dnsmasq.conf").read_text()
+    sysctl = (ROOT / "image/overlays/etc/sysctl.d/90-rave-network-isolation.conf").read_text()
+    runtime = (ROOT / "image/overlays/etc/systemd/network/10-rave-ethernet.network").read_text()
+    nm_unmanaged = (ROOT / "image/overlays/etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf").read_text()
+    wifi_backend = (ROOT / "image/overlays/etc/NetworkManager/conf.d/20-rave-wifi-backend.conf").read_text()
+    assert "id=RAVE-Setup" in profile
+    assert "interface-name=wlan0" in profile
+    assert "mode=ap" in profile
+    assert "ssid=RAVE-Setup" in profile
+    assert "address1=192.168.77.1/24" in profile
+    assert "wait-device-timeout=15000" in profile
+    assert "method=manual" in profile
+    assert "never-default=true" in profile
+    assert "may-fail=false" in profile
+    assert "gateway=\n" in profile
+    assert "[ipv6]\nmethod=disabled" in profile
+    assert "wifi-security" not in profile and "psk=" not in profile
+    assert "method=shared" not in profile
+    assert "interface=wlan0" in dhcp
+    assert "listen-address=192.168.77.1" in dhcp
+    assert "dhcp-range=192.168.77.100,192.168.77.199,255.255.255.0,12h" in dhcp
+    assert "eth0" not in dhcp
+    assert "net.ipv4.ip_forward=0" in sysctl
+    assert "net.ipv6.conf.all.forwarding=0" in sysctl
+    assert "Address=10.77.0.1/24" in runtime
+    assert "DHCP=no" in runtime and "DHCPServer=yes" not in runtime
+    assert "Gateway=" not in runtime and "DNS=" not in runtime
+    assert "unmanaged-devices=interface-name:eth0" in nm_unmanaged
+    assert "wifi.backend=wpa_supplicant" in wifi_backend
+    combined = f"{profile}\n{dhcp}\n{sysctl}".lower()
+    assert all(term not in combined for term in ("bridge", "masquerade", "snat", "dnat"))
+
+
+def test_gate_two_b_services_are_installed_and_enabled_by_image_hooks() -> None:
+    network_hook = (ROOT / "image/bdebstrap/customize80-rave-network").read_text()
+    web_hook = (ROOT / "image/bdebstrap/customize90-rave-web").read_text()
+    web_unit = (ROOT / "systemd/rave-webd.service").read_text()
+    assert "multi-user.target.wants/NetworkManager.service" in network_hook
+    assert "multi-user.target.wants/systemd-networkd.service" in network_hook
+    assert "network-online.target.wants/NetworkManager-wait-online.service" in network_hook
+    assert 'rm -f -- "$rootfs/etc/systemd/network/02-wlan0.network"' in network_hook
+    assert 'rm -f -- "$rootfs/etc/systemd/network/01-eth0.network"' in network_hook
+    assert 'ln -sf /dev/null "$rootfs/etc/systemd/system/iwd.service"' in network_hook
+    network_layer = (ROOT / "image/layer/rave-network.yaml").read_text()
+    assert "packages: [network-manager, wpasupplicant, dnsmasq-base]" in network_layer
+    assert "multi-user.target.wants/rave-webd.service" in web_hook
+    assert "multi-user.target.wants/rave-management-dhcp.service" in web_hook
+    assert "--host 192.168.77.1" in web_unit
+    assert "--host 0.0.0.0" not in web_unit
+    assert "eth0" not in web_unit
+    dhcp_unit = (ROOT / "systemd/rave-management-dhcp.service").read_text()
+    for unit in (web_unit, dhcp_unit):
+        assert "Wants=network-online.target" in unit
+        assert "After=network-online.target NetworkManager-wait-online.service" in unit
+    assert "Before=rave-webd.service" in dhcp_unit
+
+
+def test_gate_two_b_image_declares_us_regulatory_domain() -> None:
+    config = (ROOT / "image/config/rave-os-gate1.yaml").read_text()
+    assert "regdom: US" in config
+    assert "regdom: GB" not in config

@@ -1,28 +1,38 @@
 # Install RAVE OS
 
-RAVE OS is distributed as a pre-built Raspberry Pi 5 image.
+RAVE OS will be distributed as a pre-built Raspberry Pi 5 image after validation.
 
-> **Current release status:** Gate 2B test image.
+> **Current release status:** Gate 2B candidate, not yet published.
 >
-> This image has passed RAVE Gate 2A image-build, filesystem,
-> clone-safety, artifact-integrity, and provenance validation.
-> Physical Raspberry Pi 5 boot validation is still in progress.
+> No downloadable Gate 2B image or GitHub Release is currently claimed here.
+> Physical Raspberry Pi 5 boot validation remains pending.
 > This is not a production or road-use release.
 
-## Download RAVE OS
+## Download status
 
-**Raspberry Pi 5 image**
+No Gate 2B public release or downloadable asset exists yet. After a validated
+image build, `scripts/package-release-candidate.sh` generates the image and its
+`SHA256SUMS` and `release.json` beside it under `build/<build-name>/candidate/`.
+Those build-specific files are ignored release assets, not tracked source.
 
-[RAVE-OS-Pi5-Gate2B-Test.img.xz](https://github.com/Zoomzoomcarboi/rave-deployment/releases/download/rave-os-gate2b-test-2026-08-23/RAVE-OS-Pi5-Gate2B-Test.img.xz)
+Package only an artifact and provenance pair emitted by the same validated
+build:
 
-Also available with the release:
+```text
+scripts/package-release-candidate.sh \
+  build/<build-name>/work/deploy-<version>/rave-os-gate2b.img.zst \
+  build/<build-name>/provenance.json \
+  build/<build-name>/candidate
+```
 
-- SHA256SUMS
-- release.json
-- release notes
+The resulting candidate directory contains:
 
-You do not need Git, Docker, Python, rpi-image-gen, or the RAVE
-source code to install a published RAVE OS image.
+```text
+RAVE-OS-Pi5-Gate2B-Candidate.img
+RAVE-OS-Pi5-Gate2B-Candidate.img.xz
+SHA256SUMS
+release.json
+```
 
 ## What you need
 
@@ -44,8 +54,9 @@ microSD card → Write → Verify → Boot
 
 ## Integrity
 
-Verify the downloaded image against [SHA256SUMS](SHA256SUMS)
-before flashing when possible.
+An eventual release will attach `SHA256SUMS` and `release.json` alongside the
+image asset. Verify the downloaded image against that attached checksum before
+flashing.
 
 ## Important
 

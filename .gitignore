@@ -100,3 +100,5 @@ models/releases/
 release/*.img
 release/*.img.xz
 release/*.img.zst
+release/SHA256SUMS
+release/release.json

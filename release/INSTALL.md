@@ -1,19 +1,14 @@
 # Flash RAVE OS to a microSD card
 
-These instructions are for installing a pre-built RAVE OS image.
-You do not need to build RAVE OS yourself.
+These are the acceptance steps to use after a validated Gate 2B candidate is
+provided locally. No downloadable Gate 2B image is currently published.
 
 ## 1. Download RAVE OS
 
-Go to:
-
-https://github.com/Zoomzoomcarboi/rave-deployment/releases
-
-Open the newest supported RAVE OS release.
-
-Download:
-
-RAVE-OS-Pi5-Gate2B-Test.img.xz
+After a validated build has been packaged, obtain the reviewed local
+`build/<build-name>/candidate/RAVE-OS-Pi5-Gate2B-Candidate.img.xz` and verify it
+against the `SHA256SUMS` generated in that same candidate directory. Do not
+infer an asset URL. No Gate 2B public download currently exists.
 
 Do not extract the image.
 
@@ -41,7 +36,7 @@ Operating System
 
 Select:
 
-RAVE-OS-Pi5-Gate2B-Test.img.xz
+RAVE-OS-Pi5-Gate2B-Candidate.img.xz
 
 Choose:
 
@@ -80,14 +75,17 @@ Make sure the Raspberry Pi 5 is powered off.
 
 Insert the card into the Raspberry Pi 5.
 
-For the current Gate 2B test release, connect a display and keyboard
-before first boot so first-boot behavior can be observed directly.
-
 Power on the Raspberry Pi 5.
+
+Join the open `RAVE-Setup` Wi-Fi network from a phone or laptop, then browse to
+`http://192.168.77.1:8080`. No display, keyboard, SSH, or shell is required.
 
 ## Current validation boundary
 
 The Gate 2B test image is intended for appliance bring-up and validation.
+
+The open AP is prerelease-only. Secure per-device onboarding is required before
+production or public-release qualification.
 
 Hailo inference, camera operation, RAVE perception, C3X integration,
 vehicle integration, and road operation are not qualified by these
