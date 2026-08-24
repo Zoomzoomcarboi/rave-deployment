@@ -1,7 +1,8 @@
 [Unit]
 Description=RAVE provisioning AP bounded DHCP service
+Requires=rave-wifi-init.service
 Wants=network-online.target
-After=network-online.target NetworkManager-wait-online.service
+After=network-online.target NetworkManager-wait-online.service rave-wifi-init.service
 Before=rave-webd.service
 
 [Service]

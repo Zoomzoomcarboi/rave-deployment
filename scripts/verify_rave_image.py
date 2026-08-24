@@ -153,6 +153,9 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
         "usr/lib/tmpfiles.d/rave.conf",
         "usr/lib/systemd/system/rave-webd.service",
         "usr/lib/systemd/system/rave-management-dhcp.service",
+        "usr/lib/systemd/system/rave-wifi-init.service",
+        "usr/libexec/rave/rave-wifi-init",
+        "etc/systemd/system/NetworkManager-wait-online.service.d/10-rave-wifi-init.conf",
         "opt/rave/web/rave_web/app.py",
         "opt/rave/web/rave_web/static/index.html",
         "opt/rave/web/rave_web/static/app.css",
@@ -198,6 +201,51 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     require("User=rave" in unit and "Group=rave" in unit, "rave-webd service identity changed")
     require("NoNewPrivileges=true" in unit, "rave-webd privilege boundary changed")
     require("RuntimeDirectory=" not in unit, "rave-webd owns a shared runtime directory")
+    wifi_init_path = rootfs / "usr/libexec/rave/rave-wifi-init"
+    wifi_init_stat = wifi_init_path.stat()
+    require(
+        (stat.S_IMODE(wifi_init_stat.st_mode), wifi_init_stat.st_uid, wifi_init_stat.st_gid)
+        == (0o755, 0, 0),
+        "RAVE Wi-Fi initialization helper has unsafe mode/ownership",
+    )
+    wifi_init = wifi_init_path.read_text(encoding="utf-8")
+    for expected in (
+        "NMCLI=/usr/bin/nmcli",
+        "IP=/usr/bin/ip",
+        "INTERFACE=wlan0",
+        "CONNECTION=RAVE-Setup",
+        "ADDRESS=192.168.77.1/24",
+        '"$NMCLI" --wait 10 radio wifi on',
+        '"$NMCLI" --wait 2 -t -f WIFI general',
+        '[ "$radio_state" = enabled ]',
+        '"$NMCLI" --wait 20 connection up id "$CONNECTION" ifname "$INTERFACE"',
+        '"$IP" -4 -o address show dev "$INTERFACE"',
+        'while [ "$attempt" -lt 10 ]',
+    ):
+        require(expected in wifi_init, f"invalid RAVE Wi-Fi initialization contract: {expected}")
+    for forbidden in ("rfkill", "while true", "0.0.0.0", "eth0"):
+        require(forbidden not in wifi_init, f"forbidden RAVE Wi-Fi initialization behavior: {forbidden}")
+    wifi_init_unit = (rootfs / "usr/lib/systemd/system/rave-wifi-init.service").read_text(
+        encoding="utf-8"
+    )
+    for expected in (
+        "Requires=NetworkManager.service",
+        "After=NetworkManager.service",
+        "Before=NetworkManager-wait-online.service",
+        "ExecStart=/usr/libexec/rave/rave-wifi-init",
+        "TimeoutStartSec=60s",
+        "Type=oneshot",
+    ):
+        require(expected in wifi_init_unit, f"invalid RAVE Wi-Fi initialization unit: {expected}")
+    nm_wait_dropin = (
+        rootfs
+        / "etc/systemd/system/NetworkManager-wait-online.service.d/10-rave-wifi-init.conf"
+    ).read_text(encoding="utf-8")
+    require(
+        "Requires=rave-wifi-init.service" in nm_wait_dropin
+        and "After=rave-wifi-init.service" in nm_wait_dropin,
+        "NetworkManager wait-online does not require completed RAVE Wi-Fi initialization",
+    )
     wants = rootfs / "etc/systemd/system/multi-user.target.wants"
     for service in (
         "rave-webd.service",
@@ -222,6 +270,11 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     for consumer_unit, name in ((dhcp_unit, "DHCP"), (unit, "web")):
         require("Wants=network-online.target" in consumer_unit, f"{name} does not pull network-online")
         require("After=network-online.target NetworkManager-wait-online.service" in consumer_unit, f"{name} starts before AP activation settles")
+        require(
+            "Requires=rave-wifi-init.service" in consumer_unit
+            and "rave-wifi-init.service" in consumer_unit.split("After=", 1)[1].splitlines()[0],
+            f"{name} can start without successful RAVE Wi-Fi initialization",
+        )
     require("Before=rave-webd.service" in dhcp_unit, "DHCP is not ordered before the web service")
     require(not (rootfs / "etc/systemd/network/02-wlan0.network").exists(), "systemd-networkd also owns wlan0")
     require(not (rootfs / "etc/systemd/network/01-eth0.network").exists(), "unreviewed generated eth0 policy remains")
@@ -287,6 +340,9 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     return {
         "status": "pass",
         "rootfs": str(rootfs),
+        "limitations": {
+            "physical_wifi_ap_operation": "requires Raspberry Pi hardware validation",
+        },
         "checks": {
             "rave_account": "pass",
             "filesystem_contract": "pass",
@@ -295,6 +351,7 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
             "web_not_exposed_on_eth0": "pass",
             "management_boot_enablement": "pass",
             "ap_web_boot_order": "pass",
+            "wifi_initialization_static_contract": "pass",
             "single_wlan_owner": "pass",
             "networkmanager_wifi_backend": "pass",
             "isolated_runtime_ethernet": "pass",
