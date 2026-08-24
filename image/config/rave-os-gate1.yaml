@@ -16,6 +16,7 @@ layer:
   rave_base: rave-base
   rave_identity: rave-identity
   rave_network: rave-network
+  rave_engineering_ssh: rave-engineering-ssh
   rave_hailo: rave-hailo
   rave_runtime: rave-runtime
   rave_web: rave-web

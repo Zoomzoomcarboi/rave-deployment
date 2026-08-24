@@ -33,6 +33,10 @@ HOME_PATH = re.compile(
     + rb"[^\\\s]+)[/\\]"
 )
 ALLOWED_NM_PROFILE = "rave-setup.nmconnection"
+ENGINEERING_AUTHORIZED_KEY = (
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKR4QyPoOinkc4Jyg/o2/vgXzY+s3uCHP/CzFxGSg7JC "
+    "rave-pi-debug"
+)
 
 
 class VerificationError(RuntimeError):
@@ -71,12 +75,15 @@ def verify_clone_safety(rootfs: Path) -> None:
     require(machine_id.is_file() and machine_id.stat().st_size == 0, "machine-id is initialized")
     require(not (rootfs / "var/lib/dbus/machine-id").exists(), "D-Bus machine-id is cloned")
     require(not list((rootfs / "etc/ssh").glob("ssh_host_*")), "SSH host key is present")
+    allowed_authorized_keys = rootfs / "home/pi/.ssh/authorized_keys"
     for base in (rootfs / "root", rootfs / "home"):
         if base.exists():
-            require(
-                not any(path.stat().st_size for path in base.rglob("authorized_keys")),
-                "developer SSH key is present",
-            )
+            unexpected_authorized_keys = [
+                path
+                for path in base.rglob("authorized_keys")
+                if path != allowed_authorized_keys and path.stat().st_size
+            ]
+            require(not unexpected_authorized_keys, "unreviewed SSH authorized key is present")
             require(
                 not any(
                     next(base.rglob(name), None) is not None
@@ -128,12 +135,204 @@ def verify_gate2b_us_regulatory_domain(rootfs: Path) -> None:
     require("ieee80211_regdom=GB" not in regulatory, "Wi-Fi regulatory domain fell back to GB")
 
 
+def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
+    package_status = (rootfs / "var/lib/dpkg/status").read_text(encoding="utf-8")
+    for package in ("openssh-server", "sudo"):
+        stanza = next(
+            (block for block in package_status.split("\n\n") if block.startswith(f"Package: {package}\n")),
+            "",
+        )
+        require(
+            "Status: install ok installed\n" in f"{stanza}\n",
+            f"missing engineering SSH package: {package}",
+        )
+
+    socket_unit = rootfs / "usr/lib/systemd/system/ssh.socket"
+    ssh_service = rootfs / "usr/lib/systemd/system/ssh.service"
+    keygen_unit = rootfs / "usr/lib/systemd/system/sshd-keygen.service"
+    require(socket_unit.is_file(), "openssh-server ssh.socket is missing")
+    require(ssh_service.is_file(), "openssh-server ssh.service is missing")
+    require(keygen_unit.is_file(), "Debian first-boot SSH host-key generator is missing")
+    require((rootfs / "usr/sbin/sshd").is_file(), "openssh-server daemon binary is missing")
+
+    socket_dropin_path = rootfs / "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
+    require(socket_dropin_path.is_file(), "engineering SSH socket override is missing")
+    socket_dropin = socket_dropin_path.read_text(encoding="utf-8")
+    listen_streams = [
+        line.strip() for line in socket_dropin.splitlines() if line.strip().startswith("ListenStream=")
+    ]
+    require(
+        listen_streams == ["ListenStream=", "ListenStream=10.77.0.1:22"],
+        "engineering SSH socket does not reset the wildcard and bind only 10.77.0.1:22",
+    )
+    require("FreeBind=yes" in socket_dropin, "engineering SSH socket is missing FreeBind=yes")
+    require("BindToDevice=eth0" in socket_dropin, "engineering SSH socket is not bound to eth0")
+    for wildcard in ("ListenStream=22", "0.0.0.0:22", "[::]:22", ":::22"):
+        require(wildcard not in socket_dropin, f"wildcard SSH listener is configured: {wildcard}")
+
+    socket_enablement = rootfs / "etc/systemd/system/sockets.target.wants/ssh.socket"
+    require(socket_enablement.is_symlink(), "ssh.socket is not enabled at boot")
+    require(os.readlink(socket_enablement) == "/usr/lib/systemd/system/ssh.socket", "unexpected ssh.socket enablement target")
+    enabled_direct_services = sorted(
+        str(path.relative_to(rootfs))
+        for wants_dir in (rootfs / "etc/systemd/system").glob("*.target.wants")
+        for path in wants_dir.iterdir()
+        if path.is_symlink()
+        and Path(os.readlink(path)).name in {"ssh.service", "sshd.service"}
+    )
+    require(
+        not enabled_direct_services,
+        f"ssh.service is directly enabled for normal boot: {enabled_direct_services}",
+    )
+    enabled_ssh_sockets = sorted(
+        path.name
+        for wants_dir in (rootfs / "etc/systemd/system").glob("*.target.wants")
+        for path in wants_dir.glob("ssh*.socket")
+        if path.is_symlink()
+    )
+    require(enabled_ssh_sockets == ["ssh.socket"], f"unexpected enabled SSH sockets: {enabled_ssh_sockets}")
+
+    keygen_want = rootfs / "etc/systemd/system/ssh.socket.wants/sshd-keygen.service"
+    require(keygen_want.is_symlink(), "ssh.socket does not pull in first-boot host-key generation")
+    require(
+        os.readlink(keygen_want) == "/usr/lib/systemd/system/sshd-keygen.service",
+        "unexpected SSH host-key generator wiring",
+    )
+    service_keygen_want = rootfs / "etc/systemd/system/ssh.service.wants/sshd-keygen.service"
+    require(
+        service_keygen_want.is_symlink()
+        and os.readlink(service_keygen_want) == "/usr/lib/systemd/system/sshd-keygen.service",
+        "socket-activated ssh.service does not require first-boot host-key generation",
+    )
+    keygen = keygen_unit.read_text(encoding="utf-8")
+    for expected in (
+        "ConditionFirstBoot=yes",
+        "ConditionPathIsReadWrite=/etc/ssh",
+        "Before=ssh.service sshd.service sshd@.service",
+        "ExecStart=ssh-keygen -A",
+        "WantedBy=ssh.service sshd.service sshd@.service ssh.socket",
+    ):
+        require(expected in keygen, f"invalid Debian first-boot SSH host-key contract: {expected}")
+    require(
+        "ExecStartPre=/usr/sbin/sshd -t" in ssh_service.read_text(encoding="utf-8"),
+        "socket-activated ssh.service does not validate host keys before starting",
+    )
+    require(not list((rootfs / "etc/ssh").glob("ssh_host_*")), "SSH host private key is baked into image")
+
+    policy_path = rootfs / "etc/ssh/sshd_config.d/90-rave-ethernet.conf"
+    require(policy_path.is_file(), "engineering sshd policy is missing")
+    policy = policy_path.read_text(encoding="utf-8")
+    main_sshd_config = (rootfs / "etc/ssh/sshd_config").read_text(encoding="utf-8")
+    require(
+        "Include /etc/ssh/sshd_config.d/*.conf" in main_sshd_config.splitlines(),
+        "sshd does not include the engineering policy drop-in",
+    )
+    required_policy = (
+        "PubkeyAuthentication yes",
+        "PasswordAuthentication no",
+        "KbdInteractiveAuthentication no",
+        "ChallengeResponseAuthentication no",
+        "PermitEmptyPasswords no",
+        "PermitRootLogin no",
+        "AllowUsers pi",
+        "AllowTcpForwarding no",
+        "GatewayPorts no",
+        "X11Forwarding no",
+        "PermitTunnel no",
+        "AllowAgentForwarding no",
+    )
+    for expected in required_policy:
+        require(expected in policy.splitlines(), f"missing engineering sshd policy: {expected}")
+    for forbidden in (
+        "PasswordAuthentication yes",
+        "KbdInteractiveAuthentication yes",
+        "ChallengeResponseAuthentication yes",
+        "PermitRootLogin yes",
+        "AllowUsers root",
+    ):
+        require(forbidden not in policy, f"unsafe engineering sshd policy: {forbidden}")
+    sshd_config_paths = [rootfs / "etc/ssh/sshd_config"]
+    sshd_config_paths.extend(sorted((rootfs / "etc/ssh/sshd_config.d").glob("*.conf")))
+    sshd_configuration = "\n".join(
+        path.read_text(encoding="utf-8") for path in sshd_config_paths if path.is_file()
+    )
+    active_sshd_lines = [
+        line.strip()
+        for line in sshd_configuration.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    ]
+    for line in active_sshd_lines:
+        normalized = " ".join(line.split()).lower()
+        require(
+            normalized not in {"listenaddress 0.0.0.0", "listenaddress ::"},
+            f"wildcard sshd ListenAddress is configured: {line}",
+        )
+
+    passwd = {
+        fields[0]: fields
+        for line in (rootfs / "etc/passwd").read_text(encoding="utf-8").splitlines()
+        if len(fields := line.split(":")) >= 7
+    }
+    shadow = {
+        fields[0]: fields[1]
+        for line in (rootfs / "etc/shadow").read_text(encoding="utf-8").splitlines()
+        if len(fields := line.split(":")) >= 2
+    }
+    require("pi" in passwd and "pi" in shadow, "pi engineering account is missing")
+    require(shadow["pi"] == "*NP*", "pi is not configured with the key-only non-password marker")
+    require(passwd["pi"][6] not in {"/usr/sbin/nologin", "/bin/false"}, "pi has no administrative shell")
+
+    key_path = rootfs / "home/pi/.ssh/authorized_keys"
+    require(key_path.is_file() and not key_path.is_symlink(), "pi authorized_keys is missing")
+    require(key_path.read_text(encoding="utf-8").strip() == ENGINEERING_AUTHORIZED_KEY, "unexpected pi authorized key")
+    pi_uid, pi_gid = int(passwd["pi"][2]), int(passwd["pi"][3])
+    ssh_dir_stat = key_path.parent.stat()
+    key_stat = key_path.stat()
+    require(
+        (stat.S_IMODE(ssh_dir_stat.st_mode), ssh_dir_stat.st_uid, ssh_dir_stat.st_gid)
+        == (0o700, pi_uid, pi_gid),
+        "wrong pi .ssh mode/ownership",
+    )
+    require(
+        (stat.S_IMODE(key_stat.st_mode), key_stat.st_uid, key_stat.st_gid)
+        == (0o600, pi_uid, pi_gid),
+        "wrong pi authorized_keys mode/ownership",
+    )
+
+    sudoers_path = rootfs / "etc/sudoers.d/90-rave-engineering-ssh"
+    require(sudoers_path.is_file() and not sudoers_path.is_symlink(), "engineering sudoers file is missing")
+    require(
+        sudoers_path.read_text(encoding="utf-8").strip() == "pi ALL=(ALL:ALL) NOPASSWD: ALL",
+        "engineering sudoers policy is not exact",
+    )
+    sudoers_stat = sudoers_path.stat()
+    require(
+        (stat.S_IMODE(sudoers_stat.st_mode), sudoers_stat.st_uid, sudoers_stat.st_gid)
+        == (0o440, 0, 0),
+        "wrong engineering sudoers mode/ownership",
+    )
+
+    dependency_text = socket_dropin + socket_unit.read_text(encoding="utf-8")
+    for forbidden_dependency in (
+        "wlan0",
+        "RAVE-Setup",
+        "rave-wifi-init.service",
+        "NetworkManager-wait-online.service",
+        "network-online.target",
+    ):
+        require(
+            forbidden_dependency not in dependency_text,
+            f"engineering SSH incorrectly depends on management Wi-Fi: {forbidden_dependency}",
+        )
+
+
 def verify_rootfs(rootfs: Path) -> dict[str, object]:
     rootfs = rootfs.resolve(strict=True)
     require(rootfs != Path("/"), "refusing to verify host root")
     require((rootfs / "etc").is_dir() and (rootfs / "var").is_dir(), "implausible rootfs")
     verify_clone_safety(rootfs)
     verify_gate2b_us_regulatory_domain(rootfs)
+    verify_engineering_ethernet_ssh(rootfs)
 
     rave_uid, rave_gid = target_accounts(rootfs)
     required_modes = {
@@ -340,6 +539,9 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     return {
         "status": "pass",
         "rootfs": str(rootfs),
+        "engineering_ethernet_ssh": "enabled_key_only",
+        "engineering_ethernet_ssh_address": "10.77.0.1:22",
+        "engineering_ethernet_ssh_publishable": False,
         "limitations": {
             "physical_wifi_ap_operation": "requires Raspberry Pi hardware validation",
         },
@@ -361,6 +563,7 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
             "pi_provider_selected": "pass",
             "machine_id_uninitialized": "pass",
             "ssh_host_keys_absent": "pass",
+            "engineering_ethernet_ssh": "pass_non_publishable",
             "only_reviewed_network_profile": "pass",
             "rave_private_state_absent": "pass",
             "identity_and_secret_scan": "pass",

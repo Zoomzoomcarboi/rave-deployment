@@ -27,6 +27,7 @@ def test_image_composes_all_gate_one_layers() -> None:
         "rave-base",
         "rave-identity",
         "rave-network",
+        "rave-engineering-ssh",
         "rave-hailo",
         "rave-runtime",
         "rave-web",

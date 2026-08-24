@@ -75,7 +75,7 @@ def test_verifier_rejects_ssh_authorized_key(tmp_path: Path) -> None:
     key = root / "home/device/.ssh/authorized_keys"
     key.parent.mkdir(parents=True)
     key.write_text("synthetic public key material\n")
-    with pytest.raises(VerificationError, match="developer SSH key"):
+    with pytest.raises(VerificationError, match="unreviewed SSH authorized key"):
         verify_clone_safety(root)
 
 

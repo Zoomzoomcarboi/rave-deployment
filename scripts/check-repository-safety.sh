@@ -76,7 +76,9 @@ scan_file() {
   if grep -nEI -- "$secret_pattern" "$file" >/dev/null; then
     printf 'Possible private key or credential pattern: %s\n' "$display" >&2; fail=1
   fi
-  if [[ "$file" != *.md ]] && grep -nEI -- "$home_pattern" "$file" >/dev/null; then
+  # /home/pi is the reviewed Gate 2B appliance account, not build-host identity.
+  # Normalize only that exact product path before applying the generic detector.
+  if [[ "$file" != *.md ]] && sed -e 's#/home/pi/#/opt/rave/product-user/#g' -e 's#/home/pi:#/opt/rave/product-user:#g' "$file" | grep -nEI -- "$home_pattern" >/dev/null; then
     printf 'Developer user-home path in runtime source: %s\n' "$display" >&2; fail=1
   fi
   if grep -nEI -- "$wifi_secret_pattern" "$file" >/dev/null; then

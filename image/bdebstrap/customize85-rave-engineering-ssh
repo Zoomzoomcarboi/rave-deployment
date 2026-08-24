@@ -1,0 +1,50 @@
+#!/bin/sh
+set -eu
+
+rootfs_input=${1:?missing target rootfs}
+rootfs=$(realpath -e -- "$rootfs_input")
+test -n "$rootfs"
+test "$rootfs" != "/"
+test -d "$rootfs/etc"
+test -d "$rootfs/home/pi"
+
+source_root=${SRCROOT:?missing rpi-image-gen source root}
+repository_root=$(realpath -e -- "$source_root/..")
+sshd_policy="$repository_root/image/overlays/etc/ssh/sshd_config.d/90-rave-ethernet.conf"
+socket_policy="$repository_root/systemd/ssh.socket.d/90-rave-ethernet.conf"
+authorized_key="$repository_root/image/overlays/home/pi/.ssh/authorized_keys"
+sudoers_policy="$repository_root/image/overlays/etc/sudoers.d/90-rave-engineering-ssh"
+test -f "$sshd_policy"
+test -f "$socket_policy"
+test -f "$authorized_key"
+test -f "$sudoers_policy"
+test -x "$rootfs/usr/sbin/sshd"
+test -x "$rootfs/usr/sbin/visudo"
+test -f "$rootfs/usr/lib/systemd/system/ssh.socket"
+test -f "$rootfs/usr/lib/systemd/system/ssh.service"
+test -f "$rootfs/usr/lib/systemd/system/sshd-keygen.service"
+
+install -d -m 0755 \
+  "$rootfs/etc/ssh/sshd_config.d" \
+  "$rootfs/etc/systemd/system/ssh.socket.d" \
+  "$rootfs/etc/systemd/system/ssh.socket.wants" \
+  "$rootfs/etc/systemd/system/sockets.target.wants" \
+  "$rootfs/etc/sudoers.d"
+install -m 0644 "$sshd_policy" "$rootfs/etc/ssh/sshd_config.d/90-rave-ethernet.conf"
+install -m 0644 "$socket_policy" "$rootfs/etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
+install -m 0440 "$sudoers_policy" "$rootfs/etc/sudoers.d/90-rave-engineering-ssh"
+install -d -m 0700 "$rootfs/home/pi/.ssh"
+install -m 0600 "$authorized_key" "$rootfs/home/pi/.ssh/authorized_keys"
+chroot "$rootfs" /bin/chown pi:pi /home/pi/.ssh /home/pi/.ssh/authorized_keys
+chroot "$rootfs" /usr/sbin/usermod --password '*NP*' pi
+
+# Package installation enables ssh.service by default. Gate 2B deliberately
+# uses only the interface-scoped socket and per-device first-boot host keys.
+rm -f -- "$rootfs/etc/systemd/system/multi-user.target.wants/ssh.service"
+ln -sf /usr/lib/systemd/system/ssh.socket \
+  "$rootfs/etc/systemd/system/sockets.target.wants/ssh.socket"
+ln -sf /usr/lib/systemd/system/sshd-keygen.service \
+  "$rootfs/etc/systemd/system/ssh.socket.wants/sshd-keygen.service"
+
+chroot "$rootfs" /usr/sbin/visudo -cf /etc/sudoers.d/90-rave-engineering-ssh
+chroot "$rootfs" /usr/sbin/sshd -t

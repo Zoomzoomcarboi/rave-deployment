@@ -43,9 +43,17 @@ is written.
 
 The composition starts from upstream `trixie-minbase.yaml`, targets the upstream Pi 5
 and Raspberry Pi OS image layers, and adds `rave-base`, `rave-identity`, `rave-network`,
-`rave-hailo`, `rave-runtime`, `rave-web`, and `rave-update`. Hailo, perception,
-perception and updating remain explicit non-integrated markers. Gate 2B adds only the
-isolated first-boot management AP and read-only Pi management observations.
+`rave-engineering-ssh`, `rave-hailo`, `rave-runtime`, `rave-web`, and `rave-update`.
+Hailo, production perception, and updating remain explicit non-integrated markers.
+The end-user Gate 2B management path consists of the isolated first-boot AP and
+read-only Pi management observations.
+
+`rave-engineering-ssh` is a deliberately non-publishable Gate 2B diagnostic feature.
+It enables key-only `pi` administration through systemd socket activation bound only
+to `10.77.0.1:22` on `eth0`; it does not expose SSH on the management Wi-Fi network.
+The image carries the reviewed engineering public key and sudo policy, never its
+private key. This access must be removed or replaced by an approved administration
+policy before public-release qualification.
 
 Gate 2B explicitly sets the Wi-Fi regulatory domain to `US` for physical validation
 units operated in the United States. Locale, timezone, keyboard, and first-boot region
