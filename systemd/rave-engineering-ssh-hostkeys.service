@@ -1,0 +1,8 @@
+[Unit]
+Description=Generate per-device SSH host keys for RAVE engineering access
+Before=ssh.socket ssh.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/ssh-keygen -A
+RemainAfterExit=yes

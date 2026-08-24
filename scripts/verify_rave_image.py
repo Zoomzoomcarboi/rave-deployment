@@ -136,6 +136,11 @@ def verify_gate2b_us_regulatory_domain(rootfs: Path) -> None:
 
 
 def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
+    machine_id = rootfs / "etc/machine-id"
+    require(
+        machine_id.is_file() and machine_id.stat().st_size == 0,
+        "engineering SSH host-key contract expects the clone-safe empty machine-id",
+    )
     package_status = (rootfs / "var/lib/dpkg/status").read_text(encoding="utf-8")
     for package in ("openssh-server", "sudo"):
         stanza = next(
@@ -150,15 +155,25 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
     socket_unit = rootfs / "usr/lib/systemd/system/ssh.socket"
     ssh_service = rootfs / "usr/lib/systemd/system/ssh.service"
     keygen_unit = rootfs / "usr/lib/systemd/system/sshd-keygen.service"
+    rave_hostkeys_unit = rootfs / "usr/lib/systemd/system/rave-engineering-ssh-hostkeys.service"
     require(socket_unit.is_file(), "openssh-server ssh.socket is missing")
     require(ssh_service.is_file(), "openssh-server ssh.service is missing")
     require(keygen_unit.is_file(), "Debian first-boot SSH host-key generator is missing")
+    require(rave_hostkeys_unit.is_file(), "RAVE engineering SSH host-key service is missing")
     require((rootfs / "usr/sbin/sshd").is_file(), "openssh-server daemon binary is missing")
     require((rootfs / "usr/bin/sudo").is_file(), "sudo executable is missing")
 
     socket_dropin_path = rootfs / "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
     require(socket_dropin_path.is_file(), "engineering SSH socket override is missing")
     socket_dropin = socket_dropin_path.read_text(encoding="utf-8")
+    require(
+        "Requires=rave-engineering-ssh-hostkeys.service" in socket_dropin.splitlines(),
+        "ssh.socket does not require RAVE engineering host-key generation",
+    )
+    require(
+        "After=rave-engineering-ssh-hostkeys.service" in socket_dropin.splitlines(),
+        "ssh.socket is not ordered after RAVE engineering host-key generation",
+    )
     listen_streams = [
         line.strip() for line in socket_dropin.splitlines() if line.strip().startswith("ListenStream=")
     ]
@@ -214,6 +229,23 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
         "WantedBy=ssh.service sshd.service sshd@.service ssh.socket",
     ):
         require(expected in keygen, f"invalid Debian first-boot SSH host-key contract: {expected}")
+    rave_hostkeys = rave_hostkeys_unit.read_text(encoding="utf-8")
+    for expected in (
+        "Before=ssh.socket ssh.service",
+        "Type=oneshot",
+        "ExecStart=/usr/bin/ssh-keygen -A",
+        "RemainAfterExit=yes",
+    ):
+        require(expected in rave_hostkeys.splitlines(), f"invalid RAVE SSH host-key service: {expected}")
+    active_rave_hostkey_lines = (
+        line.strip()
+        for line in rave_hostkeys.splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    )
+    require(
+        not any(line.startswith("Condition") for line in active_rave_hostkey_lines),
+        "RAVE SSH host-key generation must not be conditionally skipped",
+    )
     require(
         "ExecStartPre=/usr/sbin/sshd -t" in ssh_service.read_text(encoding="utf-8"),
         "socket-activated ssh.service does not validate host keys before starting",
@@ -326,7 +358,7 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
     require("pi" not in sudo_members, "pi retains generic sudo-group membership")
     require(int(passwd["pi"][3]) != int(groups["sudo"][2]), "sudo is pi's primary group")
 
-    dependency_text = socket_dropin + socket_unit.read_text(encoding="utf-8")
+    dependency_text = socket_dropin + socket_unit.read_text(encoding="utf-8") + rave_hostkeys
     for forbidden_dependency in (
         "wlan0",
         "RAVE-Setup",
@@ -577,6 +609,7 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
             "pi_provider_selected": "pass",
             "machine_id_uninitialized": "pass",
             "ssh_host_keys_absent": "pass",
+            "rave_host_keys_independent_of_systemd_first_boot": "pass",
             "engineering_ethernet_ssh": "pass_non_publishable",
             "only_reviewed_network_profile": "pass",
             "rave_private_state_absent": "pass",

@@ -26,6 +26,7 @@ def _write(root: Path, relative: str, content: str, mode: int = 0o644) -> Path:
 
 def ssh_rootfs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     root = tmp_path / "rootfs"
+    _write(root, "etc/machine-id", "", 0o444)
     _write(
         root,
         "var/lib/dpkg/status",
@@ -46,6 +47,11 @@ def ssh_rootfs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
         "[Unit]\nConditionFirstBoot=yes\nConditionPathIsReadWrite=/etc/ssh\n"
         "Before=ssh.service sshd.service sshd@.service\n[Service]\nExecStart=ssh-keygen -A\n"
         "[Install]\nWantedBy=ssh.service sshd.service sshd@.service ssh.socket\n",
+    )
+    _write(
+        root,
+        "usr/lib/systemd/system/rave-engineering-ssh-hostkeys.service",
+        (ROOT / "systemd/rave-engineering-ssh-hostkeys.service").read_text(),
     )
     socket_policy = (ROOT / "systemd/ssh.socket.d/90-rave-ethernet.conf").read_text()
     _write(root, "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf", socket_policy)
@@ -100,6 +106,10 @@ def test_engineering_ssh_source_contract_is_exact_and_non_publishable() -> None:
     assert "packages: [openssh-server, sudo]" in layer
     assert "non-publishable" in layer
     assert socket.splitlines() == [
+        "[Unit]",
+        "Requires=rave-engineering-ssh-hostkeys.service",
+        "After=rave-engineering-ssh-hostkeys.service",
+        "",
         "[Socket]",
         "ListenStream=",
         "ListenStream=10.77.0.1:22",
@@ -118,6 +128,7 @@ def test_engineering_ssh_source_contract_is_exact_and_non_publishable() -> None:
     assert "multi-user.target.wants/ssh.service" in hook
     assert "sockets.target.wants/ssh.socket" in hook
     assert "ssh.socket.wants/sshd-keygen.service" in hook
+    assert "rave-engineering-ssh-hostkeys.service" in hook
     assert "NetworkManager" not in socket + policy
     assert "wlan0" not in socket + policy
     assert "network-online.target" not in socket + policy
@@ -153,11 +164,12 @@ def test_artifact_verifier_rejects_unsafe_ssh_socket(
     dropin = root / "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
     lines = dropin.read_text().splitlines()
     if replacement.startswith("ListenStream"):
-        lines[1:3] = [replacement]
+        first_listener = lines.index("ListenStream=")
+        lines[first_listener : first_listener + 2] = [replacement]
     elif replacement.startswith("FreeBind"):
-        lines[3] = replacement
+        lines[lines.index("FreeBind=yes")] = replacement
     else:
-        lines[4] = replacement
+        lines[lines.index("BindToDevice=eth0")] = replacement
     dropin.write_text("\n".join(lines) + "\n")
     with pytest.raises(VerificationError, match=message):
         verify_engineering_ethernet_ssh(root)
@@ -242,4 +254,89 @@ def test_artifact_verifier_rejects_pi_sudo_group_membership(
     root = ssh_rootfs(tmp_path, monkeypatch)
     (root / "etc/group").write_text("sudo:x:27:pi\n")
     with pytest.raises(VerificationError, match="sudo-group membership"):
+        verify_engineering_ethernet_ssh(root)
+
+
+def test_empty_machine_id_and_absent_host_keys_use_rave_owned_generator(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    machine_id = root / "etc/machine-id"
+    assert machine_id.stat().st_size == 0
+    assert not list((root / "etc/ssh").glob("ssh_host_*"))
+    verify_engineering_ethernet_ssh(root)
+    rave_unit = (root / "usr/lib/systemd/system/rave-engineering-ssh-hostkeys.service").read_text()
+    socket = (root / "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf").read_text()
+    assert "ExecStart=/usr/bin/ssh-keygen -A" in rave_unit
+    assert "Condition" not in rave_unit
+    assert "Requires=rave-engineering-ssh-hostkeys.service" in socket
+    assert "After=rave-engineering-ssh-hostkeys.service" in socket
+
+
+def test_artifact_verifier_rejects_missing_rave_hostkey_service(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    (root / "usr/lib/systemd/system/rave-engineering-ssh-hostkeys.service").unlink()
+    with pytest.raises(VerificationError, match="RAVE engineering SSH host-key service"):
+        verify_engineering_ethernet_ssh(root)
+
+
+@pytest.mark.parametrize(
+    ("old", "new", "message"),
+    (
+        ("ExecStart=/usr/bin/ssh-keygen -A", "ExecStart=/bin/true", "ssh-keygen -A"),
+        ("Type=oneshot", "Type=simple", "Type=oneshot"),
+        ("RemainAfterExit=yes", "RemainAfterExit=no", "RemainAfterExit=yes"),
+    ),
+)
+def test_artifact_verifier_rejects_invalid_rave_hostkey_service(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    old: str,
+    new: str,
+    message: str,
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    unit = root / "usr/lib/systemd/system/rave-engineering-ssh-hostkeys.service"
+    unit.write_text(unit.read_text().replace(old, new))
+    with pytest.raises(VerificationError, match=message):
+        verify_engineering_ethernet_ssh(root)
+
+
+@pytest.mark.parametrize(
+    ("directive", "message"),
+    (
+        ("Requires=rave-engineering-ssh-hostkeys.service", "does not require"),
+        ("After=rave-engineering-ssh-hostkeys.service", "not ordered after"),
+    ),
+)
+def test_artifact_verifier_rejects_socket_without_rave_hostkey_dependency(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    directive: str,
+    message: str,
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    socket = root / "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
+    socket.write_text(socket.read_text().replace(f"{directive}\n", ""))
+    with pytest.raises(VerificationError, match=message):
+        verify_engineering_ethernet_ssh(root)
+
+
+@pytest.mark.parametrize(
+    "condition",
+    (
+        "ConditionFirstBoot=yes",
+        "ConditionPathIsReadWrite=/etc/ssh",
+        "ConditionPathIsSymbolicLink=!/etc/ssh",
+    ),
+)
+def test_artifact_verifier_rejects_conditional_rave_generator(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, condition: str
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    unit = root / "usr/lib/systemd/system/rave-engineering-ssh-hostkeys.service"
+    unit.write_text(unit.read_text().replace("[Unit]\n", f"[Unit]\n{condition}\n"))
+    with pytest.raises(VerificationError, match="conditionally skipped"):
         verify_engineering_ethernet_ssh(root)

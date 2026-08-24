@@ -12,10 +12,12 @@ source_root=${SRCROOT:?missing rpi-image-gen source root}
 repository_root=$(realpath -e -- "$source_root/..")
 sshd_policy="$repository_root/image/overlays/etc/ssh/sshd_config.d/90-rave-ethernet.conf"
 socket_policy="$repository_root/systemd/ssh.socket.d/90-rave-ethernet.conf"
+hostkeys_unit="$repository_root/systemd/rave-engineering-ssh-hostkeys.service"
 authorized_key="$repository_root/image/overlays/home/pi/.ssh/authorized_keys"
 sudoers_policy="$repository_root/image/overlays/etc/sudoers.d/90-rave-engineering-ssh"
 test -f "$sshd_policy"
 test -f "$socket_policy"
+test -f "$hostkeys_unit"
 test -f "$authorized_key"
 test -f "$sudoers_policy"
 test -x "$rootfs/usr/sbin/sshd"
@@ -32,6 +34,8 @@ install -d -m 0755 \
   "$rootfs/etc/sudoers.d"
 install -m 0644 "$sshd_policy" "$rootfs/etc/ssh/sshd_config.d/90-rave-ethernet.conf"
 install -m 0644 "$socket_policy" "$rootfs/etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
+install -m 0644 "$hostkeys_unit" \
+  "$rootfs/usr/lib/systemd/system/rave-engineering-ssh-hostkeys.service"
 rm -f -- "$rootfs/etc/sudoers.d/010_rpi-nopasswd"
 if chroot "$rootfs" /usr/bin/id -nG pi | /usr/bin/tr ' ' '\n' | /usr/bin/grep -qx sudo; then
   chroot "$rootfs" /usr/sbin/deluser pi sudo
