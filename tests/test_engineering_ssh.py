@@ -39,6 +39,7 @@ def ssh_rootfs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
         "[Service]\nExecStartPre=/usr/sbin/sshd -t\nExecStart=/usr/sbin/sshd -D\n",
     )
     _write(root, "usr/sbin/sshd", "synthetic executable\n", 0o755)
+    _write(root, "usr/bin/sudo", "synthetic executable\n", 0o4755)
     _write(
         root,
         "usr/lib/systemd/system/sshd-keygen.service",
@@ -65,6 +66,7 @@ def ssh_rootfs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
 
     uid, gid = os.getuid(), os.getgid()
     _write(root, "etc/passwd", f"pi:x:{uid}:{gid}::/home/pi:/bin/bash\n")
+    _write(root, "etc/group", "sudo:x:27:\n")
     _write(root, "etc/shadow", "pi:*NP*:20000::::::\n", 0o640)
     key = _write(root, "home/pi/.ssh/authorized_keys", KEY, 0o600)
     key.parent.chmod(0o700)
@@ -110,6 +112,9 @@ def test_engineering_ssh_source_contract_is_exact_and_non_publishable() -> None:
     assert "AllowTcpForwarding no" in policy
     assert "AllowAgentForwarding no" in policy
     assert "usermod --password '*NP*' pi" in hook
+    assert 'rm -f -- "$rootfs/etc/sudoers.d/010_rpi-nopasswd"' in hook
+    assert "/usr/sbin/deluser pi sudo" in hook
+    assert "/usr/sbin/visudo -cf /etc/sudoers" in hook
     assert "multi-user.target.wants/ssh.service" in hook
     assert "sockets.target.wants/ssh.socket" in hook
     assert "ssh.socket.wants/sshd-keygen.service" in hook
@@ -219,4 +224,22 @@ def test_artifact_verifier_rejects_missing_authorized_key(
     root = ssh_rootfs(tmp_path, monkeypatch)
     (root / "home/pi/.ssh/authorized_keys").unlink()
     with pytest.raises(VerificationError, match="authorized_keys"):
+        verify_engineering_ethernet_ssh(root)
+
+
+def test_artifact_verifier_rejects_builder_generic_sudo_policy(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    _write(root, "etc/sudoers.d/010_rpi-nopasswd", "pi ALL=(ALL) NOPASSWD: ALL\n", 0o440)
+    with pytest.raises(VerificationError, match="builder-generated generic sudo policy"):
+        verify_engineering_ethernet_ssh(root)
+
+
+def test_artifact_verifier_rejects_pi_sudo_group_membership(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    (root / "etc/group").write_text("sudo:x:27:pi\n")
+    with pytest.raises(VerificationError, match="sudo-group membership"):
         verify_engineering_ethernet_ssh(root)

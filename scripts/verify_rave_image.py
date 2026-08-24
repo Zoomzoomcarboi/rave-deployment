@@ -154,6 +154,7 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
     require(ssh_service.is_file(), "openssh-server ssh.service is missing")
     require(keygen_unit.is_file(), "Debian first-boot SSH host-key generator is missing")
     require((rootfs / "usr/sbin/sshd").is_file(), "openssh-server daemon binary is missing")
+    require((rootfs / "usr/bin/sudo").is_file(), "sudo executable is missing")
 
     socket_dropin_path = rootfs / "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
     require(socket_dropin_path.is_file(), "engineering SSH socket override is missing")
@@ -311,6 +312,19 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
         == (0o440, 0, 0),
         "wrong engineering sudoers mode/ownership",
     )
+    require(
+        not (rootfs / "etc/sudoers.d/010_rpi-nopasswd").exists(),
+        "builder-generated generic sudo policy is present",
+    )
+    groups = {
+        fields[0]: fields
+        for line in (rootfs / "etc/group").read_text(encoding="utf-8").splitlines()
+        if len(fields := line.split(":")) >= 4
+    }
+    require("sudo" in groups, "sudo group is missing")
+    sudo_members = {member for member in groups["sudo"][3].split(",") if member}
+    require("pi" not in sudo_members, "pi retains generic sudo-group membership")
+    require(int(passwd["pi"][3]) != int(groups["sudo"][2]), "sudo is pi's primary group")
 
     dependency_text = socket_dropin + socket_unit.read_text(encoding="utf-8")
     for forbidden_dependency in (

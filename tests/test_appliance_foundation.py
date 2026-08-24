@@ -21,6 +21,7 @@ def test_image_composes_all_gate_one_layers() -> None:
     assert config["include"]["file"] == "trixie-minbase.yaml"
     assert config["device"]["layer"] == "rpi5"
     assert config["device"]["hostname"] == "rave-pi"
+    assert config["device"]["user1sudo"] == "nopasswd"
     assert config["image"] == {"layer": "image-rpios", "name": "rave-os-gate2b"}
     assert config["deploy"] == {"compression": "zstd"}
     assert list(config["layer"].values()) == [

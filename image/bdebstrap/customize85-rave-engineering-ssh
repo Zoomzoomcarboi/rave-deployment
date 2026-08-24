@@ -32,6 +32,10 @@ install -d -m 0755 \
   "$rootfs/etc/sudoers.d"
 install -m 0644 "$sshd_policy" "$rootfs/etc/ssh/sshd_config.d/90-rave-ethernet.conf"
 install -m 0644 "$socket_policy" "$rootfs/etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
+rm -f -- "$rootfs/etc/sudoers.d/010_rpi-nopasswd"
+if chroot "$rootfs" /usr/bin/id -nG pi | /usr/bin/tr ' ' '\n' | /usr/bin/grep -qx sudo; then
+  chroot "$rootfs" /usr/sbin/deluser pi sudo
+fi
 install -m 0440 "$sudoers_policy" "$rootfs/etc/sudoers.d/90-rave-engineering-ssh"
 install -d -m 0700 "$rootfs/home/pi/.ssh"
 install -m 0600 "$authorized_key" "$rootfs/home/pi/.ssh/authorized_keys"
@@ -46,5 +50,5 @@ ln -sf /usr/lib/systemd/system/ssh.socket \
 ln -sf /usr/lib/systemd/system/sshd-keygen.service \
   "$rootfs/etc/systemd/system/ssh.socket.wants/sshd-keygen.service"
 
-chroot "$rootfs" /usr/sbin/visudo -cf /etc/sudoers.d/90-rave-engineering-ssh
+chroot "$rootfs" /usr/sbin/visudo -cf /etc/sudoers
 chroot "$rootfs" /usr/sbin/sshd -t

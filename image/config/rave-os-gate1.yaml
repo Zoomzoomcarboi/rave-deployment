@@ -5,6 +5,7 @@ include:
 device:
   layer: rpi5
   hostname: rave-pi
+  user1sudo: nopasswd
 image:
   layer: image-rpios
   name: rave-os-gate2b
