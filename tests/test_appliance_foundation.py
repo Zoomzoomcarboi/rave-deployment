@@ -1,5 +1,6 @@
 import inspect
 import json
+import os
 from pathlib import Path
 
 import yaml
@@ -190,13 +191,15 @@ def test_gate_two_b_management_network_is_exact_and_isolated() -> None:
     assert "method=manual" in profile
     assert "never-default=true" in profile
     assert "may-fail=false" in profile
-    assert "gateway=\n" in profile
+    assert "\ngateway=" not in profile
     assert "[ipv6]\nmethod=disabled" in profile
     assert "wifi-security" not in profile and "psk=" not in profile
     assert "method=shared" not in profile
     assert "interface=wlan0" in dhcp
     assert "listen-address=192.168.77.1" in dhcp
     assert "dhcp-range=192.168.77.100,192.168.77.199,255.255.255.0,12h" in dhcp
+    assert "dhcp-leasefile=/var/lib/misc/dnsmasq.leases" in dhcp
+    assert "log-dhcp" not in dhcp
     assert "eth0" not in dhcp
     assert "net.ipv4.ip_forward=0" in sysctl
     assert "net.ipv6.conf.all.forwarding=0" in sysctl
@@ -223,6 +226,8 @@ def test_gate_two_b_services_are_installed_and_enabled_by_image_hooks() -> None:
     assert "packages: [network-manager, wpasupplicant, dnsmasq-base]" in network_layer
     assert "multi-user.target.wants/rave-webd.service" in web_hook
     assert "multi-user.target.wants/rave-management-dhcp.service" in web_hook
+    assert "/usr/sbin/dnsmasq --test" in web_hook
+    assert "/usr/bin/systemd-analyze verify --man=no" in web_hook
     assert "--host 192.168.77.1" in web_unit
     assert "--host 0.0.0.0" not in web_unit
     assert "eth0" not in web_unit
@@ -231,9 +236,56 @@ def test_gate_two_b_services_are_installed_and_enabled_by_image_hooks() -> None:
         assert "Wants=network-online.target" in unit
         assert "After=network-online.target NetworkManager-wait-online.service" in unit
     assert "Before=rave-webd.service" in dhcp_unit
+    assert "ProtectSystem=strict" in dhcp_unit
+    assert "ReadWritePaths=/var/lib/misc" in dhcp_unit
+    assert 'install -d -m 0755 "$rootfs/var/lib/misc"' in network_hook
 
 
 def test_gate_two_b_image_declares_us_regulatory_domain() -> None:
     config = (ROOT / "image/config/rave-os-gate1.yaml").read_text()
     assert "regdom: US" in config
     assert "regdom: GB" not in config
+
+
+def test_gate_two_b_acceptance_tool_is_read_only_and_checks_explicit_states() -> None:
+    path = ROOT / "scripts/validate-gate2b-network.sh"
+    script = path.read_text(encoding="utf-8")
+    assert os.access(path, os.X_OK)
+    for unit in (
+        "rave-wifi-init.service",
+        "rave-management-dhcp.service",
+        "rave-webd.service",
+        "ssh.socket",
+    ):
+        assert unit in script
+    for required in (
+        "ActiveState",
+        "SubState",
+        "10.77.0.1:22",
+        "192.168.77.1:8080",
+        "dnsmasq --test",
+        "BindToDevice",
+        "sys-subsystem-net-devices-eth0.device",
+    ):
+        assert required in script
+    for mutation in (
+        "systemctl restart",
+        "systemctl start",
+        "systemctl stop",
+        "nmcli connection up",
+        "ip address add",
+        "sed -i",
+        "sleep ",
+    ):
+        assert mutation not in script
+    assert "systemctl --failed" not in script
+
+
+def test_gate_two_b_acceptance_document_requires_five_untouched_boots() -> None:
+    document = (ROOT / "docs/GATE2B_NETWORK_ACCEPTANCE.md").read_text(encoding="utf-8")
+    assert "five consecutive cold boots" in document.lower()
+    assert "scripts/validate-gate2b-network.sh" in document
+    assert "do not restart or repair any RAVE service" in document
+    assert "BindsTo=" in document
+    assert "sys-subsystem-net-devices-eth0.device" in document
+    assert "complete RAVE system" in document

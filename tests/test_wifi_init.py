@@ -72,7 +72,6 @@ method=manual
 address1=192.168.77.1/24
 never-default=true
 may-fail=false
-gateway=
 dns-search=
 
 [ipv6]

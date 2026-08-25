@@ -37,6 +37,7 @@ def ssh_rootfs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     _write(
         root,
         "usr/lib/systemd/system/ssh.service",
+        "[Unit]\nAfter=network.target\n\n"
         "[Service]\nExecStartPre=/usr/sbin/sshd -t\nExecStart=/usr/sbin/sshd -D\n",
     )
     _write(root, "usr/sbin/sshd", "synthetic executable\n", 0o755)
@@ -63,9 +64,6 @@ def ssh_rootfs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     socket_enablement = root / "etc/systemd/system/sockets.target.wants/ssh.socket"
     socket_enablement.parent.mkdir(parents=True)
     socket_enablement.symlink_to("/usr/lib/systemd/system/ssh.socket")
-    keygen_want = root / "etc/systemd/system/ssh.socket.wants/sshd-keygen.service"
-    keygen_want.parent.mkdir(parents=True)
-    keygen_want.symlink_to("/usr/lib/systemd/system/sshd-keygen.service")
     service_keygen_want = root / "etc/systemd/system/ssh.service.wants/sshd-keygen.service"
     service_keygen_want.parent.mkdir(parents=True)
     service_keygen_want.symlink_to("/usr/lib/systemd/system/sshd-keygen.service")
@@ -114,8 +112,8 @@ def test_engineering_ssh_source_contract_is_exact_and_non_publishable() -> None:
         "ListenStream=",
         "ListenStream=10.77.0.1:22",
         "FreeBind=yes",
-        "BindToDevice=eth0",
     ]
+    assert "BindToDevice=" not in socket
     assert "PasswordAuthentication no" in policy
     assert "PermitRootLogin no" in policy
     assert "AllowUsers pi" in policy
@@ -127,7 +125,7 @@ def test_engineering_ssh_source_contract_is_exact_and_non_publishable() -> None:
     assert "/usr/sbin/visudo -cf /etc/sudoers" in hook
     assert "multi-user.target.wants/ssh.service" in hook
     assert "sockets.target.wants/ssh.socket" in hook
-    assert "ssh.socket.wants/sshd-keygen.service" in hook
+    assert '"$rootfs/etc/systemd/system/ssh.socket.wants/sshd-keygen.service"' in hook
     assert "rave-engineering-ssh-hostkeys.service" in hook
     assert "NetworkManager" not in socket + policy
     assert "wlan0" not in socket + policy
@@ -151,7 +149,8 @@ def test_artifact_verifier_accepts_exact_engineering_ssh_contract(
         ("ListenStream=0.0.0.0:22", "reset the wildcard"),
         ("ListenStream=[::]:22", "reset the wildcard"),
         ("FreeBind=no", "FreeBind"),
-        ("BindToDevice=wlan0", "bound to eth0"),
+        ("BindToDevice=eth0", "device-lifetime coupling"),
+        ("BindToDevice=wlan0", "device-lifetime coupling"),
     ),
 )
 def test_artifact_verifier_rejects_unsafe_ssh_socket(
@@ -169,7 +168,7 @@ def test_artifact_verifier_rejects_unsafe_ssh_socket(
     elif replacement.startswith("FreeBind"):
         lines[lines.index("FreeBind=yes")] = replacement
     else:
-        lines[lines.index("BindToDevice=eth0")] = replacement
+        lines.append(replacement)
     dropin.write_text("\n".join(lines) + "\n")
     with pytest.raises(VerificationError, match=message):
         verify_engineering_ethernet_ssh(root)
@@ -197,6 +196,19 @@ def test_artifact_verifier_rejects_unsafe_sshd_authentication(
         verify_engineering_ethernet_ssh(root)
 
 
+@pytest.mark.parametrize("address", ("0.0.0.0", "::", "192.168.77.1", "10.77.0.1"))
+def test_artifact_verifier_rejects_sshd_listener_outside_socket_policy(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    address: str,
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    policy = root / "etc/ssh/sshd_config.d/90-rave-ethernet.conf"
+    policy.write_text(policy.read_text() + f"ListenAddress {address}\n")
+    with pytest.raises(VerificationError, match="owned exclusively by ssh.socket"):
+        verify_engineering_ethernet_ssh(root)
+
+
 def test_artifact_verifier_rejects_direct_ssh_service_enablement(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -205,6 +217,32 @@ def test_artifact_verifier_rejects_direct_ssh_service_enablement(
     enabled.parent.mkdir(parents=True, exist_ok=True)
     enabled.symlink_to("/usr/lib/systemd/system/ssh.service")
     with pytest.raises(VerificationError, match="directly enabled"):
+        verify_engineering_ethernet_ssh(root)
+
+
+def test_artifact_verifier_rejects_competing_socket_hostkey_generator(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    keygen_want = root / "etc/systemd/system/ssh.socket.wants/sshd-keygen.service"
+    keygen_want.parent.mkdir(parents=True)
+    keygen_want.symlink_to("/usr/lib/systemd/system/sshd-keygen.service")
+    with pytest.raises(VerificationError, match="competing conditional host-key generator"):
+        verify_engineering_ethernet_ssh(root)
+
+
+@pytest.mark.parametrize(
+    "unit",
+    ("ssh.service", "rave-engineering-ssh-hostkeys.service"),
+)
+def test_artifact_verifier_rejects_obscuring_ssh_service_dropin(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    unit: str,
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    _write(root, f"etc/systemd/system/{unit}.d/90-unsafe.conf", "[Unit]\nAfter=rave-webd.service\n")
+    with pytest.raises(VerificationError, match="drop-ins obscure"):
         verify_engineering_ethernet_ssh(root)
 
 
@@ -321,6 +359,42 @@ def test_artifact_verifier_rejects_socket_without_rave_hostkey_dependency(
     socket = root / "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
     socket.write_text(socket.read_text().replace(f"{directive}\n", ""))
     with pytest.raises(VerificationError, match=message):
+        verify_engineering_ethernet_ssh(root)
+
+
+@pytest.mark.parametrize(
+    ("relative", "dependency"),
+    (
+        ("etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf", "rave-wifi-init.service"),
+        ("usr/lib/systemd/system/ssh.service", "rave-management-dhcp.service"),
+        ("usr/lib/systemd/system/ssh.service", "rave-webd.service"),
+        ("usr/lib/systemd/system/ssh.service", "NetworkManager-wait-online.service"),
+    ),
+)
+def test_artifact_verifier_rejects_ssh_management_dependency(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    relative: str,
+    dependency: str,
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    unit = root / relative
+    unit.write_text(unit.read_text().replace("[Unit]\n", f"[Unit]\nRequires={dependency}\n", 1))
+    with pytest.raises(VerificationError, match="management stack"):
+        verify_engineering_ethernet_ssh(root)
+
+
+def test_artifact_verifier_rejects_explicit_ssh_device_dependency(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    root = ssh_rootfs(tmp_path, monkeypatch)
+    socket = root / "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
+    socket.write_text(
+        socket.read_text().replace(
+            "[Unit]\n", "[Unit]\nBindsTo=sys-subsystem-net-devices-eth0.device\n", 1
+        )
+    )
+    with pytest.raises(VerificationError, match="device-lifetime dependency"):
         verify_engineering_ethernet_ssh(root)
 
 

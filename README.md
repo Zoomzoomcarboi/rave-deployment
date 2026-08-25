@@ -19,8 +19,9 @@ End-user images and flashing instructions are available in
 **[release/](release/README.md)**.
 
 The current image is a **Gate 2B test prerelease**. It has passed image-build and
-artifact validation but has not yet completed physical Raspberry Pi 5 boot
-qualification.
+artifact validation. An earlier engineering image supplied diagnostic Pi boot
+evidence, but the corrected networking/SSH source has not yet passed clean-image,
+five-boot hardware qualification.
 
 ## Current status
 
@@ -60,7 +61,8 @@ contract.
 The Gate 2B management candidate includes an unprivileged `rave-webd`, the static
 Galaxy-language UI, a read-only Pi management provider, and an isolated first-boot
 `RAVE-Setup` AP. Camera, perception, Hailo, Comma-link, and update integrations remain
-truthfully unavailable. Physical Pi boot/AP validation is still pending.
+truthfully unavailable. Clean-image repeated-boot network/AP/SSH qualification is still
+pending.
 
 ## Enforced safety boundary
 

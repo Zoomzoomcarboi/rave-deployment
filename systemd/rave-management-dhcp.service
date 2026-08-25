@@ -15,6 +15,7 @@ PrivateDevices=true
 PrivateTmp=true
 ProtectHome=true
 ProtectSystem=strict
+ReadWritePaths=/var/lib/misc
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectControlGroups=true

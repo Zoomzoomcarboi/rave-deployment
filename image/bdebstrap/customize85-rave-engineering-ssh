@@ -29,7 +29,6 @@ test -f "$rootfs/usr/lib/systemd/system/sshd-keygen.service"
 install -d -m 0755 \
   "$rootfs/etc/ssh/sshd_config.d" \
   "$rootfs/etc/systemd/system/ssh.socket.d" \
-  "$rootfs/etc/systemd/system/ssh.socket.wants" \
   "$rootfs/etc/systemd/system/sockets.target.wants" \
   "$rootfs/etc/sudoers.d"
 install -m 0644 "$sshd_policy" "$rootfs/etc/ssh/sshd_config.d/90-rave-ethernet.conf"
@@ -46,13 +45,14 @@ install -m 0600 "$authorized_key" "$rootfs/home/pi/.ssh/authorized_keys"
 chroot "$rootfs" /bin/chown pi:pi /home/pi/.ssh /home/pi/.ssh/authorized_keys
 chroot "$rootfs" /usr/sbin/usermod --password '*NP*' pi
 
-# Package installation enables ssh.service by default. Gate 2B deliberately
-# uses only the interface-scoped socket and per-device first-boot host keys.
-rm -f -- "$rootfs/etc/systemd/system/multi-user.target.wants/ssh.service"
+# Package installation enables ssh.service and conditionally wires its own key
+# generator into ssh.socket. Gate 2B uses only the address-scoped socket and the
+# unconditional RAVE host-key service, avoiding concurrent first-boot generators.
+rm -f -- \
+  "$rootfs/etc/systemd/system/multi-user.target.wants/ssh.service" \
+  "$rootfs/etc/systemd/system/ssh.socket.wants/sshd-keygen.service"
 ln -sf /usr/lib/systemd/system/ssh.socket \
   "$rootfs/etc/systemd/system/sockets.target.wants/ssh.socket"
-ln -sf /usr/lib/systemd/system/sshd-keygen.service \
-  "$rootfs/etc/systemd/system/ssh.socket.wants/sshd-keygen.service"
 
 chroot "$rootfs" /usr/sbin/visudo -cf /etc/sudoers
 chroot "$rootfs" /usr/sbin/sshd -t

@@ -9,6 +9,7 @@ from scripts.verify_rave_image import (
     VerificationError,
     verify_clone_safety,
     verify_gate2b_us_regulatory_domain,
+    verify_publishable_image_has_no_engineering_ssh,
     verify_rootfs,
 )
 
@@ -85,6 +86,20 @@ def test_verifier_rejects_token_assignment(tmp_path: Path) -> None:
     (root / "etc/unsafe.conf").write_text(f"{field}=synthetic-credential\n")
     with pytest.raises(VerificationError, match="token or credential"):
         verify_clone_safety(root)
+
+
+def test_publishable_policy_does_not_require_engineering_ssh(tmp_path: Path) -> None:
+    root = minimal_rootfs(tmp_path)
+    verify_publishable_image_has_no_engineering_ssh(root)
+
+
+def test_publishable_policy_rejects_engineering_ssh_assets(tmp_path: Path) -> None:
+    root = minimal_rootfs(tmp_path)
+    engineering_policy = root / "etc/ssh/sshd_config.d/90-rave-ethernet.conf"
+    engineering_policy.parent.mkdir(parents=True)
+    engineering_policy.write_text("synthetic engineering policy\n", encoding="utf-8")
+    with pytest.raises(VerificationError, match="non-publishable Gate 2B engineering SSH"):
+        verify_publishable_image_has_no_engineering_ssh(root)
 
 
 def regulatory_rootfs(tmp_path: Path, *, regdom: str = "US") -> Path:

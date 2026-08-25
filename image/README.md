@@ -4,7 +4,14 @@ Gate 1 established the seven-layer declarative image definition, but it had not 
 built. Gate 2A pins `raspberrypi/rpi-image-gen` v2.7.0 at commit
 `a7b6d4806183195f3efadb533f58c8e46393d057` and has generated and inspected a real
 Raspberry Pi 5 image. This is image-build evidence only: the image has not been
-flashed, booted, or validated on a Pi.
+qualified from the current networking source on a Pi.
+
+An earlier `gate2b-ethernet-ssh-4c4bb1a` engineering image was flashed and used for
+live diagnosis. That work proved three narrow management corrections, then reproduced
+a reboot where Ethernet and the management stack survived but the SSH listener did
+not. Those manually corrected runtime results are diagnostic hardware evidence, not a
+clean-image validation of the current source. The new source still requires the
+five-boot procedure in `docs/GATE2B_NETWORK_ACCEPTANCE.md`.
 
 The pin, including the digest-pinned Debian builder container, is recorded in
 `rpi-image-gen.lock.json`. The single build entry point is:
@@ -34,10 +41,12 @@ deployment setting in this release (`deploy.compression: zstd`); the former
 `image.compression` key did not control the deployed artifact.
 
 The build produces the compressed image below `work/deploy-<version>/`, an artifact
-safety report, and `provenance.json`. The verifier checks clone identity, credentials,
+safety report, and `provenance.json`. Before the artifact verifier runs, the target
+image's own dnsmasq and systemd parsers validate the installed DHCP configuration and
+relevant units/drop-ins. The verifier then checks clone identity, credentials,
 logs/caches, filesystem ownership, installed web content/dependencies, the exact
-management-only listener/AP/DHCP policy, and required boot enablement before provenance
-is written.
+management-only listener/AP/DHCP policy, DHCP sandbox/lease state, SSH dependency
+isolation, and required boot enablement before provenance is written.
 
 ## Composition and limits
 
@@ -50,7 +59,12 @@ read-only Pi management observations.
 
 `rave-engineering-ssh` is a deliberately non-publishable Gate 2B diagnostic feature.
 It enables key-only `pi` administration through systemd socket activation bound only
-to `10.77.0.1:22` on `eth0`; it does not expose SSH on the management Wi-Fi network.
+to the exact `10.77.0.1:22` address; it does not expose SSH on the management Wi-Fi
+network. `FreeBind=yes` permits early address binding without coupling the socket's
+lifetime to the `eth0.device` unit. Direct `ssh.service` boot enablement is removed;
+the enabled socket activates the service on demand after per-device host-key
+generation. RAVE's unconditional generator is the socket's sole host-key prerequisite;
+the distro's conditional generator is not also wired into the socket transaction.
 The image carries the reviewed engineering public key and sudo policy, never its
 private key. This access must be removed or replaced by an approved administration
 policy before public-release qualification.

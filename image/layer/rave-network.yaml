@@ -1,7 +1,7 @@
 # METABEGIN
 # X-Env-Layer-Name: rave-network
 # X-Env-Layer-Desc: Gate-2B isolated wlan0 provisioning AP and bounded DHCP
-# X-Env-Layer-Version: 0.2.1
+# X-Env-Layer-Version: 0.2.2
 # X-Env-Layer-Requires: rave-base
 # METAEND
 ---

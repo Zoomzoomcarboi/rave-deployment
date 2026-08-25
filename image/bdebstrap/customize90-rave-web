@@ -14,6 +14,8 @@ test -d "$repository_root/setup-ui/rave_web"
 test -f "$repository_root/systemd/rave-webd.service"
 test -f "$repository_root/systemd/rave-management-dhcp.service"
 test -f "$repository_root/THIRD_PARTY_NOTICES.md"
+test -x "$rootfs/usr/sbin/dnsmasq"
+test -x "$rootfs/usr/bin/systemd-analyze"
 
 install -d -m 0755 \
   "$rootfs/opt/rave/web/rave_web" \
@@ -34,3 +36,15 @@ ln -s /usr/lib/systemd/system/rave-management-dhcp.service \
   "$rootfs/etc/systemd/system/multi-user.target.wants/rave-management-dhcp.service"
 install -m 0644 "$repository_root/THIRD_PARTY_NOTICES.md" \
   "$rootfs/usr/share/doc/rave-web/THIRD_PARTY_NOTICES.md"
+
+# Fail the build with the target image's own parsers after all Gate 2B units,
+# drop-ins, and management-network configuration have been installed.
+chroot "$rootfs" /usr/sbin/dnsmasq --test \
+  --conf-file=/etc/rave/network/dnsmasq.conf --no-hosts --no-resolv
+chroot "$rootfs" /usr/bin/systemd-analyze verify --man=no \
+  ssh.socket \
+  ssh.service \
+  rave-engineering-ssh-hostkeys.service \
+  rave-wifi-init.service \
+  rave-management-dhcp.service \
+  rave-webd.service

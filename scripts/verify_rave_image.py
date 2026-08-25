@@ -7,6 +7,7 @@ import hashlib
 import json
 import os
 import re
+import shlex
 import stat
 from datetime import UTC, datetime
 from pathlib import Path
@@ -37,6 +38,13 @@ ENGINEERING_AUTHORIZED_KEY = (
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKR4QyPoOinkc4Jyg/o2/vgXzY+s3uCHP/CzFxGSg7JC "
     "rave-pi-debug"
 )
+ENGINEERING_SSH_ARTIFACTS = (
+    "etc/ssh/sshd_config.d/90-rave-ethernet.conf",
+    "etc/sudoers.d/90-rave-engineering-ssh",
+    "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf",
+    "home/pi/.ssh/authorized_keys",
+    "usr/lib/systemd/system/rave-engineering-ssh-hostkeys.service",
+)
 
 
 class VerificationError(RuntimeError):
@@ -46,6 +54,69 @@ class VerificationError(RuntimeError):
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise VerificationError(message)
+
+
+def systemd_directives(text: str, section: str, key: str) -> list[str]:
+    """Extract active unit directives after systemd has validated the unit syntax."""
+    current_section = ""
+    values: list[str] = []
+    logical_line = ""
+    for raw_line in text.splitlines():
+        line = f"{logical_line}{raw_line.lstrip() if logical_line else raw_line}"
+        if line.rstrip().endswith("\\"):
+            logical_line = f"{line.rstrip()[:-1]} "
+            continue
+        logical_line = ""
+        stripped = line.strip()
+        if not stripped or stripped.startswith(("#", ";")):
+            continue
+        if stripped.startswith("[") and stripped.endswith("]"):
+            current_section = stripped[1:-1]
+            continue
+        if current_section != section or "=" not in stripped:
+            continue
+        directive, value = stripped.split("=", 1)
+        if directive.strip() == key:
+            values.append(value.strip())
+    require(not logical_line, f"unterminated systemd continuation in [{section}] {key}")
+    return values
+
+
+def effective_systemd_list(texts: tuple[str, ...], section: str, key: str) -> list[str]:
+    values: list[str] = []
+    for text in texts:
+        for value in systemd_directives(text, section, key):
+            if value:
+                values.append(value)
+            else:
+                values.clear()
+    return values
+
+
+def effective_systemd_words(texts: tuple[str, ...], section: str, key: str) -> list[str]:
+    values: list[str] = []
+    for text in texts:
+        for value in systemd_directives(text, section, key):
+            if not value:
+                values.clear()
+            else:
+                values.extend(shlex.split(value))
+    return values
+
+
+def effective_systemd_scalar(texts: tuple[str, ...], section: str, key: str) -> str | None:
+    values = [value for text in texts for value in systemd_directives(text, section, key)]
+    return values[-1] if values else None
+
+
+def read_ini(path: Path, description: str) -> configparser.ConfigParser:
+    profile = configparser.ConfigParser(interpolation=None)
+    try:
+        loaded = profile.read(path, encoding="utf-8")
+    except configparser.Error as error:
+        raise VerificationError(f"invalid {description} structure: {error}") from error
+    require(loaded == [str(path)], f"{description} could not be read")
+    return profile
 
 
 def target_accounts(rootfs: Path) -> tuple[int, int]:
@@ -135,6 +206,219 @@ def verify_gate2b_us_regulatory_domain(rootfs: Path) -> None:
     require("ieee80211_regdom=GB" not in regulatory, "Wi-Fi regulatory domain fell back to GB")
 
 
+def unit_dropins(rootfs: Path, unit: str) -> list[Path]:
+    paths: list[Path] = []
+    for base in (rootfs / "usr/lib/systemd/system", rootfs / "etc/systemd/system"):
+        directory = base / f"{unit}.d"
+        if directory.is_dir():
+            paths.extend(sorted(directory.glob("*.conf")))
+    return paths
+
+
+def verify_management_profile(profile_path: Path) -> str:
+    require(profile_path.is_file(), "RAVE-Setup profile is missing")
+    require(stat.S_IMODE(profile_path.stat().st_mode) == 0o600, "RAVE-Setup profile permissions are unsafe")
+    profile = read_ini(profile_path, "NetworkManager keyfile")
+    require(profile.get("connection", "id") == "RAVE-Setup", "wrong provisioning profile id")
+    require(
+        profile.get("connection", "uuid") == "0fc02a7e-795a-4e05-8952-9ea47f31f695",
+        "wrong provisioning profile UUID",
+    )
+    require(profile.get("connection", "type") == "wifi", "provisioning profile is not Wi-Fi")
+    require(profile.get("connection", "interface-name") == "wlan0", "AP is not scoped to wlan0")
+    require(profile.getboolean("connection", "autoconnect"), "AP profile is not enabled")
+    require(
+        profile.getint("connection", "autoconnect-priority") == 100,
+        "AP autoconnect priority changed",
+    )
+    require(
+        profile.getint("connection", "wait-device-timeout") == 15000,
+        "AP device wait is not explicitly bounded to 15000 ms",
+    )
+    require(profile.get("wifi", "ssid") == "RAVE-Setup", "wrong provisioning SSID")
+    require(profile.get("wifi", "mode") == "ap", "provisioning profile is not an AP")
+    require(profile.get("ipv4", "method") == "manual", "AP must use manual IPv4")
+    require(profile.get("ipv4", "address1") == "192.168.77.1/24", "wrong management address/subnet")
+    require(profile.getboolean("ipv4", "never-default"), "AP may install a default route")
+    require(not profile.getboolean("ipv4", "may-fail"), "AP IPv4 configuration is optional")
+    require(
+        not profile.has_option("ipv4", "gateway"),
+        "AP keyfile contains a gateway property; an empty gateway is invalid on the target",
+    )
+    route_options = sorted(option for option, _ in profile.items("ipv4") if option.startswith("route"))
+    require(not route_options, f"AP keyfile contains explicit IPv4 route settings: {route_options}")
+    require(not profile.has_option("ipv4", "dns"), "AP keyfile configures IPv4 DNS servers")
+    require(not profile.get("ipv4", "dns-search", fallback=""), "AP keyfile configures DNS search domains")
+    require(profile.get("ipv6", "method") == "disabled", "AP IPv6 is not disabled")
+    require(not profile.has_section("wifi-security"), "provisioning profile contains Wi-Fi security material")
+    profile_text = profile_path.read_text(encoding="utf-8")
+    require("method=shared" not in profile_text, "NetworkManager shared/NAT mode is forbidden")
+    require("bridge" not in profile_text.lower(), "management profile configures a bridge")
+    return profile_text
+
+
+def verify_dnsmasq_configuration(path: Path) -> str:
+    require(path.is_file(), "RAVE dnsmasq configuration is missing")
+    text = path.read_text(encoding="utf-8")
+    directives: dict[str, list[str | None]] = {}
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" in line:
+            key, value = line.split("=", 1)
+            parsed_value: str | None = value.strip()
+        else:
+            key, parsed_value = line, None
+        directives.setdefault(key.strip(), []).append(parsed_value)
+
+    require("log-dhcp" not in directives, "verbose or invalid log-dhcp directive is configured")
+    expected_keys = {
+        "interface",
+        "listen-address",
+        "bind-interfaces",
+        "port",
+        "dhcp-range",
+        "dhcp-option",
+        "dhcp-leasefile",
+    }
+    require(set(directives) == expected_keys, f"unexpected dnsmasq directives: {sorted(set(directives) - expected_keys)}")
+    require(directives["interface"] == ["wlan0"], "DHCP is not restricted to wlan0")
+    require(directives["listen-address"] == ["192.168.77.1"], "DHCP has the wrong listen address")
+    require(directives["bind-interfaces"] == [None], "dnsmasq interface binding is not flag-style and exclusive")
+    require(directives["port"] == ["0"], "dnsmasq DNS service is not disabled")
+    require(
+        directives["dhcp-range"]
+        == ["192.168.77.100,192.168.77.199,255.255.255.0,12h"],
+        "management DHCP range changed",
+    )
+    require(directives["dhcp-option"] == ["3", "6"], "DHCP advertises a router or DNS server")
+    require(
+        directives["dhcp-leasefile"] == ["/var/lib/misc/dnsmasq.leases"],
+        "DHCP lease database path changed",
+    )
+    require("eth0" not in text, "DHCP listens on runtime Ethernet")
+    return text
+
+
+def verify_dhcp_service(rootfs: Path, unit_path: Path) -> str:
+    require(unit_path.is_file(), "RAVE DHCP service is missing")
+    dropins = unit_dropins(rootfs, "rave-management-dhcp.service")
+    require(not dropins, f"unexpected DHCP service drop-ins obscure the canonical sandbox: {dropins}")
+    unit = unit_path.read_text(encoding="utf-8")
+    texts = (unit,)
+    require(
+        effective_systemd_scalar(texts, "Service", "ProtectSystem") == "strict",
+        "DHCP must retain ProtectSystem=strict",
+    )
+    require(
+        effective_systemd_words(texts, "Service", "ReadWritePaths") == ["/var/lib/misc"],
+        "DHCP writable paths must be exactly /var/lib/misc",
+    )
+    exec_starts = systemd_directives(unit, "Service", "ExecStart")
+    require(len(exec_starts) == 1, "DHCP service must have one canonical ExecStart")
+    command = shlex.split(exec_starts[0])
+    require(command and command[0] == "/usr/sbin/dnsmasq", "DHCP service does not execute dnsmasq")
+    require(
+        "--conf-file=/etc/rave/network/dnsmasq.conf" in command
+        and "--no-hosts" in command
+        and "--no-resolv" in command,
+        "DHCP service does not use only the product configuration",
+    )
+    lease_directory = rootfs / "var/lib/misc"
+    require(lease_directory.is_dir() and not lease_directory.is_symlink(), "DHCP lease directory is missing or unsafe")
+    lease_stat = lease_directory.stat()
+    require(
+        (stat.S_IMODE(lease_stat.st_mode), lease_stat.st_uid, lease_stat.st_gid) == (0o755, 0, 0),
+        "DHCP lease directory must be root-owned mode 0755",
+    )
+    require(
+        not (lease_directory / "dnsmasq.leases").exists(),
+        "generic image carries a DHCP lease database",
+    )
+    return unit
+
+
+def verify_web_service(rootfs: Path, unit_path: Path) -> str:
+    require(unit_path.is_file(), "rave-webd service is missing")
+    dropins = unit_dropins(rootfs, "rave-webd.service")
+    require(not dropins, f"unexpected rave-webd drop-ins obscure listener policy: {dropins}")
+    unit = unit_path.read_text(encoding="utf-8")
+    exec_starts = systemd_directives(unit, "Service", "ExecStart")
+    require(len(exec_starts) == 1, "rave-webd must have one canonical ExecStart")
+    command = shlex.split(exec_starts[0])
+    require(command.count("--host") == 1, "rave-webd must configure exactly one host binding")
+    host_index = command.index("--host")
+    require(host_index + 1 < len(command), "rave-webd host binding has no address")
+    require(command[host_index + 1] == "192.168.77.1", "rave-webd is not management-address-only")
+    require(command.count("--port") == 1, "rave-webd must configure exactly one TCP port")
+    port_index = command.index("--port")
+    require(port_index + 1 < len(command), "rave-webd port has no value")
+    require(command[port_index + 1] == "8080", "rave-webd management port changed")
+    require(not {"--fd", "--uds"}.intersection(command), "rave-webd has an additional listener mechanism")
+    require("RAVE_PROVIDER=pi" in systemd_directives(unit, "Service", "Environment"), "rave-webd does not explicitly select the Pi provider")
+    require(
+        effective_systemd_scalar((unit,), "Service", "User") == "rave"
+        and effective_systemd_scalar((unit,), "Service", "Group") == "rave",
+        "rave-webd service identity changed",
+    )
+    require(effective_systemd_scalar((unit,), "Service", "NoNewPrivileges") == "true", "rave-webd privilege boundary changed")
+    require(not systemd_directives(unit, "Service", "RuntimeDirectory"), "rave-webd owns a shared runtime directory")
+    return unit
+
+
+def verify_runtime_ethernet_configuration(rootfs: Path) -> tuple[str, str]:
+    network_path = rootfs / "etc/systemd/network/10-rave-ethernet.network"
+    require(network_path.is_file(), "RAVE runtime Ethernet networkd policy is missing")
+    network_dropins = [
+        path
+        for base in (rootfs / "usr/lib/systemd/network", rootfs / "etc/systemd/network")
+        if (directory := base / "10-rave-ethernet.network.d").is_dir()
+        for path in sorted(directory.glob("*.conf"))
+    ]
+    require(not network_dropins, f"runtime Ethernet policy has unexpected drop-ins: {network_dropins}")
+    etc_networks = sorted((rootfs / "etc/systemd/network").glob("*.network"))
+    require(
+        etc_networks == [network_path],
+        f"unexpected administrator networkd policies may overlap runtime Ethernet: {etc_networks}",
+    )
+    network = read_ini(network_path, "systemd-networkd policy")
+    require(network.sections() == ["Match", "Network"], "runtime Ethernet has unexpected sections")
+    require(network.get("Match", "Name") == "eth0", "runtime Ethernet policy does not match eth0")
+    expected_network = {
+        "address": "10.77.0.1/24",
+        "dhcp": "no",
+        "linklocaladdressing": "no",
+        "defaultrouteondevice": "no",
+        "ipmasquerade": "no",
+        "ipv6acceptra": "no",
+    }
+    actual_network = dict(network.items("Network"))
+    require(actual_network == expected_network, f"runtime Ethernet policy changed: {actual_network}")
+    network_text = network_path.read_text(encoding="utf-8")
+    require("wlan0" not in network_text, "runtime Ethernet policy depends on management Wi-Fi")
+
+    unmanaged_path = rootfs / "etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf"
+    require(unmanaged_path.is_file(), "NetworkManager runtime exclusion is missing")
+    unmanaged = read_ini(unmanaged_path, "NetworkManager configuration")
+    require(
+        unmanaged.sections() == ["keyfile"]
+        and dict(unmanaged.items("keyfile")) == {"unmanaged-devices": "interface-name:eth0"},
+        "NetworkManager may own runtime Ethernet",
+    )
+    for base in (rootfs / "usr/lib/NetworkManager/conf.d", rootfs / "etc/NetworkManager/conf.d"):
+        if not base.is_dir():
+            continue
+        for path in base.glob("*.conf"):
+            if path == unmanaged_path:
+                continue
+            require(
+                "eth0" not in path.read_text(encoding="utf-8"),
+                f"another NetworkManager configuration references eth0: {path}",
+            )
+    return network_text, unmanaged_path.read_text(encoding="utf-8")
+
+
 def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
     machine_id = rootfs / "etc/machine-id"
     require(
@@ -162,9 +446,17 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
     require(rave_hostkeys_unit.is_file(), "RAVE engineering SSH host-key service is missing")
     require((rootfs / "usr/sbin/sshd").is_file(), "openssh-server daemon binary is missing")
     require((rootfs / "usr/bin/sudo").is_file(), "sudo executable is missing")
+    for unit_name in ("ssh.service", "rave-engineering-ssh-hostkeys.service"):
+        dropins = unit_dropins(rootfs, unit_name)
+        require(not dropins, f"unexpected {unit_name} drop-ins obscure the engineering SSH contract: {dropins}")
 
     socket_dropin_path = rootfs / "etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
     require(socket_dropin_path.is_file(), "engineering SSH socket override is missing")
+    socket_dropins = unit_dropins(rootfs, "ssh.socket")
+    require(
+        socket_dropins == [socket_dropin_path],
+        f"unexpected SSH socket drop-ins obscure listener policy: {socket_dropins}",
+    )
     socket_dropin = socket_dropin_path.read_text(encoding="utf-8")
     require(
         "Requires=rave-engineering-ssh-hostkeys.service" in socket_dropin.splitlines(),
@@ -174,17 +466,22 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
         "After=rave-engineering-ssh-hostkeys.service" in socket_dropin.splitlines(),
         "ssh.socket is not ordered after RAVE engineering host-key generation",
     )
-    listen_streams = [
-        line.strip() for line in socket_dropin.splitlines() if line.strip().startswith("ListenStream=")
-    ]
+    socket_unit_text = socket_unit.read_text(encoding="utf-8")
+    socket_texts = (socket_unit_text, socket_dropin)
+    listen_streams = effective_systemd_list(socket_texts, "Socket", "ListenStream")
     require(
-        listen_streams == ["ListenStream=", "ListenStream=10.77.0.1:22"],
+        listen_streams == ["10.77.0.1:22"],
         "engineering SSH socket does not reset the wildcard and bind only 10.77.0.1:22",
     )
-    require("FreeBind=yes" in socket_dropin, "engineering SSH socket is missing FreeBind=yes")
-    require("BindToDevice=eth0" in socket_dropin, "engineering SSH socket is not bound to eth0")
-    for wildcard in ("ListenStream=22", "0.0.0.0:22", "[::]:22", ":::22"):
-        require(wildcard not in socket_dropin, f"wildcard SSH listener is configured: {wildcard}")
+    require(
+        effective_systemd_scalar(socket_texts, "Socket", "FreeBind") == "yes",
+        "engineering SSH socket is missing FreeBind=yes",
+    )
+    bind_to_device = effective_systemd_scalar(socket_texts, "Socket", "BindToDevice")
+    require(
+        bind_to_device in (None, ""),
+        "engineering SSH socket has device-lifetime coupling through BindToDevice",
+    )
 
     socket_enablement = rootfs / "etc/systemd/system/sockets.target.wants/ssh.socket"
     require(socket_enablement.is_symlink(), "ssh.socket is not enabled at boot")
@@ -209,10 +506,9 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
     require(enabled_ssh_sockets == ["ssh.socket"], f"unexpected enabled SSH sockets: {enabled_ssh_sockets}")
 
     keygen_want = rootfs / "etc/systemd/system/ssh.socket.wants/sshd-keygen.service"
-    require(keygen_want.is_symlink(), "ssh.socket does not pull in first-boot host-key generation")
     require(
-        os.readlink(keygen_want) == "/usr/lib/systemd/system/sshd-keygen.service",
-        "unexpected SSH host-key generator wiring",
+        not keygen_want.exists() and not keygen_want.is_symlink(),
+        "ssh.socket has a competing conditional host-key generator",
     )
     service_keygen_want = rootfs / "etc/systemd/system/ssh.service.wants/sshd-keygen.service"
     require(
@@ -297,8 +593,8 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
     for line in active_sshd_lines:
         normalized = " ".join(line.split()).lower()
         require(
-            normalized not in {"listenaddress 0.0.0.0", "listenaddress ::"},
-            f"wildcard sshd ListenAddress is configured: {line}",
+            not normalized.startswith("listenaddress "),
+            f"sshd listener policy must remain owned exclusively by ssh.socket: {line}",
         )
 
     passwd = {
@@ -358,18 +654,40 @@ def verify_engineering_ethernet_ssh(rootfs: Path) -> None:
     require("pi" not in sudo_members, "pi retains generic sudo-group membership")
     require(int(passwd["pi"][3]) != int(groups["sudo"][2]), "sudo is pi's primary group")
 
-    dependency_text = socket_dropin + socket_unit.read_text(encoding="utf-8") + rave_hostkeys
-    for forbidden_dependency in (
-        "wlan0",
-        "RAVE-Setup",
+    dependency_units = {
+        "ssh.socket": socket_texts,
+        "ssh.service": (ssh_service.read_text(encoding="utf-8"),),
+        "rave-engineering-ssh-hostkeys.service": (rave_hostkeys,),
+    }
+    forbidden_dependencies = {
         "rave-wifi-init.service",
+        "rave-management-dhcp.service",
+        "rave-webd.service",
+        "NetworkManager.service",
         "NetworkManager-wait-online.service",
         "network-online.target",
-    ):
+    }
+    for unit_name, texts in dependency_units.items():
+        dependency_targets = {
+            target
+            for directive in ("Requires", "Wants", "After", "Before", "BindsTo", "PartOf")
+            for target in effective_systemd_words(texts, "Unit", directive)
+        }
+        forbidden = sorted(dependency_targets.intersection(forbidden_dependencies))
+        require(not forbidden, f"{unit_name} depends on the management stack: {forbidden}")
+        device_dependencies = sorted(target for target in dependency_targets if target.endswith(".device"))
         require(
-            forbidden_dependency not in dependency_text,
-            f"engineering SSH incorrectly depends on management Wi-Fi: {forbidden_dependency}",
+            not device_dependencies,
+            f"{unit_name} has a device-lifetime dependency: {device_dependencies}",
         )
+
+
+def verify_publishable_image_has_no_engineering_ssh(rootfs: Path) -> None:
+    present = [relative for relative in ENGINEERING_SSH_ARTIFACTS if (rootfs / relative).exists()]
+    require(
+        not present,
+        f"publishable image contains non-publishable Gate 2B engineering SSH assets: {present}",
+    )
 
 
 def verify_rootfs(rootfs: Path) -> dict[str, object]:
@@ -439,13 +757,8 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
             f"missing runtime package: {package}",
         )
 
-    unit = (rootfs / "usr/lib/systemd/system/rave-webd.service").read_text(encoding="utf-8")
-    require("--host 192.168.77.1" in unit, "rave-webd is not bound to the management address")
-    require("RAVE_PROVIDER=pi" in unit, "rave-webd does not explicitly select the Pi provider")
-    require("--host 0.0.0.0" not in unit and "--host eth0" not in unit, "unsafe web exposure")
-    require("User=rave" in unit and "Group=rave" in unit, "rave-webd service identity changed")
-    require("NoNewPrivileges=true" in unit, "rave-webd privilege boundary changed")
-    require("RuntimeDirectory=" not in unit, "rave-webd owns a shared runtime directory")
+    web_unit_path = rootfs / "usr/lib/systemd/system/rave-webd.service"
+    unit = verify_web_service(rootfs, web_unit_path)
     wifi_init_path = rootfs / "usr/libexec/rave/rave-wifi-init"
     wifi_init_stat = wifi_init_path.stat()
     require(
@@ -509,8 +822,8 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     require("Requires=NetworkManager.service" in nm_wait, "NM wait-online does not require NetworkManager")
     require("Before=network-online.target" in nm_wait, "NM wait-online does not gate network-online")
     require("ExecStart=/usr/bin/nm-online -s -q" in nm_wait, "NM startup completion is not awaited")
-    dhcp_unit = (rootfs / "usr/lib/systemd/system/rave-management-dhcp.service").read_text(
-        encoding="utf-8"
+    dhcp_unit = verify_dhcp_service(
+        rootfs, rootfs / "usr/lib/systemd/system/rave-management-dhcp.service"
     )
     for consumer_unit, name in ((dhcp_unit, "DHCP"), (unit, "web")):
         require("Wants=network-online.target" in consumer_unit, f"{name} does not pull network-online")
@@ -525,13 +838,7 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     require(not (rootfs / "etc/systemd/network/01-eth0.network").exists(), "unreviewed generated eth0 policy remains")
     iwd_mask = rootfs / "etc/systemd/system/iwd.service"
     require(iwd_mask.is_symlink() and os.readlink(iwd_mask) == "/dev/null", "standalone iwd is not masked")
-    runtime_network = (rootfs / "etc/systemd/network/10-rave-ethernet.network").read_text(encoding="utf-8")
-    for expected in ("Name=eth0", "Address=10.77.0.1/24", "DHCP=no", "IPMasquerade=no"):
-        require(expected in runtime_network, f"invalid runtime Ethernet policy: {expected}")
-    for forbidden in ("Gateway=", "DNS=", "DHCPServer=yes"):
-        require(forbidden not in runtime_network, f"runtime Ethernet has forbidden setting: {forbidden}")
-    nm_unmanaged = (rootfs / "etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf").read_text(encoding="utf-8")
-    require("unmanaged-devices=interface-name:eth0" in nm_unmanaged, "NetworkManager may own runtime Ethernet")
+    verify_runtime_ethernet_configuration(rootfs)
     wifi_backend = (rootfs / "etc/NetworkManager/conf.d/20-rave-wifi-backend.conf").read_text(
         encoding="utf-8"
     )
@@ -539,41 +846,9 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     require((rootfs / "usr/sbin/wpa_supplicant").is_file(), "wpa_supplicant backend binary is missing")
 
     profile_path = rootfs / "etc/NetworkManager/system-connections/rave-setup.nmconnection"
-    require(stat.S_IMODE(profile_path.stat().st_mode) == 0o600, "RAVE-Setup profile permissions are unsafe")
-    profile = configparser.ConfigParser(interpolation=None)
-    profile.read(profile_path, encoding="utf-8")
-    require(profile.get("connection", "id") == "RAVE-Setup", "wrong provisioning profile id")
-    require(profile.get("connection", "interface-name") == "wlan0", "AP is not scoped to wlan0")
-    require(profile.getboolean("connection", "autoconnect"), "AP profile is not enabled")
-    require(
-        profile.getint("connection", "wait-device-timeout") == 15000,
-        "AP device wait is not explicitly bounded to 15000 ms",
-    )
-    require(profile.get("wifi", "ssid") == "RAVE-Setup", "wrong provisioning SSID")
-    require(profile.get("wifi", "mode") == "ap", "provisioning profile is not an AP")
-    require(profile.get("ipv4", "method") == "manual", "AP must use manual IPv4")
-    require(profile.get("ipv4", "address1") == "192.168.77.1/24", "wrong management address/subnet")
-    require(profile.getboolean("ipv4", "never-default"), "AP may install a default route")
-    require(not profile.getboolean("ipv4", "may-fail"), "AP IPv4 configuration is optional")
-    require(not profile.get("ipv4", "gateway", fallback=""), "AP gateway must be empty")
-    require(profile.get("ipv6", "method") == "disabled", "AP IPv6 is not disabled")
-    require(not profile.has_section("wifi-security"), "provisioning profile contains Wi-Fi security material")
-    profile_text = profile_path.read_text(encoding="utf-8")
-    require("method=shared" not in profile_text, "NetworkManager shared/NAT mode is forbidden")
-    require("bridge" not in profile_text.lower(), "management profile configures a bridge")
+    profile_text = verify_management_profile(profile_path)
 
-    dnsmasq = (rootfs / "etc/rave/network/dnsmasq.conf").read_text(encoding="utf-8")
-    for expected in (
-        "interface=wlan0",
-        "listen-address=192.168.77.1",
-        "bind-interfaces",
-        "port=0",
-        "dhcp-range=192.168.77.100,192.168.77.199,255.255.255.0,12h",
-        "dhcp-option=3",
-        "dhcp-option=6",
-    ):
-        require(expected in dnsmasq.splitlines(), f"missing bounded DHCP setting: {expected}")
-    require("eth0" not in dnsmasq, "DHCP listens on runtime Ethernet")
+    dnsmasq = verify_dnsmasq_configuration(rootfs / "etc/rave/network/dnsmasq.conf")
 
     sysctl = (rootfs / "etc/sysctl.d/90-rave-network-isolation.conf").read_text(encoding="utf-8")
     require("net.ipv4.ip_forward=0" in sysctl, "IPv4 forwarding is not disabled")
@@ -590,6 +865,9 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
         "engineering_ethernet_ssh_publishable": False,
         "limitations": {
             "physical_wifi_ap_operation": "requires Raspberry Pi hardware validation",
+            "networkmanager_target_profile_load": "requires clean-image Raspberry Pi boot validation",
+            "dhcp_runtime_lease_write": "requires clean-image Raspberry Pi boot validation",
+            "ssh_listener_reboot_persistence": "requires five consecutive clean-image boot cycles",
         },
         "checks": {
             "rave_account": "pass",
@@ -605,12 +883,15 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
             "isolated_runtime_ethernet": "pass",
             "provisioning_ap_profile": "pass",
             "bounded_dhcp": "pass",
+            "dhcp_strict_sandbox_and_lease_state": "pass",
             "no_bridge_forwarding_or_nat": "pass",
             "pi_provider_selected": "pass",
             "machine_id_uninitialized": "pass",
             "ssh_host_keys_absent": "pass",
             "rave_host_keys_independent_of_systemd_first_boot": "pass",
             "engineering_ethernet_ssh": "pass_non_publishable",
+            "ssh_without_device_lifetime_coupling": "pass",
+            "ssh_management_dependency_isolation": "pass",
             "only_reviewed_network_profile": "pass",
             "rave_private_state_absent": "pass",
             "identity_and_secret_scan": "pass",
