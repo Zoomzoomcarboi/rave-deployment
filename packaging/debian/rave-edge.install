@@ -1,4 +1,2 @@
 systemd/rave-edge.service lib/systemd/system/
-systemd/rave-setup.service lib/systemd/system/
 config/rave.toml.example usr/share/doc/rave-edge/examples/
-setup-ui usr/lib/rave/

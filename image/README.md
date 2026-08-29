@@ -14,10 +14,12 @@ clean-image validation of the current source. The new source still requires the
 five-boot procedure in `docs/GATE2B_NETWORK_ACCEPTANCE.md`.
 
 The pin, including the digest-pinned Debian builder container, is recorded in
-`rpi-image-gen.lock.json`. The single build entry point is:
+`rpi-image-gen.lock.json`. The single engineering-image build entry point requires
+the intended ED25519 public key as explicit input:
 
 ```sh
-./scripts/build-rave-os.sh
+RAVE_ENGINEERING_SSH_PUBLIC_KEY_FILE=/path/to/engineering-key.pub \
+  ./scripts/build-rave-os.sh
 ```
 
 An optional argument selects the output directory. The default is
@@ -28,15 +30,17 @@ host tools in a digest-pinned privileged container without passing a block devic
 does not flash media or change host networking. Docker, Git, Python 3, network access
 to upstream source/package repositories, and sufficient disk space are prerequisites.
 
-The known-good upstream invocation, run inside that controlled container, is:
+The builder invocation, run inside that controlled container, also receives the
+validated public key through the image configuration override:
 
 ```sh
 /builder/rpi-image-gen build -B /out/work -S /rave/image \
-  -c rave-os-gate1.yaml -- IGconf_artefact_version=gate2b-<rave-commit>
+  -c rave-os.yaml -- IGconf_artefact_version=gate2b-<rave-commit> \
+  IGconf_rave_ssh_public_key='<validated-ed25519-public-key>'
 ```
 
 With `-S /rave/image`, v2.7.0 resolves configuration names below that source tree's
-`config/` directory, so `-c config/rave-os-gate1.yaml` is invalid. Compression is a
+`config/` directory, so `-c config/rave-os.yaml` is invalid. Compression is a
 deployment setting in this release (`deploy.compression: zstd`); the former
 `image.compression` key did not control the deployed artifact.
 
@@ -54,8 +58,9 @@ The composition starts from upstream `trixie-minbase.yaml`, targets the upstream
 and Raspberry Pi OS image layers, and adds `rave-base`, `rave-identity`, `rave-network`,
 `rave-engineering-ssh`, `rave-hailo`, `rave-runtime`, `rave-web`, and `rave-update`.
 Hailo, production perception, and updating remain explicit non-integrated markers.
-The end-user Gate 2B management path consists of the isolated first-boot AP and
-read-only Pi management observations.
+The management path consists of saved-station startup, the isolated provisioning AP,
+typed scan/connect/provisioning operations, and truthful appliance observations. The
+new path remains pending target-image and Pi validation.
 
 `rave-engineering-ssh` is a deliberately non-publishable Gate 2B diagnostic feature.
 It enables key-only `pi` administration through systemd socket activation bound only
@@ -65,13 +70,16 @@ lifetime to the `eth0.device` unit. Direct `ssh.service` boot enablement is remo
 the enabled socket activates the service on demand after per-device host-key
 generation. RAVE's unconditional generator is the socket's sole host-key prerequisite;
 the distro's conditional generator is not also wired into the socket transaction.
-The image carries the reviewed engineering public key and sudo policy, never its
-private key. This access must be removed or replaced by an approved administration
-policy before public-release qualification.
+The repository carries no default engineering authorization key. An engineering build
+fails unless it receives one valid OpenSSH ED25519 public key; its fingerprint is
+recorded in provenance. The resulting non-publishable image carries that public key
+and the reviewed sudo policy, never a private key. This access must be removed or
+replaced by an approved administration policy before public-release qualification.
 
 Gate 2B explicitly sets the Wi-Fi regulatory domain to `US` for physical validation
-units operated in the United States. Locale, timezone, keyboard, and first-boot region
-selection remain next-revision work, so this gate retains upstream locale behavior.
+units operated in the United States. The appliance timezone is explicitly `Etc/UTC`;
+unsynchronized wall time remains reported as unsynchronized. Locale, keyboard, and
+first-boot region selection remain later work.
 A future public release requires an explicit country-appropriate regulatory-domain
 and onboarding policy; no single Wi-Fi regulatory domain is valid everywhere.
 

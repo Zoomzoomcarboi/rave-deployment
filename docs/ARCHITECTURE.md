@@ -13,11 +13,15 @@ camera-to-raw-inference stage, ZBook inference/tracking, the dedicated C3X Ether
 path, and StarPilot network/UI integration. See `VALIDATED_BASELINES.md` and
 `PERCEPTION_V5_BASELINE.md`.
 
-Gate 2B keeps `rave-webd` unprivileged while explicitly selecting a read-only Pi
-provider for OS, thermal, and management-interface observations. The first-boot AP is
-owned by NetworkManager/dnsmasq outside the web process, and the listener is restricted
-to `192.168.77.1`. Camera, perception, Hailo, Comma link, and updates remain
-unavailable/not integrated. See `MANAGEMENT_NETWORK.md`.
+The management implementation keeps `rave-webd` unprivileged while selecting a Pi
+provider for OS, thermal, time, and typed management-network requests. The web service
+cannot invoke NetworkManager. A root-owned `rave-networkd` accepts only versioned
+status, scan, connect, and provisioning operations over `/run/rave/networkd.sock`,
+then performs fixed `wlan0`/profile operations. The HTTP listener is inherited from a
+systemd socket bound to `wlan0`; the web process cannot create non-local network
+sockets. Camera, perception, Hailo, Comma link, and updates remain unavailable/not
+integrated. This management revision is host-tested and awaits Pi validation. See
+`MANAGEMENT_NETWORK.md`.
 
 ## Hard target and real-time architecture
 

@@ -1,31 +1,37 @@
 [Unit]
 Description=RAVE local management web service
-Requires=rave-wifi-init.service
-Wants=network-online.target
-After=network-online.target NetworkManager-wait-online.service rave-wifi-init.service
+Requires=rave-webd.socket
+After=rave-webd.socket
 
 [Service]
 Type=simple
 User=rave
 Group=rave
 Environment=RAVE_PROVIDER=pi
-ExecStart=/usr/bin/python3 -m uvicorn rave_web.app:app --app-dir /opt/rave/web --host 192.168.77.1 --port 8080 --no-access-log
+Environment=PYTHONPATH=/opt/rave/web:/opt/rave/management
+ExecStart=/usr/bin/python3 -m uvicorn rave_web.app:app --app-dir /opt/rave/web --fd 3 --no-access-log
 Restart=on-failure
 RestartSec=5s
+Nice=10
+CPUWeight=10
+IOSchedulingClass=idle
 NoNewPrivileges=true
 PrivateDevices=true
 PrivateTmp=true
 ProtectHome=true
 ProtectSystem=strict
+ProtectClock=true
+ProtectHostname=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
 ProtectControlGroups=true
-RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+RestrictAddressFamilies=AF_UNIX
 RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
 LockPersonality=true
 MemoryDenyWriteExecute=true
 SystemCallArchitectures=native
+CapabilityBoundingSet=
+AmbientCapabilities=
 UMask=0077
-
-[Install]
-WantedBy=multi-user.target

@@ -1,6 +1,6 @@
 # METABEGIN
 # X-Env-Layer-Name: rave-hailo
-# X-Env-Layer-Desc: Hailo compatibility boundary; packages intentionally absent in Gate 1
+# X-Env-Layer-Desc: Hailo compatibility boundary; runtime packages are not yet integrated
 # X-Env-Layer-Version: 0.1.0
 # X-Env-Layer-Requires: rave-base
 # METAEND

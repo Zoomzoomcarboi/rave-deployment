@@ -1,4 +1,4 @@
-.PHONY: install test lint doctor run setup-ui package image
+.PHONY: install test lint doctor run setup-ui image
 
 install:
 	python3 -m pip install -e '.[dev,setup]'
@@ -17,9 +17,6 @@ run:
 
 setup-ui:
 	uvicorn rave_web.app:app --app-dir setup-ui --host 127.0.0.1 --port 8080
-
-package:
-	@echo "TODO: invoke Debian package build"
 
 image:
 	./scripts/build-rave-os.sh

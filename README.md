@@ -18,10 +18,11 @@ See [`docs/VALIDATED_BASELINES.md`](docs/VALIDATED_BASELINES.md) and
 End-user images and flashing instructions are available in
 **[release/](release/README.md)**.
 
-The current image is a **Gate 2B test prerelease**. It has passed image-build and
-artifact validation. An earlier engineering image supplied diagnostic Pi boot
-evidence, but the corrected networking/SSH source has not yet passed clean-image,
-five-boot hardware qualification.
+The last built image is a **Gate 2B test prerelease**. The current source adds typed
+management Wi-Fi provisioning, build-supplied engineering-key authorization, and UTC
+time policy; that source has host tests but has not yet produced or qualified a new
+Pi image. The currently powered AP-only appliance has supplied useful hardware
+evidence, but manual diagnostic key changes on that unit are not image qualification.
 
 ## Current status
 
@@ -58,11 +59,13 @@ The repository's synthetic loop and JSON debug path remain development-only.
 `protocol/rave.proto` is still a proposed schema and is not a production wire
 contract.
 
-The Gate 2B management candidate includes an unprivileged `rave-webd`, the static
-Galaxy-language UI, a read-only Pi management provider, and an isolated first-boot
-`RAVE-Setup` AP. Camera, perception, Hailo, Comma-link, and update integrations remain
-truthfully unavailable. Clean-image repeated-boot network/AP/SSH qualification is still
-pending.
+The management candidate includes an unprivileged `rave-webd`, the static
+Galaxy-language UI, a narrow root-owned `rave-networkd`, saved-station startup and
+bounded `RAVE-Setup` recovery, and truthful UTC synchronization status. Network
+actuation crosses a root-owned local Unix socket and cannot carry arbitrary commands,
+interfaces, or NetworkManager properties. Camera, perception, Hailo, Comma-link, and
+update integrations remain truthfully unavailable. The new management path is
+implemented and unit-tested, not Pi-validated.
 
 ## Enforced safety boundary
 
@@ -95,7 +98,7 @@ Install development dependencies in a virtual environment, then run checks:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e '.[dev]'
+pip install -e '.[dev,setup]'
 rave config-check --config config/rave.toml.example
 rave doctor --config config/rave.toml.example
 pytest

@@ -1,12 +1,12 @@
 # METABEGIN
 # X-Env-Layer-Name: rave-web
 # X-Env-Layer-Desc: RAVE local management web service and static assets
-# X-Env-Layer-Version: 0.2.1
+# X-Env-Layer-Version: 0.3.0
 # X-Env-Layer-Requires: rave-base
 # METAEND
 ---
 mmdebstrap:
-  packages: [python3-fastapi, python3-pydantic, python3-uvicorn]
+  packages: [python3-fastapi, python3-pydantic, python3-uvicorn, avahi-daemon]
   customize-hooks:
     - |-
       set -eu

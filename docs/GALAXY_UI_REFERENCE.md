@@ -19,7 +19,7 @@ as the browser implementation reference.
 
 ## Faithfully ported styling contract
 
-Gate 1 keeps RAVE-specific markup, routes, state, and vanilla JavaScript, while
+RAVE keeps RAVE-specific markup, routes, state, and vanilla JavaScript, while
 faithfully porting the relevant MIT-licensed Galaxy declarations onto the equivalent
 RAVE shell selectors. This includes:
 

@@ -17,8 +17,8 @@ def test_management_provider_has_no_privileged_network_or_hardware_calls() -> No
     assert all(term not in source for term in forbidden)
 
 
-def test_image_composes_all_gate_one_layers() -> None:
-    config = yaml.safe_load((ROOT / "image/config/rave-os-gate1.yaml").read_text())
+def test_image_composes_all_rave_layers() -> None:
+    config = yaml.safe_load((ROOT / "image/config/rave-os.yaml").read_text())
     assert config["include"]["file"] == "trixie-minbase.yaml"
     assert config["device"]["layer"] == "rpi5"
     assert config["device"]["hostname"] == "rave-pi"
@@ -53,7 +53,7 @@ def test_gate_two_a_builder_is_exactly_pinned() -> None:
 def test_gate_two_a_entrypoint_uses_source_tree_and_relative_config_name() -> None:
     script = (ROOT / "scripts/build-rave-os.sh").read_text()
     assert 'resolved_commit == "$builder_commit"' in script
-    assert "-S /rave/image -c rave-os-gate1.yaml" in script
+    assert "-S /rave/image -c rave-os.yaml" in script
     assert "--device" not in script
     assert "RAVE_ARTIFACT_DENYLIST" in script
 
@@ -75,12 +75,17 @@ def test_gate_two_a_entrypoint_initializes_fresh_unprivileged_build_tree() -> No
 def test_runtime_paths_and_service_identity_are_product_scoped() -> None:
     base = (ROOT / "image/layer/rave-base.yaml").read_text()
     unit = (ROOT / "systemd/rave-webd.service").read_text()
+    socket_unit = (ROOT / "systemd/rave-webd.socket").read_text()
     for path in ("/opt/rave", "/etc/rave", "/var/lib/rave", "/var/log/rave", "/run/rave"):
         assert path in base
     assert "User=rave" in unit and "Group=rave" in unit
     assert "PrivateDevices=true" in unit
-    assert "--host 192.168.77.1" in unit
-    assert "--host 0.0.0.0" not in unit
+    assert "RestrictAddressFamilies=AF_UNIX" in unit
+    assert "Nice=10" in unit and "CPUWeight=10" in unit
+    assert "--fd 3" in unit
+    assert "--host" not in unit
+    assert "BindToDevice=wlan0" in socket_unit
+    assert "ListenStream=8080" in socket_unit
     assert "RAVE_PROVIDER=pi" in unit
     assert "RuntimeDirectory=" not in unit
 
@@ -218,31 +223,33 @@ def test_gate_two_b_services_are_installed_and_enabled_by_image_hooks() -> None:
     web_unit = (ROOT / "systemd/rave-webd.service").read_text()
     assert "multi-user.target.wants/NetworkManager.service" in network_hook
     assert "multi-user.target.wants/systemd-networkd.service" in network_hook
+    assert "multi-user.target.wants/rave-networkd.service" in network_hook
     assert "network-online.target.wants/NetworkManager-wait-online.service" in network_hook
+    assert 'rm -f -- "$rootfs/etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service"' in network_hook
     assert 'rm -f -- "$rootfs/etc/systemd/network/02-wlan0.network"' in network_hook
     assert 'rm -f -- "$rootfs/etc/systemd/network/01-eth0.network"' in network_hook
     assert 'ln -sf /dev/null "$rootfs/etc/systemd/system/iwd.service"' in network_hook
     network_layer = (ROOT / "image/layer/rave-network.yaml").read_text()
     assert "packages: [network-manager, wpasupplicant, dnsmasq-base]" in network_layer
-    assert "multi-user.target.wants/rave-webd.service" in web_hook
-    assert "multi-user.target.wants/rave-management-dhcp.service" in web_hook
-    assert "/usr/sbin/dnsmasq --test" in web_hook
+    assert "sockets.target.wants/rave-webd.socket" in web_hook
+    assert "multi-user.target.wants/rave-webd.service" not in web_hook
+    assert "multi-user.target.wants/rave-management-dhcp.service" not in web_hook
+    assert "/usr/sbin/dnsmasq --test" in network_hook
     assert "/usr/bin/systemd-analyze verify --man=no" in web_hook
-    assert "--host 192.168.77.1" in web_unit
-    assert "--host 0.0.0.0" not in web_unit
+    assert "--fd 3" in web_unit
+    assert "--host" not in web_unit
     assert "eth0" not in web_unit
     dhcp_unit = (ROOT / "systemd/rave-management-dhcp.service").read_text()
     for unit in (web_unit, dhcp_unit):
-        assert "Wants=network-online.target" in unit
-        assert "After=network-online.target NetworkManager-wait-online.service" in unit
-    assert "Before=rave-webd.service" in dhcp_unit
+        assert "network-online.target" not in unit
+        assert "NetworkManager-wait-online.service" not in unit
     assert "ProtectSystem=strict" in dhcp_unit
     assert "ReadWritePaths=/var/lib/misc" in dhcp_unit
     assert 'install -d -m 0755 "$rootfs/var/lib/misc"' in network_hook
 
 
 def test_gate_two_b_image_declares_us_regulatory_domain() -> None:
-    config = (ROOT / "image/config/rave-os-gate1.yaml").read_text()
+    config = (ROOT / "image/config/rave-os.yaml").read_text()
     assert "regdom: US" in config
     assert "regdom: GB" not in config
 
@@ -252,19 +259,24 @@ def test_gate_two_b_acceptance_tool_is_read_only_and_checks_explicit_states() ->
     script = path.read_text(encoding="utf-8")
     assert os.access(path, os.X_OK)
     for unit in (
-        "rave-wifi-init.service",
+        "rave-networkd.service",
         "rave-management-dhcp.service",
+        "rave-webd.socket",
         "rave-webd.service",
         "ssh.socket",
+        "systemd-timesyncd.service",
     ):
         assert unit in script
     for required in (
         "ActiveState",
         "SubState",
+        "NRestarts",
         "10.77.0.1:22",
         "192.168.77.1:8080",
         "dnsmasq --test",
         "BindToDevice",
+        "/run/rave/networkd.sock",
+        "Etc/UTC",
         "sys-subsystem-net-devices-eth0.device",
     ):
         assert required in script
@@ -283,9 +295,10 @@ def test_gate_two_b_acceptance_tool_is_read_only_and_checks_explicit_states() ->
 
 def test_gate_two_b_acceptance_document_requires_five_untouched_boots() -> None:
     document = (ROOT / "docs/GATE2B_NETWORK_ACCEPTANCE.md").read_text(encoding="utf-8")
-    assert "five consecutive cold boots" in document.lower()
+    lower_document = document.lower()
+    assert "five consecutive cold boots" in lower_document
     assert "scripts/validate-gate2b-network.sh" in document
-    assert "do not restart or repair any RAVE service" in document
+    assert "do not restart or repair any rave service" in lower_document
     assert "BindsTo=" in document
     assert "sys-subsystem-net-devices-eth0.device" in document
     assert "complete RAVE system" in document

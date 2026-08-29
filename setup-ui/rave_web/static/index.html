@@ -3,51 +3,202 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#8b6cc5">
-    <title>RAVE</title>
+    <meta name="theme-color" content="#06060f">
+    <meta name="description" content="RAVE local appliance dashboard and management interface">
+    <title>RAVE Dashboard</title>
     <link rel="stylesheet" href="/static/app.css">
     <script type="module" src="/static/app.js"></script>
   </head>
   <body>
+    <a class="skip-link" href="#content">Skip to main content</a>
     <button class="menu-button" type="button" aria-controls="sidebar" aria-expanded="false">
-      <span aria-hidden="true">☰</span><span class="sr-only">Open navigation</span>
+      <span class="menu-icon" aria-hidden="true"><span></span><span></span><span></span></span>
+      <span class="sr-only">Open navigation</span>
     </button>
     <div class="underlay" hidden></div>
+
     <aside class="sidebar" id="sidebar">
       <header class="product-mark">
-        <div class="product-glyph" aria-hidden="true">R</div>
-        <div><strong>RAVE</strong><small>Rear Awareness</small></div>
+        <div class="product-glyph" aria-hidden="true"><span>R</span></div>
+        <div class="product-name"><strong>RAVE</strong><small>Rear Awareness</small></div>
       </header>
+
       <nav aria-label="Primary">
         <p class="nav-label">Appliance</p>
-        <a href="#dashboard" data-view="dashboard" class="active">Dashboard</a>
-        <a href="#network" data-view="network">Network</a>
-        <a href="#system" data-view="system">System</a>
-        <a href="#diagnostics" data-view="diagnostics">Diagnostics</a>
+        <a href="#dashboard" data-view="dashboard" class="active">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13h6V4H4v9Zm0 7h6v-4H4v4Zm10 0h6v-9h-6v9Zm0-16v4h6V4h-6Z"/></svg>
+          <span>Overview</span>
+        </a>
+        <a href="#network" data-view="network">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 9.5a13 13 0 0 1 17 0M6.5 13a8.5 8.5 0 0 1 11 0M9.5 16.5a4 4 0 0 1 5 0M12 20h.01"/></svg>
+          <span>Network</span>
+        </a>
+        <a href="#system" data-view="system">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+          <span>System</span>
+        </a>
+        <a href="#diagnostics" data-view="diagnostics">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15h3l2-6 4 10 2-7 2 3h3"/></svg>
+          <span>Diagnostics</span>
+        </a>
       </nav>
-      <footer><span class="status-dot ready"></span>Gate 2B candidate</footer>
+
+      <footer class="sidebar-footer">
+        <span class="footer-mark" aria-hidden="true"></span>
+        <span><strong>Local management</strong><small>Raspberry Pi appliance</small></span>
+      </footer>
     </aside>
+
     <main class="content" id="content" tabindex="-1">
       <section class="page" data-page="dashboard">
         <header class="page-header">
-          <div><p class="eyebrow">Appliance overview</p><h1>Dashboard</h1></div>
-          <span class="pill unavailable" id="overall-state">Unavailable</span>
+          <div><p class="eyebrow">Appliance overview</p><h1>Overview</h1></div>
+          <p class="page-context">RAVE OS local management</p>
         </header>
-        <div class="notice"><span class="status-dot unavailable"></span><div><strong>Perception integration is incomplete</strong><p>Management is available; camera, perception, Hailo, and the Comma link remain intentionally unavailable.</p></div></div>
-        <div class="card-grid" id="component-cards" aria-live="polite"></div>
+
+        <article class="status-hero unavailable" id="status-hero">
+          <div class="status-orbit" aria-hidden="true"><span></span></div>
+          <div class="status-copy">
+            <p class="status-label">Current appliance state</p>
+            <p class="status-value unavailable" id="overall-state">Unavailable</p>
+            <p class="status-summary" id="overall-summary">Waiting for current appliance status.</p>
+          </div>
+          <div class="status-proof"><span class="status-symbol" aria-hidden="true"></span><span id="overall-proof">Current data required</span></div>
+        </article>
+
+        <section aria-labelledby="at-a-glance-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">At a glance</p><h2 id="at-a-glance-title">Management and system</h2></div>
+          </div>
+          <div class="summary-grid">
+            <article class="summary-item">
+              <span class="summary-icon network" aria-hidden="true"></span>
+              <div><p>Management Wi-Fi</p><strong class="dynamic-state unavailable" id="overview-network">Unavailable</strong><small id="overview-network-detail">Current network state unavailable.</small></div>
+            </article>
+            <article class="summary-item">
+              <span class="summary-icon system" aria-hidden="true"></span>
+              <div><p>Management system</p><strong class="dynamic-state unavailable" id="overview-system">Unavailable</strong><small>Local appliance services</small></div>
+            </article>
+            <article class="summary-item">
+              <span class="summary-icon thermal" aria-hidden="true"></span>
+              <div><p>CPU temperature</p><strong class="dynamic-state unavailable" id="overview-temperature">Unavailable</strong><small>Current thermal-zone reading</small></div>
+            </article>
+          </div>
+        </section>
+
+        <aside class="notice" aria-label="Integration status">
+          <span class="notice-icon" aria-hidden="true">i</span>
+          <div><strong>Perception integration is incomplete</strong><p>Management is available; camera, perception, Hailo, and the Comma link remain intentionally unavailable until their integration gates are complete.</p></div>
+        </aside>
+
+        <section aria-labelledby="components-title">
+          <div class="section-heading">
+            <div><p class="eyebrow">Perception path</p><h2 id="components-title">Component availability</h2></div>
+            <p>Truthful status from the local management API</p>
+          </div>
+          <div class="component-grid" id="component-cards" aria-live="polite"></div>
+        </section>
       </section>
+
       <section class="page" data-page="network" hidden>
-        <header class="page-header"><div><p class="eyebrow">Management plane</p><h1>Network</h1></div></header>
-        <article class="card"><p class="card-kicker">Management Wi-Fi</p><h2 id="network-mode">Starting</h2><p id="network-detail">Waiting for the read-only appliance provider.</p></article>
-        <article class="card"><p class="card-kicker">Dedicated runtime link</p><h2>10.77.0.0/24</h2><p>Separate from management Wi-Fi. No bridge, gateway, DNS, forwarding, NAT, or web listener is configured here.</p></article>
+        <header class="page-header">
+          <div><p class="eyebrow">Management plane</p><h1>Network</h1></div>
+          <p class="page-context">Wi-Fi setup and recovery</p>
+        </header>
+
+        <div class="network-summary-grid">
+          <article class="card network-primary-card">
+            <div class="card-topline"><p class="card-kicker">Management Wi-Fi</p><span class="state-marker unavailable" id="network-state-marker">Status unavailable</span></div>
+            <h2 class="dynamic-state unavailable" id="network-mode">Starting</h2>
+            <p id="network-detail">Waiting for the appliance network provider.</p>
+          </article>
+          <article class="card">
+            <div class="card-topline"><p class="card-kicker">Recovery network</p><span class="role-badge">AP</span></div>
+            <h2 class="dynamic-state unavailable" id="rave-setup-state">Starting</h2>
+            <p><strong>RAVE-Setup</strong> uses <span class="numeric">192.168.77.1/24</span> for bounded local provisioning.</p>
+          </article>
+        </div>
+
+        <article class="card wifi-card">
+          <div class="card-heading">
+            <div><p class="card-kicker">Available Wi-Fi</p><h2>Join a management network</h2><p>Choose the network this appliance should use for local management.</p></div>
+            <button class="secondary-button" id="wifi-refresh" type="button"><span class="refresh-icon" aria-hidden="true"></span><span>Refresh</span></button>
+          </div>
+
+          <form class="network-form" id="wifi-connect-form">
+            <fieldset class="wifi-fieldset">
+              <legend>Detected networks</legend>
+              <div class="wifi-list" id="wifi-network-list" aria-live="polite" aria-busy="false">
+                <div class="empty-state"><span class="empty-state-icon" aria-hidden="true"></span><strong>No scan yet</strong><p>Select Refresh to find nearby management networks.</p></div>
+              </div>
+            </fieldset>
+
+            <div class="form-field">
+              <label for="wifi-password">Network password</label>
+              <input id="wifi-password" name="password" type="password" minlength="8" maxlength="63" autocomplete="off" aria-describedby="wifi-password-help" disabled>
+              <p class="field-help" id="wifi-password-help">Select a secured network to enter its password.</p>
+            </div>
+
+            <aside class="handoff-note">
+              <span class="handoff-icon" aria-hidden="true"></span>
+              <div><strong>Your setup address will change</strong><p>After RAVE switches networks, this RAVE-Setup page will no longer be available. Join the same Wi-Fi network, then open:</p><a href="http://rave-pi.local:8080">http://rave-pi.local:8080</a></div>
+            </aside>
+
+            <div class="button-row">
+              <button class="primary-button" id="wifi-connect" type="submit" disabled><span>Connect to network</span><span class="button-arrow" aria-hidden="true">→</span></button>
+              <button class="secondary-button" id="restore-provisioning" type="button">Return to RAVE-Setup</button>
+            </div>
+          </form>
+
+          <p class="action-status" id="network-action-status" role="status">Select Refresh to scan for management networks.</p>
+
+          <div class="handoff-panel" id="handoff-panel" hidden>
+            <div><p class="card-kicker">Next step</p><h3>Continue on your management network</h3><p>Reconnect this device to the selected Wi-Fi network, then use RAVE’s stable local address.</p></div>
+            <a class="primary-button" href="http://rave-pi.local:8080">Open RAVE <span aria-hidden="true">→</span></a>
+          </div>
+        </article>
+
+        <article class="card runtime-card">
+          <div><p class="card-kicker">Dedicated runtime link</p><h2 class="numeric">10.77.0.0/24</h2></div>
+          <p>Separate from management Wi-Fi. No bridge, gateway, DNS, forwarding, NAT, or management-web listener is configured on this interface.</p>
+          <span class="role-badge">Isolated</span>
+        </article>
       </section>
+
       <section class="page" data-page="system" hidden>
-        <header class="page-header"><div><p class="eyebrow">RAVE OS</p><h1>System</h1></div></header>
-        <div class="card-grid"><article class="card"><p class="card-kicker">Management system</p><h2 id="management-state">Starting</h2><p>Read-only appliance provider health.</p></article><article class="card"><p class="card-kicker">Operating system</p><h2 id="os-version">Starting</h2><p>Read from the appliance OS release identity.</p></article><article class="card"><p class="card-kicker">CPU temperature</p><h2 id="temperature">Starting</h2><p>Actual Raspberry Pi thermal-zone reading when available.</p></article><article class="card"><p class="card-kicker">Updates</p><h2 id="update-state">Unavailable</h2><p>Model and OS update services are not integrated.</p></article></div>
+        <header class="page-header">
+          <div><p class="eyebrow">RAVE OS</p><h1>System</h1></div>
+          <p class="page-context">Local appliance health</p>
+        </header>
+
+        <section aria-labelledby="system-health-title">
+          <div class="section-heading"><div><p class="eyebrow">Health</p><h2 id="system-health-title">Current system state</h2></div></div>
+          <div class="system-grid">
+            <article class="card system-primary-card"><p class="card-kicker">Management system</p><h2 class="dynamic-state unavailable" id="management-state">Starting</h2><p>Health of the local appliance provider.</p></article>
+            <article class="card"><p class="card-kicker">CPU temperature</p><h2 class="numeric dynamic-state unavailable" id="temperature">Starting</h2><p>Actual Raspberry Pi thermal-zone reading when available.</p></article>
+            <article class="card time-card"><p class="card-kicker">Wall clock</p><h2 class="dynamic-state unavailable" id="time-sync-state">Starting</h2><dl class="detail-list"><div><dt>UTC</dt><dd id="utc-time">Unavailable</dd></div><div><dt>RTC</dt><dd id="rtc-state">Unavailable</dd></div></dl></article>
+          </div>
+        </section>
+
+        <section aria-labelledby="software-title">
+          <div class="section-heading"><div><p class="eyebrow">Software</p><h2 id="software-title">Installed software</h2></div></div>
+          <div class="system-grid software-grid">
+            <article class="card"><p class="card-kicker">Operating system</p><h2 id="os-version">Starting</h2><p>Read from the appliance OS release identity.</p></article>
+            <article class="card"><p class="card-kicker">Management UI</p><h2 class="numeric" id="web-version">Starting</h2><p>Version reported by the local management API.</p></article>
+            <article class="card"><p class="card-kicker">Updates</p><h2 class="dynamic-state unavailable" id="update-state">Unavailable</h2><p>Model and OS update services are not integrated.</p></article>
+          </div>
+        </section>
       </section>
+
       <section class="page" data-page="diagnostics" hidden>
-        <header class="page-header"><div><p class="eyebrow">Engineering detail</p><h1>Diagnostics</h1></div></header>
-        <article class="card"><p class="card-kicker">Provider status</p><h2>No diagnostics provider</h2><p>This view intentionally exposes no fabricated counters, logs, or hardware readings.</p></article>
+        <header class="page-header">
+          <div><p class="eyebrow">Engineering detail</p><h1>Diagnostics</h1></div>
+          <p class="page-context">No fabricated telemetry</p>
+        </header>
+        <article class="card diagnostics-empty">
+          <span class="diagnostics-icon" aria-hidden="true"></span>
+          <div><p class="card-kicker">Provider status</p><h2>No diagnostics provider</h2><p>This view intentionally exposes no fabricated counters, logs, or hardware readings. Engineering detail will appear only when a bounded diagnostics provider is integrated.</p></div>
+        </article>
       </section>
     </main>
   </body>

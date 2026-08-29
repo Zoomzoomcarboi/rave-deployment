@@ -14,7 +14,9 @@ def test_failed_station_recovers_provisioning_ap() -> None:
     assert state == NetworkMode.TRANSITION
     assert transition(state, NetworkEvent.AP_READY) == NetworkMode.PROVISIONING_AP
     state = transition(NetworkMode.PROVISIONING_AP, NetworkEvent.STATION_REQUESTED)
-    assert transition(state, NetworkEvent.STATION_TIMEOUT) == NetworkMode.PROVISIONING_AP
+    state = transition(state, NetworkEvent.STATION_TIMEOUT)
+    assert state == NetworkMode.TRANSITION
+    assert transition(state, NetworkEvent.AP_READY) == NetworkMode.PROVISIONING_AP
 
 
 def test_undefined_transition_is_rejected() -> None:

@@ -58,6 +58,39 @@ listener_is_exact() {
     ! ss -H -ltn6 "sport = :$port" | grep -q .
 }
 
+listener_port_is_present() {
+  local port=$1
+  [[ $(ss -H -ltn "sport = :$port" | wc -l) -eq 1 ]]
+}
+
+web_socket_is_management_bound() {
+  [[ $(systemctl show rave-webd.socket --property=BindToDevice --value) == wlan0 ]] &&
+    [[ $(systemctl show rave-webd.socket --property=ActiveState --value) == active ]] &&
+    [[ $(systemctl show rave-webd.socket --property=SubState --value) == listening ]]
+}
+
+web_root_is_available() {
+  curl --fail --silent --show-error --connect-timeout 3 --max-time 5 \
+    http://192.168.77.1:8080/ >/dev/null
+}
+
+socket_activated_service_is_healthy() {
+  local active sub result
+  active=$(systemctl show rave-webd.service --property=ActiveState --value)
+  sub=$(systemctl show rave-webd.service --property=SubState --value)
+  result=$(systemctl show rave-webd.service --property=Result --value)
+  [[ $active == active && $sub == running && $result == success ]] ||
+    [[ $active == inactive && $sub == dead && $result == success ]]
+}
+
+networkd_socket_is_restricted() {
+  local mode owner group
+  mode=$(stat --format='%a' /run/rave/networkd.sock)
+  owner=$(stat --format='%U' /run/rave/networkd.sock)
+  group=$(stat --format='%G' /run/rave/networkd.sock)
+  [[ $mode == 660 && $owner == root && $group == rave ]]
+}
+
 dhcp_socket_is_management_only() {
   local sockets
   sockets=$(ss -H -lunp 'sport = :67')
@@ -69,7 +102,7 @@ ssh_dependencies_are_isolated() {
   relationships=$(systemctl show ssh.socket ssh.service \
     --property=Requires,Wants,After,Before,BindsTo,PartOf --value)
   ! grep -Eq \
-    'rave-wifi-init|rave-management-dhcp|rave-webd|NetworkManager(-wait-online)?|sys-subsystem-net-devices-eth0\.device' \
+    'rave-networkd|rave-management-dhcp|rave-webd|NetworkManager(-wait-online)?|sys-subsystem-net-devices-eth0\.device' \
     <<<"$relationships"
 }
 
@@ -94,18 +127,32 @@ host_private_keys_are_present_and_restricted() {
     ! find /etc/ssh -maxdepth 1 -type f -name 'ssh_host_*_key' ! -perm 0600 | grep -q .
 }
 
+
+timekeeping_is_truthful() {
+  local synchronized marker=no
+  [[ $(timedatectl show --property=Timezone --value) == Etc/UTC ]] || return 1
+  [[ $(systemctl is-active systemd-timesyncd.service) == active ]] || return 1
+  [[ -e /sys/class/rtc/rtc0 ]] || return 1
+  [[ -e /run/systemd/timesync/synchronized ]] && marker=yes
+  synchronized=$(timedatectl show --property=SystemClockSynchronized --value)
+  [[ $synchronized == "$marker" ]]
+}
+
 check 'eth0 has only 10.77.0.1/24' interface_has_only_address eth0 10.77.0.1/24
 check 'wlan0 has only 192.168.77.1/24' interface_has_only_address wlan0 192.168.77.1/24
 check 'runtime route is connected-only with no IPv4/IPv6 default' route_contract_isolated
 check 'NetworkManager leaves eth0 unmanaged' networkmanager_leaves_eth0_unmanaged
 check 'RAVE-Setup is active on wlan0' rave_setup_is_active
 check 'systemd-networkd is active/running' service_state_is systemd-networkd.service active running
-check 'Wi-Fi initialization completed' service_state_is rave-wifi-init.service active exited
+check 'management network daemon is active/running' service_state_is rave-networkd.service active running
 check 'DHCP is active/running' service_state_is rave-management-dhcp.service active running
-check 'web management is active/running' service_state_is rave-webd.service active running
+check 'web management socket is bound to wlan0' web_socket_is_management_bound
+check 'socket-activated web service is healthy' socket_activated_service_is_healthy
+check 'management web root returns HTTP success' web_root_is_available
 check 'SSH socket is active/listening' service_state_is ssh.socket active listening
 check 'SSH listener is exactly 10.77.0.1:22' listener_is_exact 22 10.77.0.1:22
-check 'web listener is exactly 192.168.77.1:8080' listener_is_exact 8080 192.168.77.1:8080
+check 'one inherited web listener exists on port 8080' listener_port_is_present 8080
+check 'network daemon socket is root:rave mode 0660' networkd_socket_is_restricted
 check 'DHCP socket is bound to wlan0 and not eth0' dhcp_socket_is_management_only
 check 'DHCP target configuration parses' dnsmasq --test \
   --conf-file=/etc/rave/network/dnsmasq.conf --no-hosts --no-resolv
@@ -115,6 +162,7 @@ check 'bridging and IP forwarding are absent' no_bridge_or_forwarding
 check 'SSH has no management dependency' ssh_dependencies_are_isolated
 check 'SSH has no eth0 device-unit lifetime binding' ssh_has_no_device_binding
 check 'per-device SSH host private keys exist with mode 0600' host_private_keys_are_present_and_restricted
+check 'UTC/time synchronization state is truthful' timekeeping_is_truthful
 
 printf '\nSSH host-key fingerprints for qualification records:\n'
 for public_key in /etc/ssh/ssh_host_*_key.pub; do
@@ -122,8 +170,9 @@ for public_key in /etc/ssh/ssh_host_*_key.pub; do
 done
 
 printf '\nExplicit RAVE unit states:\n'
-systemctl show rave-wifi-init.service rave-management-dhcp.service rave-webd.service ssh.socket \
-  --property=Id,LoadState,ActiveState,SubState,Result --no-pager
+systemctl show rave-networkd.service rave-management-dhcp.service rave-webd.socket \
+  rave-webd.service ssh.socket systemd-timesyncd.service \
+  --property=Id,LoadState,ActiveState,SubState,Result,NRestarts --no-pager
 
 if (( failures == 0 )); then
   printf '\nGate 2B target-local checks passed. External Ethernet, client DHCP, and exposure checks remain required.\n'

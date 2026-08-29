@@ -3,6 +3,13 @@
 # X-Env-Layer-Desc: Gate-2B non-publishable key-only engineering SSH on runtime Ethernet
 # X-Env-Layer-Version: 0.1.2
 # X-Env-Layer-Requires: rave-base
+#
+# X-Env-VarPrefix: rave_ssh
+# X-Env-Var-public_key:
+# X-Env-Var-public_key-Desc: Build-supplied OpenSSH ED25519 engineering public key.
+# X-Env-Var-public_key-Required: y
+# X-Env-Var-public_key-Valid: string
+# X-Env-Var-public_key-Set: y
 # METAEND
 ---
 mmdebstrap:
