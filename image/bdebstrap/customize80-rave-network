@@ -15,18 +15,20 @@ sysctl="$repository_root/image/overlays/etc/sysctl.d/90-rave-network-isolation.c
 runtime_network="$repository_root/image/overlays/etc/systemd/network/10-rave-ethernet.network"
 nm_unmanaged="$repository_root/image/overlays/etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf"
 nm_wifi_backend="$repository_root/image/overlays/etc/NetworkManager/conf.d/20-rave-wifi-backend.conf"
-wifi_init="$repository_root/scripts/rave-wifi-init.sh"
-wifi_init_unit="$repository_root/systemd/rave-wifi-init.service"
-nm_wait_dropin="$repository_root/systemd/NetworkManager-wait-online.service.d/10-rave-wifi-init.conf"
+network_ipc="$repository_root/setup-ui/rave_network_ipc"
+network_daemon="$repository_root/setup-ui/rave_networkd"
+networkd_unit="$repository_root/systemd/rave-networkd.service"
+dhcp_unit="$repository_root/systemd/rave-management-dhcp.service"
 test -f "$profile"
 test -f "$dnsmasq"
 test -f "$sysctl"
 test -f "$runtime_network"
 test -f "$nm_unmanaged"
 test -f "$nm_wifi_backend"
-test -f "$wifi_init"
-test -f "$wifi_init_unit"
-test -f "$nm_wait_dropin"
+test -d "$network_ipc"
+test -d "$network_daemon"
+test -f "$networkd_unit"
+test -f "$dhcp_unit"
 rm -f -- "$rootfs/etc/systemd/network/01-eth0.network"
 rm -f -- "$rootfs/etc/systemd/network/02-wlan0.network"
 rm -f -- "$rootfs/etc/systemd/system/multi-user.target.wants/iwd.service"
@@ -42,15 +44,23 @@ install -m 0644 "$runtime_network" "$rootfs/etc/systemd/network/10-rave-ethernet
 install -m 0644 "$nm_unmanaged" "$rootfs/etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf"
 install -m 0644 "$nm_wifi_backend" "$rootfs/etc/NetworkManager/conf.d/20-rave-wifi-backend.conf"
 install -d -m 0755 \
-  "$rootfs/usr/libexec/rave" \
+  "$rootfs/opt/rave/management/rave_network_ipc" \
+  "$rootfs/opt/rave/management/rave_networkd" \
   "$rootfs/usr/lib/systemd/system" \
-  "$rootfs/etc/systemd/system/NetworkManager-wait-online.service.d" \
-  "$rootfs/etc/systemd/system/multi-user.target.wants" \
-  "$rootfs/etc/systemd/system/network-online.target.wants"
-install -m 0755 "$wifi_init" "$rootfs/usr/libexec/rave/rave-wifi-init"
-install -m 0644 "$wifi_init_unit" "$rootfs/usr/lib/systemd/system/rave-wifi-init.service"
-install -m 0644 "$nm_wait_dropin" \
-  "$rootfs/etc/systemd/system/NetworkManager-wait-online.service.d/10-rave-wifi-init.conf"
+  "$rootfs/etc/systemd/system/multi-user.target.wants"
+rsync -a --delete --exclude='__pycache__' --exclude='*.pyc' \
+  "$network_ipc/" "$rootfs/opt/rave/management/rave_network_ipc/"
+rsync -a --delete --exclude='__pycache__' --exclude='*.pyc' \
+  "$network_daemon/" "$rootfs/opt/rave/management/rave_networkd/"
+find "$rootfs/opt/rave/management" -type d -exec chmod 0755 {} +
+find "$rootfs/opt/rave/management" -type f -exec chmod 0644 {} +
+chroot "$rootfs" /bin/chown -R root:root /opt/rave/management
+install -m 0644 "$networkd_unit" "$rootfs/usr/lib/systemd/system/rave-networkd.service"
+install -m 0644 "$dhcp_unit" "$rootfs/usr/lib/systemd/system/rave-management-dhcp.service"
 ln -sf /usr/lib/systemd/system/NetworkManager.service "$rootfs/etc/systemd/system/multi-user.target.wants/NetworkManager.service"
 ln -sf /usr/lib/systemd/system/systemd-networkd.service "$rootfs/etc/systemd/system/multi-user.target.wants/systemd-networkd.service"
-ln -sf /usr/lib/systemd/system/NetworkManager-wait-online.service "$rootfs/etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service"
+ln -sf /usr/lib/systemd/system/rave-networkd.service "$rootfs/etc/systemd/system/multi-user.target.wants/rave-networkd.service"
+rm -f -- "$rootfs/etc/systemd/system/network-online.target.wants/NetworkManager-wait-online.service"
+
+chroot "$rootfs" /usr/sbin/dnsmasq --test \
+  --conf-file=/etc/rave/network/dnsmasq.conf --no-hosts --no-resolv

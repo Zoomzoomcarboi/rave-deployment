@@ -1,0 +1,11 @@
+[Unit]
+Description=RAVE management-interface web socket
+
+[Socket]
+ListenStream=8080
+BindToDevice=wlan0
+NoDelay=true
+Service=rave-webd.service
+
+[Install]
+WantedBy=sockets.target

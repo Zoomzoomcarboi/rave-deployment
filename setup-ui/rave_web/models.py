@@ -1,8 +1,15 @@
 """Versioned, bounded management API models."""
 
+from datetime import datetime
 from enum import StrEnum
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, SecretStr, field_validator
+from rave_network_ipc.protocol import (
+    NetworkMode,
+    WifiSecurity,
+    validate_password,
+    validate_ssid,
+)
 
 
 class StrictModel(BaseModel):
@@ -14,15 +21,6 @@ class Availability(StrEnum):
     STARTING = "starting"
     READY = "ready"
     DEGRADED = "degraded"
-    ERROR = "error"
-
-
-class NetworkMode(StrEnum):
-    UNCONFIGURED = "unconfigured"
-    STATION_CONNECTING = "station_connecting"
-    STATION_CONNECTED = "station_connected"
-    PROVISIONING_AP = "provisioning_ap"
-    TRANSITION = "transition"
     ERROR = "error"
 
 
@@ -49,6 +47,60 @@ class NetworkResponse(StrictModel):
     local_discovery_name: str | None = Field(default=None, max_length=253)
     runtime_network: str = Field(pattern=r"^10\.77\.0\.0/24$")
     actuation_available: bool = False
+    provisioning_ap_active: bool = False
+    station_ssid: str | None = Field(default=None, max_length=32)
+    last_error: str | None = Field(default=None, max_length=64)
+
+
+class WifiNetwork(StrictModel):
+    ssid: str = Field(min_length=1, max_length=32)
+    signal_percent: int = Field(ge=0, le=100)
+    security: WifiSecurity
+    connected: bool = False
+
+    @field_validator("ssid")
+    @classmethod
+    def validate_network_ssid(cls, value: str) -> str:
+        return validate_ssid(value)
+
+
+class WifiScanResponse(StrictModel):
+    api_version: str = Field(pattern=r"^v1$")
+    networks: list[WifiNetwork] = Field(max_length=64)
+
+
+class NetworkConnectRequest(StrictModel):
+    ssid: str
+    password: SecretStr | None = None
+
+    @field_validator("ssid")
+    @classmethod
+    def validate_requested_ssid(cls, value: str) -> str:
+        return validate_ssid(value)
+
+    @field_validator("password")
+    @classmethod
+    def validate_requested_password(cls, value: SecretStr | None) -> SecretStr | None:
+        if value is not None:
+            validate_password(value.get_secret_value())
+        return value
+
+
+class ProvisioningRequest(StrictModel):
+    pass
+
+
+class NetworkActionResponse(StrictModel):
+    api_version: str = Field(pattern=r"^v1$")
+    accepted: bool
+    mode: NetworkMode
+    reason: str = Field(min_length=1, max_length=64)
+
+
+class TimeStatus(StrictModel):
+    current_utc: datetime
+    synchronized: bool
+    rtc_available: bool
 
 
 class SystemResponse(StrictModel):
@@ -58,3 +110,4 @@ class SystemResponse(StrictModel):
     web_version: str = Field(min_length=1, max_length=32)
     update_status: ComponentStatus
     temperature_c: float | None = Field(default=None, ge=-40, le=125)
+    time: TimeStatus

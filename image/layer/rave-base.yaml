@@ -1,6 +1,6 @@
 # METABEGIN
 # X-Env-Layer-Name: rave-base
-# X-Env-Layer-Desc: Gate-1 RAVE filesystem and least-privilege service identity
+# X-Env-Layer-Desc: RAVE filesystem and least-privilege service identity
 # X-Env-Layer-Version: 0.1.0
 # METAEND
 ---
@@ -20,4 +20,4 @@ mmdebstrap:
       chroot "$rootfs" /bin/chown rave:rave /var/lib/rave /var/log/rave
       chroot "$rootfs" /bin/chmod 0755 /opt/rave /etc/rave
       chroot "$rootfs" /bin/chmod 0750 /var/lib/rave /var/log/rave
-      printf 'd /run/rave 0750 rave rave -\n' > "$rootfs/usr/lib/tmpfiles.d/rave.conf"
+      printf 'd /run/rave 0750 root rave -\n' > "$rootfs/usr/lib/tmpfiles.d/rave.conf"

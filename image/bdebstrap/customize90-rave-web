@@ -10,41 +10,58 @@ test -d "$rootfs/opt"
 
 source_root=${SRCROOT:?missing rpi-image-gen source root}
 repository_root=$(realpath -e -- "$source_root/..")
+avahi_policy="$repository_root/image/overlays/etc/rave/avahi-daemon.conf"
+avahi_service_policy="$repository_root/systemd/avahi-daemon.service.d/90-rave-management.conf"
 test -d "$repository_root/setup-ui/rave_web"
+test -f "$avahi_policy"
+test -f "$avahi_service_policy"
 test -f "$repository_root/systemd/rave-webd.service"
+test -f "$repository_root/systemd/rave-webd.socket"
 test -f "$repository_root/systemd/rave-management-dhcp.service"
 test -f "$repository_root/THIRD_PARTY_NOTICES.md"
 test -x "$rootfs/usr/sbin/dnsmasq"
 test -x "$rootfs/usr/bin/systemd-analyze"
+test -x "$rootfs/usr/sbin/avahi-daemon"
+test -f "$rootfs/usr/lib/systemd/system/avahi-daemon.service"
+test -f "$rootfs/usr/lib/systemd/system/avahi-daemon.socket"
 
 install -d -m 0755 \
   "$rootfs/opt/rave/web/rave_web" \
+  "$rootfs/etc/rave" \
+  "$rootfs/etc/systemd/system/multi-user.target.wants" \
+  "$rootfs/etc/systemd/system/sockets.target.wants" \
+  "$rootfs/usr/lib/systemd/system/avahi-daemon.service.d" \
   "$rootfs/usr/lib/systemd/system" \
   "$rootfs/usr/share/doc/rave-web"
 rsync -a --delete --exclude='__pycache__' --exclude='*.pyc' \
   "$repository_root/setup-ui/rave_web/" "$rootfs/opt/rave/web/rave_web/"
 find "$rootfs/opt/rave/web/rave_web" -type d -exec chmod 0755 {} +
 find "$rootfs/opt/rave/web/rave_web" -type f -exec chmod 0644 {} +
+chroot "$rootfs" /bin/chown -R root:root /opt/rave/web/rave_web
 install -m 0644 "$repository_root/systemd/rave-webd.service" \
   "$rootfs/usr/lib/systemd/system/rave-webd.service"
-install -m 0644 "$repository_root/systemd/rave-management-dhcp.service" \
-  "$rootfs/usr/lib/systemd/system/rave-management-dhcp.service"
-install -d -m 0755 "$rootfs/etc/systemd/system/multi-user.target.wants"
-ln -s /usr/lib/systemd/system/rave-webd.service \
-  "$rootfs/etc/systemd/system/multi-user.target.wants/rave-webd.service"
-ln -s /usr/lib/systemd/system/rave-management-dhcp.service \
-  "$rootfs/etc/systemd/system/multi-user.target.wants/rave-management-dhcp.service"
+install -m 0644 "$repository_root/systemd/rave-webd.socket" \
+  "$rootfs/usr/lib/systemd/system/rave-webd.socket"
+ln -s /usr/lib/systemd/system/rave-webd.socket \
+  "$rootfs/etc/systemd/system/sockets.target.wants/rave-webd.socket"
+install -m 0644 "$avahi_policy" "$rootfs/etc/rave/avahi-daemon.conf"
+install -m 0644 "$avahi_service_policy" \
+  "$rootfs/usr/lib/systemd/system/avahi-daemon.service.d/90-rave-management.conf"
+ln -sf /usr/lib/systemd/system/avahi-daemon.service \
+  "$rootfs/etc/systemd/system/multi-user.target.wants/avahi-daemon.service"
+ln -sf /usr/lib/systemd/system/avahi-daemon.socket \
+  "$rootfs/etc/systemd/system/sockets.target.wants/avahi-daemon.socket"
 install -m 0644 "$repository_root/THIRD_PARTY_NOTICES.md" \
   "$rootfs/usr/share/doc/rave-web/THIRD_PARTY_NOTICES.md"
 
-# Fail the build with the target image's own parsers after all Gate 2B units,
+# Fail the build with the target image's own parsers after all management units,
 # drop-ins, and management-network configuration have been installed.
-chroot "$rootfs" /usr/sbin/dnsmasq --test \
-  --conf-file=/etc/rave/network/dnsmasq.conf --no-hosts --no-resolv
 chroot "$rootfs" /usr/bin/systemd-analyze verify --man=no \
+  avahi-daemon.service \
   ssh.socket \
   ssh.service \
   rave-engineering-ssh-hostkeys.service \
-  rave-wifi-init.service \
+  rave-networkd.service \
   rave-management-dhcp.service \
+  rave-webd.socket \
   rave-webd.service

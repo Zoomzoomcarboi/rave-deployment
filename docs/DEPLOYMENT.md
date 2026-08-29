@@ -71,15 +71,14 @@ Production integration of V5 must receive exact changed-file review, syntax/stat
 checks, relevant unit tests, Pi benchmark regression, and failure-path review before it
 can replace the mock-only runtime boundary.
 
-The Gate 2B candidate adds the boot-enabled `RAVE-Setup` AP, bounded DHCP, a web
-listener restricted to `192.168.77.1:8080`, and a read-only Pi management provider.
-The historical Gate 2A build record remains in `RAVE_OS_GATE2A_BUILD.md`. A flashed
-Gate 2B engineering image has supplied diagnostic boot evidence and live validation of
-three management-network corrections, but that image required manual runtime repair
-and reproduced an SSH-listener lifecycle failure after reboot. The corrected current
-source is therefore not yet clean-image Pi-validated. Qualification requires a fresh
-source-built image and the five consecutive untouched boots in
-`GATE2B_NETWORK_ACCEPTANCE.md`.
+The current candidate adds saved management-station startup, bounded fallback to the
+`RAVE-Setup` AP, scan/connect/provisioning APIs, and a root-owned narrow network daemon.
+The web listener is systemd-owned and bound to `wlan0`; DHCP runs only while the AP is
+active. UTC is the appliance timezone, while timesyncd and the Pi RTC retain ownership
+of wall-clock truth. The historical Gate 2A build record remains in
+`RAVE_OS_GATE2A_BUILD.md`. The current source is host-tested but has not been built or
+Pi-validated. Qualification requires a fresh source-built image, AP/station recovery
+tests, and the untouched-boot procedure in `GATE2B_NETWORK_ACCEPTANCE.md`.
 
 ## Release/update requirements
 

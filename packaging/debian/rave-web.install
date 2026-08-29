@@ -1,3 +1,7 @@
 setup-ui/rave_web /opt/rave/web
+setup-ui/rave_network_ipc /opt/rave/management
 systemd/rave-webd.service /lib/systemd/system
+systemd/rave-webd.socket /lib/systemd/system
+image/overlays/etc/rave/avahi-daemon.conf /etc/rave
+systemd/avahi-daemon.service.d/90-rave-management.conf /lib/systemd/system/avahi-daemon.service.d
 THIRD_PARTY_NOTICES.md /usr/share/doc/rave-web

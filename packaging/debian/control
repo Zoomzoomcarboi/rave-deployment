@@ -14,6 +14,6 @@ Description: RAVE edge-perception appliance service
 
 Package: rave-web
 Architecture: all
-Depends: python3-fastapi, python3-pydantic, python3-uvicorn, ${misc:Depends}, ${python3:Depends}
+Depends: avahi-daemon, python3-fastapi, python3-pydantic, python3-uvicorn, ${misc:Depends}, ${python3:Depends}
 Description: RAVE local management web foundation
- Unprivileged Gate-1 management API and static browser shell.
+ Unprivileged local management API and static browser shell.

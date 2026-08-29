@@ -1,6 +1,6 @@
 # METABEGIN
 # X-Env-Layer-Name: rave-runtime
-# X-Env-Layer-Desc: Production runtime boundary; perception intentionally absent in Gate 1
+# X-Env-Layer-Desc: Production runtime boundary; perception is not yet integrated
 # X-Env-Layer-Version: 0.1.0
 # X-Env-Layer-Requires: rave-base
 # METAEND

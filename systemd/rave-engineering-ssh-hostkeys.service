@@ -1,6 +1,6 @@
 [Unit]
 Description=Generate per-device SSH host keys for RAVE engineering access
-Before=ssh.socket ssh.service
+Before=ssh.service
 
 [Service]
 Type=oneshot

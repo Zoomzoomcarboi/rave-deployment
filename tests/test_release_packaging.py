@@ -12,6 +12,16 @@ PACKAGER = ROOT / "scripts/package-release-candidate.sh"
 RAW_MINIMUM = 256 * 1024 * 1024
 
 
+def test_debian_install_manifest_sources_exist() -> None:
+    for manifest in sorted((ROOT / "packaging/debian").glob("*.install")):
+        for line in manifest.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            source = line.split()[0]
+            assert (ROOT / source).exists(), f"{manifest.name} references missing source: {source}"
+
+
 def sha256(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as stream:
@@ -43,7 +53,8 @@ def validated_build(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, Pat
                 },
                 "build_timestamp_utc": "2026-08-23T00:00:00+00:00",
                 "builder_container": "example.invalid/builder@sha256:" + "1" * 64,
-                "configuration": "image/config/rave-os-gate1.yaml",
+                "configuration": "image/config/rave-os.yaml",
+                "engineering_ssh_public_key_fingerprint": "SHA256:" + "c" * 43,
                 "rave_repository_commit": "a" * 40,
                 "rave_worktree_dirty": False,
                 "reproducibility": {

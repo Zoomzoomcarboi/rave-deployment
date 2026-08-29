@@ -3,7 +3,7 @@ id=RAVE-Setup
 uuid=0fc02a7e-795a-4e05-8952-9ea47f31f695
 type=wifi
 interface-name=wlan0
-autoconnect=true
+autoconnect=false
 autoconnect-priority=100
 wait-device-timeout=15000
 

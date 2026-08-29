@@ -12,27 +12,32 @@ source_root=${SRCROOT:?missing rpi-image-gen source root}
 repository_root=$(realpath -e -- "$source_root/..")
 sshd_policy="$repository_root/image/overlays/etc/ssh/sshd_config.d/90-rave-ethernet.conf"
 socket_policy="$repository_root/systemd/ssh.socket.d/90-rave-ethernet.conf"
+service_policy="$repository_root/systemd/ssh.service.d/90-rave-hostkeys.conf"
 hostkeys_unit="$repository_root/systemd/rave-engineering-ssh-hostkeys.service"
-authorized_key="$repository_root/image/overlays/home/pi/.ssh/authorized_keys"
+key_validator="$repository_root/scripts/engineering_ssh_key.py"
 sudoers_policy="$repository_root/image/overlays/etc/sudoers.d/90-rave-engineering-ssh"
 test -f "$sshd_policy"
 test -f "$socket_policy"
+test -f "$service_policy"
 test -f "$hostkeys_unit"
-test -f "$authorized_key"
+test -f "$key_validator"
 test -f "$sudoers_policy"
 test -x "$rootfs/usr/sbin/sshd"
 test -x "$rootfs/usr/sbin/visudo"
+test -x "$rootfs/usr/sbin/chpasswd"
 test -f "$rootfs/usr/lib/systemd/system/ssh.socket"
 test -f "$rootfs/usr/lib/systemd/system/ssh.service"
 test -f "$rootfs/usr/lib/systemd/system/sshd-keygen.service"
 
 install -d -m 0755 \
   "$rootfs/etc/ssh/sshd_config.d" \
+  "$rootfs/etc/systemd/system/ssh.service.d" \
   "$rootfs/etc/systemd/system/ssh.socket.d" \
   "$rootfs/etc/systemd/system/sockets.target.wants" \
   "$rootfs/etc/sudoers.d"
 install -m 0644 "$sshd_policy" "$rootfs/etc/ssh/sshd_config.d/90-rave-ethernet.conf"
 install -m 0644 "$socket_policy" "$rootfs/etc/systemd/system/ssh.socket.d/90-rave-ethernet.conf"
+install -m 0644 "$service_policy" "$rootfs/etc/systemd/system/ssh.service.d/90-rave-hostkeys.conf"
 install -m 0644 "$hostkeys_unit" \
   "$rootfs/usr/lib/systemd/system/rave-engineering-ssh-hostkeys.service"
 rm -f -- "$rootfs/etc/sudoers.d/010_rpi-nopasswd"
@@ -41,15 +46,25 @@ if chroot "$rootfs" /usr/bin/id -nG pi | /usr/bin/tr ' ' '\n' | /usr/bin/grep -q
 fi
 install -m 0440 "$sudoers_policy" "$rootfs/etc/sudoers.d/90-rave-engineering-ssh"
 install -d -m 0700 "$rootfs/home/pi/.ssh"
-install -m 0600 "$authorized_key" "$rootfs/home/pi/.ssh/authorized_keys"
+engineering_public_key=${IGconf_rave_ssh_public_key:-}
+test -n "$engineering_public_key" || {
+  printf 'error: engineering image requires a build-supplied ED25519 public key\n' >&2
+  exit 2
+}
+printf '%s\n' "$engineering_public_key" | \
+  python3 "$key_validator" --stdin > "$rootfs/home/pi/.ssh/authorized_keys.tmp"
+install -m 0600 "$rootfs/home/pi/.ssh/authorized_keys.tmp" \
+  "$rootfs/home/pi/.ssh/authorized_keys"
+rm -f -- "$rootfs/home/pi/.ssh/authorized_keys.tmp"
 chroot "$rootfs" /bin/chown pi:pi /home/pi/.ssh /home/pi/.ssh/authorized_keys
-chroot "$rootfs" /usr/sbin/usermod --password '*NP*' pi
+printf '%s\n' 'pi:debug' | chroot "$rootfs" /usr/sbin/chpasswd
 
 # Package installation enables ssh.service and conditionally wires its own key
-# generator into ssh.socket. Gate 2B uses only the address-scoped socket and the
-# unconditional RAVE host-key service, avoiding concurrent first-boot generators.
+# generator into ssh.service and ssh.socket. RAVE uses only the address-scoped
+# socket and the unconditional service-ordered host-key generator.
 rm -f -- \
   "$rootfs/etc/systemd/system/multi-user.target.wants/ssh.service" \
+  "$rootfs/etc/systemd/system/ssh.service.wants/sshd-keygen.service" \
   "$rootfs/etc/systemd/system/ssh.socket.wants/sshd-keygen.service"
 ln -sf /usr/lib/systemd/system/ssh.socket \
   "$rootfs/etc/systemd/system/sockets.target.wants/ssh.socket"

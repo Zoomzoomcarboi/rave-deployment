@@ -4,13 +4,27 @@ from rave_web.models import Availability, NetworkMode
 from rave_web.providers import PiManagementProvider, configured_provider
 
 
+class ConnectedNetworkClient:
+    def status(self):
+        return {
+            "mode": "provisioning_ap",
+            "provisioning_ap_active": True,
+            "station_ssid": None,
+            "last_error": None,
+        }
+
+
 def test_pi_provider_real_system_happy_path(tmp_path: Path, monkeypatch) -> None:
     os_release = tmp_path / "os-release"
     temperature = tmp_path / "temp"
     os_release.write_text('PRETTY_NAME="RAVE OS Test 2B"\n', encoding="utf-8")
     temperature.write_text("48750\n", encoding="utf-8")
     monkeypatch.setattr("rave_web.providers._ipv4_address", lambda interface: "192.168.77.1")
-    provider = PiManagementProvider(os_release=os_release, temperature=temperature)
+    provider = PiManagementProvider(
+        os_release=os_release,
+        temperature=temperature,
+        network_client=ConnectedNetworkClient(),
+    )
 
     system = provider.system()
     network = provider.network()
@@ -22,7 +36,7 @@ def test_pi_provider_real_system_happy_path(tmp_path: Path, monkeypatch) -> None
     assert network.mode == NetworkMode.PROVISIONING_AP
     assert network.management_interface == "wlan0"
     assert network.runtime_network == "10.77.0.0/24"
-    assert network.actuation_available is False
+    assert network.actuation_available is True
 
 
 def test_pi_provider_missing_or_invalid_temperature_is_truthful(tmp_path: Path) -> None:

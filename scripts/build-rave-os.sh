@@ -4,11 +4,25 @@ set -euo pipefail
 repository_root=$(realpath -e -- "$(dirname -- "${BASH_SOURCE[0]}")/..")
 lock_file="$repository_root/image/rpi-image-gen.lock.json"
 output_input=${1:-"$repository_root/build/rave-os-gate2b"}
+engineering_key_input=${RAVE_ENGINEERING_SSH_PUBLIC_KEY_FILE:-}
 
-command -v docker >/dev/null || { printf 'error: docker is required\n' >&2; exit 2; }
-command -v git >/dev/null || { printf 'error: git is required\n' >&2; exit 2; }
 command -v python3 >/dev/null || { printf 'error: python3 is required\n' >&2; exit 2; }
 test -f "$lock_file" || { printf 'error: missing %s\n' "$lock_file" >&2; exit 2; }
+test -n "$engineering_key_input" || {
+  printf 'error: RAVE_ENGINEERING_SSH_PUBLIC_KEY_FILE is required for this engineering image\n' >&2
+  exit 2
+}
+engineering_key_input=$(realpath -e -- "$engineering_key_input")
+test -f "$engineering_key_input" || {
+  printf 'error: engineering SSH public-key input is not a file\n' >&2
+  exit 2
+}
+engineering_public_key=$(python3 "$repository_root/scripts/engineering_ssh_key.py" \
+  --input "$engineering_key_input")
+engineering_key_fingerprint=$(python3 "$repository_root/scripts/engineering_ssh_key.py" \
+  --input "$engineering_key_input" --fingerprint)
+command -v docker >/dev/null || { printf 'error: docker is required\n' >&2; exit 2; }
+command -v git >/dev/null || { printf 'error: git is required\n' >&2; exit 2; }
 
 readarray -t lock < <(python3 - "$lock_file" <<'PY'
 import json
@@ -85,8 +99,8 @@ docker run --rm --privileged \
     chmod 0755 /out /out/work /out/work/cache
     setpriv --reuid=1000 --regid=1000 --init-groups \
       env HOME=/tmp/rave-builder-home PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin \
-      /builder/rpi-image-gen build -B /out/work -S /rave/image -c rave-os-gate1.yaml -- \
-      "IGconf_artefact_version=$1"
+      /builder/rpi-image-gen build -B /out/work -S /rave/image -c rave-os.yaml -- \
+      "IGconf_artefact_version=$1" "IGconf_rave_ssh_public_key=$7"
     rootfs="/out/work/chroot-$1/filesystem"
     artifact="/out/work/deploy-$1/rave-os-gate2b.img.zst"
     setpriv --reuid=1000 --regid=1000 --init-groups \
@@ -96,8 +110,10 @@ docker run --rm --privileged \
     python3 /rave/scripts/verify_rave_image.py --write-provenance /out/provenance.json \
       --artifact "$artifact" --rave-commit "$2" --rave-dirty "$3" \
       --builder-tag "$4" --builder-commit "$5" --container-image "$6" \
-      --configuration image/config/rave-os-gate1.yaml
-  ' -- "$version" "$rave_commit" "$rave_dirty" "$builder_tag" "$builder_commit" "$container_image"
+      --configuration image/config/rave-os.yaml \
+      --engineering-ssh-public-key-fingerprint "$8"
+  ' -- "$version" "$rave_commit" "$rave_dirty" "$builder_tag" "$builder_commit" "$container_image" \
+    "$engineering_public_key" "$engineering_key_fingerprint"
 
 printf 'Build, artifact verification, and provenance generation completed.\n'
 printf 'Artifact: %s/work/deploy-%s/rave-os-gate2b.img.zst\n' "$output_dir" "$version"
