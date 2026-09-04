@@ -99,9 +99,34 @@ def test_artifact_verifier_accepts_corrected_management_profile(tmp_path: Path) 
     verify_management_profile(profile)
 
 
+def test_artifact_verifier_rejects_management_profile_without_autoconnect(
+    tmp_path: Path,
+) -> None:
+    profile = copied_file(tmp_path, PROFILE, "rave-setup.nmconnection", 0o600)
+    profile.write_text(
+        profile.read_text(encoding="utf-8").replace("autoconnect=false\n", ""),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(VerificationError, match="autoconnect"):
+        verify_management_profile(profile)
+
+
 def test_artifact_verifier_accepts_networkd_core_dump_protection(tmp_path: Path) -> None:
     rootfs, unit = networkd_rootfs(tmp_path)
     verify_networkd_service(rootfs, unit)
+
+
+def test_artifact_verifier_rejects_networkd_shell_execution(tmp_path: Path) -> None:
+    rootfs, unit = networkd_rootfs(tmp_path)
+    backend = rootfs / "opt/rave/management/rave_networkd/backend.py"
+    backend.write_text(
+        backend.read_text(encoding="utf-8") + "\nsubprocess.run(command, shell=True)\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(VerificationError, match="shell=True"):
+        verify_networkd_service(rootfs, unit)
 
 
 def test_artifact_verifier_rejects_networkd_core_dump_protection_removal(

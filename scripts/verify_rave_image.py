@@ -259,8 +259,8 @@ def verify_management_profile(profile_path: Path) -> str:
     require(profile.get("connection", "type") == "wifi", "provisioning profile is not Wi-Fi")
     require(profile.get("connection", "interface-name") == "wlan0", "AP is not scoped to wlan0")
     require(
-        not profile.getboolean("connection", "autoconnect"),
-        "AP profile may race the canonical network state service",
+        not profile.getboolean("connection", "autoconnect", fallback=True),
+        "AP profile autoconnect may race the canonical network state service",
     )
     require(
         profile.getint("connection", "autoconnect-priority") == 100,
@@ -546,7 +546,11 @@ def verify_networkd_service(rootfs: Path, unit_path: Path) -> str:
         'SYSTEMCTL = "/usr/bin/systemctl"',
     ):
         require(expected in backend, f"rave-networkd fixed operation contract changed: {expected}")
-    for forbidden in ("shell=True", "eth0", "ip_forward", "masquerade"):
+    require(
+        "shell=true" not in backend.lower(),
+        "rave-networkd contains forbidden behavior: shell=True",
+    )
+    for forbidden in ("eth0", "ip_forward", "masquerade"):
         require(forbidden not in backend.lower(), f"rave-networkd contains forbidden behavior: {forbidden}")
     require(
         re.search(r'"connection\.autoconnect",\s*"no"', backend) is not None
