@@ -37,20 +37,7 @@ jobs:
           print(f"Parsed {len(paths)} YAML files")
           PY
       - name: systemd unit verification
-        run: |
-          if command -v systemd-analyze >/dev/null 2>&1; then
-            mkdir -p /tmp/rave-ci-units
-            for unit in systemd/*.service; do
-              sed -E \
-                -e 's|^ExecStart=.*|ExecStart=/usr/bin/true|' \
-                -e 's|^User=.*|User=root|' \
-                -e 's|^Group=.*|Group=root|' \
-                "$unit" > "/tmp/rave-ci-units/$(basename "$unit")"
-            done
-            systemd-analyze verify /tmp/rave-ci-units/*.service
-          else
-            echo "systemd-analyze unavailable; unit verification skipped"
-          fi
+        run: scripts/verify-systemd-units.sh
       - name: Repository safety policy
         env:
           RAVE_IDENTITY_DENYLIST: ${{ secrets.RAVE_IDENTITY_DENYLIST }}
