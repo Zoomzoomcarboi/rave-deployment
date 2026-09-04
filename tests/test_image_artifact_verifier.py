@@ -150,10 +150,10 @@ def test_verifier_accepts_benign_wifi_password_program_code(
 @pytest.mark.parametrize(
     "assignment",
     (
-        "wifi_password=synthetic-value",
-        "wifi-password: synthetic-value",
-        "wifi password=synthetic-value",
-        "psk=synthetic-value",
+        "wifi_password=synthetic-value",  # RAVE-SAFETY: synthetic Wi-Fi credential fixture
+        "wifi-password: synthetic-value",  # RAVE-SAFETY: synthetic Wi-Fi credential fixture
+        "wifi password=synthetic-value",  # RAVE-SAFETY: synthetic Wi-Fi credential fixture
+        "psk=synthetic-value",  # RAVE-SAFETY: synthetic Wi-Fi credential fixture
     ),
 )
 def test_verifier_rejects_unquoted_config_wifi_credentials(
@@ -168,9 +168,9 @@ def test_verifier_rejects_unquoted_config_wifi_credentials(
 @pytest.mark.parametrize(
     "assignment",
     (
-        'wifi_password="synthetic value"',
-        "wifi-password: 'synthetic value'",
-        'psk="synthetic-value"',
+        'wifi_password="synthetic value"',  # RAVE-SAFETY: synthetic Wi-Fi credential fixture
+        "wifi-password: 'synthetic value'",  # RAVE-SAFETY: synthetic Wi-Fi credential fixture
+        'psk="synthetic-value"',  # RAVE-SAFETY: synthetic Wi-Fi credential fixture
     ),
 )
 def test_verifier_rejects_quoted_config_wifi_credentials(
@@ -186,7 +186,7 @@ def test_verifier_rejects_quoted_config_wifi_credentials(
     "source",
     (
         'const wifiPassword = "synthetic value";',
-        "let psk = 'synthetic-value';",
+        "let psk = 'synthetic-value';",  # RAVE-SAFETY: synthetic Wi-Fi credential fixture
         'const request = { password: "synthetic value" };',
     ),
 )

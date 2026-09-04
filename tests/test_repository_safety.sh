@@ -136,6 +136,50 @@ if scripts/check-repository-safety.sh --scan-root "$fixture_root/fail" >/dev/nul
   exit 1
 fi
 
+rm -f "$fixture_root/fail/tests/test_repository_safety.sh"
+mkdir -p "$fixture_root/pass/tests"
+printf '%s\n' \
+  'wifi_password=synthetic-value  # RAVE-SAFETY: synthetic Wi-Fi credential fixture' > \
+  "$fixture_root/pass/tests/test_synthetic_wifi.py"
+scripts/check-repository-safety.sh --scan-root "$fixture_root/pass"
+
+printf '%s\n' \
+  'psk=correct-horse-battery-staple  # RAVE-SAFETY: synthetic Wi-Fi credential fixture # RAVE-SAFETY: scanner negative-test definition' > \
+  "$fixture_root/fail/tests/test_realistic_psk.py"
+if scripts/check-repository-safety.sh --scan-root "$fixture_root/fail" >/dev/null 2>&1; then
+  printf 'Expected realistic test PSK to fail despite fixture marker\n' >&2
+  exit 1
+fi
+rm -f "$fixture_root/fail/tests/test_realistic_psk.py"
+
+printf '%s\n' \
+  'wifi_password=realistic-network-password  # RAVE-SAFETY: synthetic Wi-Fi credential fixture # RAVE-SAFETY: scanner negative-test definition' > \
+  "$fixture_root/fail/tests/test_realistic_wifi_password.py"
+if scripts/check-repository-safety.sh --scan-root "$fixture_root/fail" >/dev/null 2>&1; then
+  printf 'Expected realistic test Wi-Fi password to fail despite fixture marker\n' >&2
+  exit 1
+fi
+rm -f "$fixture_root/fail/tests/test_realistic_wifi_password.py"
+
+printf '%s\n' \
+  'psk=realistic-network-password; psk=synthetic-value  # RAVE-SAFETY: synthetic Wi-Fi credential fixture # RAVE-SAFETY: scanner negative-test definition' > \
+  "$fixture_root/fail/tests/test_marker_does_not_hide_realistic_psk.py"
+if scripts/check-repository-safety.sh --scan-root "$fixture_root/fail" >/dev/null 2>&1; then
+  printf 'Expected fixture marker not to hide another credential on the same line\n' >&2
+  exit 1
+fi
+rm -f "$fixture_root/fail/tests/test_marker_does_not_hide_realistic_psk.py"
+
+mkdir -p "$fixture_root/fail/opt/rave"
+printf '%s\n' \
+  'psk=synthetic-value  # RAVE-SAFETY: synthetic Wi-Fi credential fixture' > \
+  "$fixture_root/fail/opt/rave/runtime.conf"
+if scripts/check-repository-safety.sh --scan-root "$fixture_root/fail" >/dev/null 2>&1; then
+  printf 'Expected production synthetic credential marker to fail\n' >&2
+  exit 1
+fi
+rm -f "$fixture_root/fail/opt/rave/runtime.conf"
+
 workflow=.github/workflows/ci.yml
 grep -F 'RAVE_IDENTITY_DENYLIST: ${{ secrets.RAVE_IDENTITY_DENYLIST }}' "$workflow" >/dev/null
 if grep -F 'Repository safety requires RAVE_IDENTITY_DENYLIST' "$workflow" >/dev/null; then

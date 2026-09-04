@@ -11,6 +11,8 @@ mac_home_prefix='/Us'
 windows_home_prefix='[A-Za-z]:\\Us'
 home_pattern="(^|[^[:alnum:]_])(${linux_home_prefix}me/[^/[:space:]]+|${mac_home_prefix}ers/[^/[:space:]]+|${windows_home_prefix}ers\\\\[^\\\\[:space:]]+)(/|\\\\)"
 wifi_secret_pattern='(^|[[:space:]])(wifi[-_ ]?password|psk)[[:space:]]*[:=][[:space:]]*[^[:space:]#]+'
+synthetic_wifi_fixture_marker='# RAVE-SAFETY: synthetic Wi-Fi credential fixture'
+scanner_negative_test_marker='# RAVE-SAFETY: scanner negative-test definition'
 fail=0
 
 check_artifact_paths() {
@@ -31,6 +33,20 @@ identity_values() {
 
 escape_ere() {
   printf '%s' "$1" | sed 's/[][\\.^$*+?(){}|]/\\&/g'
+}
+
+is_allowed_synthetic_wifi_fixture() {
+  local display=$1 line=$2 normalized pattern match_count
+  if [[ $display == tests/test_repository_safety.sh && $line == *"$scanner_negative_test_marker"* ]]; then
+    return 0
+  fi
+  [[ $display == tests/* ]] || return 1
+  [[ $line == *"$synthetic_wifi_fixture_marker"* ]] || return 1
+  normalized=${line//\\/}
+  match_count=$(grep -Eo -- "$wifi_secret_pattern" <<< "$normalized" | wc -l)
+  [[ $match_count -eq 1 ]] || return 1
+  pattern="(wifi[-_ ]?password|psk)[[:space:]]*[:=][[:space:]]*[\"']?synthetic([- ]value)[\"']{0,2}[,;]?[\"']?,?[[:space:]]*${synthetic_wifi_fixture_marker}$"
+  [[ $normalized =~ $pattern ]]
 }
 
 scan_ambient_identity() {
@@ -81,9 +97,13 @@ scan_file() {
   if [[ "$file" != *.md ]] && sed -e 's#/home/pi/#/opt/rave/product-user/#g' -e 's#/home/pi:#/opt/rave/product-user:#g' "$file" | grep -nEI -- "$home_pattern" >/dev/null; then
     printf 'Developer user-home path in runtime source: %s\n' "$display" >&2; fail=1
   fi
-  if grep -nEI -- "$wifi_secret_pattern" "$file" >/dev/null; then
-    printf 'Possible Wi-Fi credential material: %s\n' "$display" >&2; fail=1
-  fi
+  while IFS= read -r line; do
+    if ! is_allowed_synthetic_wifi_fixture "$display" "$line"; then
+      printf 'Possible Wi-Fi credential material: %s\n' "$display" >&2
+      fail=1
+      break
+    fi
+  done < <(grep -EI -- "$wifi_secret_pattern" "$file" || true)
   scan_ambient_identity "$display" "$file"
   while IFS= read -r value; do
     [[ ${#value} -ge 5 ]] || continue
