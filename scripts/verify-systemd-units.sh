@@ -54,5 +54,16 @@ printf '%s\n' \
   'ExecStart=/usr/bin/true' \
   > "$verification_dir/NetworkManager.service"
 
+mkdir -p \
+  "$verification_dir/multi-user.target.wants" \
+  "$verification_dir/sockets.target.wants"
+ln -s ../rave-grow-rootfs.service \
+  "$verification_dir/multi-user.target.wants/rave-grow-rootfs.service"
+ln -s ../rave-networkd.service \
+  "$verification_dir/multi-user.target.wants/rave-networkd.service"
+ln -s ../rave-webd.socket \
+  "$verification_dir/sockets.target.wants/rave-webd.socket"
+
 SYSTEMD_UNIT_PATH="$verification_dir:/usr/local/lib/systemd/system:/usr/lib/systemd/system:/lib/systemd/system" \
-  "$systemd_analyze" verify --man=no "${verification_units[@]}"
+  "$systemd_analyze" verify --man=no \
+  multi-user.target sockets.target basic.target "${verification_units[@]}"

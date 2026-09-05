@@ -1,0 +1,20 @@
+[Unit]
+Description=Expand RAVE ROOT filesystem to the physical boot device
+After=local-fs.target systemd-udev-settle.service
+Before=rave-networkd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/rave/rave-grow-rootfs
+RemainAfterExit=yes
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+ReadWritePaths=-/var/lib/rave/storage
+RestrictAddressFamilies=AF_UNIX
+LockPersonality=true
+MemoryDenyWriteExecute=true
+
+[Install]
+WantedBy=multi-user.target

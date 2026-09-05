@@ -93,3 +93,15 @@ generic image ends with an empty `/etc/machine-id`, no SSH host keys, no RAVE pr
 identity/pairing/session state, exactly one reviewed product AP profile (and no user
 profiles), and no carried logs/caches. First-boot identity behavior still requires Pi
 boot validation.
+
+## Storage layout
+
+Gate 2B explicitly overrides the minimum-base percentage sizing with a 512 MiB `BOOT`
+partition and a 12 GiB `ROOT` system partition. This remains the upstream two-partition
+`image-rpios` MBR layout. `/dev/disk/by-slot/system` is a stable alias for `ROOT`, not
+an A/B slot. The guarded `rave-grow-rootfs.service` expands partition 2 and its ext4
+filesystem to the physical device on first boot, verifies that `BOOT` and the root
+start sector were unchanged, and reruns idempotently on later boots. A separate
+persistent-data partition is intentionally deferred until an explicit image-format
+migration. See
+[`docs/RAVE_OS_STORAGE_LAYOUT.md`](../docs/RAVE_OS_STORAGE_LAYOUT.md).

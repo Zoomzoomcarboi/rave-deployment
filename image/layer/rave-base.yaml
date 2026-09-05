@@ -5,7 +5,7 @@
 # METAEND
 ---
 mmdebstrap:
-  packages: [ca-certificates, systemd]
+  packages: [ca-certificates, cloud-guest-utils, e2fsprogs, systemd, util-linux]
   customize-hooks:
     - |-
       set -eu
@@ -14,10 +14,15 @@ mmdebstrap:
       test -n "$rootfs"
       test "$rootfs" != "/"
       test -d "$rootfs"
-      mkdir -p "$rootfs/opt/rave" "$rootfs/etc/rave" "$rootfs/var/lib/rave" "$rootfs/var/log/rave" "$rootfs/usr/lib/tmpfiles.d"
+      source_root=${SRCROOT:?missing rpi-image-gen source root}
+      repository_root=$(realpath -e -- "$source_root/..")
+      mkdir -p "$rootfs/opt/rave" "$rootfs/etc/rave" "$rootfs/var/lib/rave" "$rootfs/var/log/rave" "$rootfs/usr/lib/tmpfiles.d" "$rootfs/usr/libexec/rave" "$rootfs/usr/lib/systemd/system" "$rootfs/etc/systemd/system/multi-user.target.wants"
       chroot "$rootfs" /usr/sbin/groupadd --system rave
       chroot "$rootfs" /usr/sbin/useradd --system --gid rave --home-dir /var/lib/rave --no-create-home --shell /usr/sbin/nologin rave
       chroot "$rootfs" /bin/chown rave:rave /var/lib/rave /var/log/rave
       chroot "$rootfs" /bin/chmod 0755 /opt/rave /etc/rave
       chroot "$rootfs" /bin/chmod 0750 /var/lib/rave /var/log/rave
       printf 'd /run/rave 0750 root rave -\n' > "$rootfs/usr/lib/tmpfiles.d/rave.conf"
+      install -m 0755 "$repository_root/scripts/rave_grow_rootfs.py" "$rootfs/usr/libexec/rave/rave-grow-rootfs"
+      install -m 0644 "$repository_root/systemd/rave-grow-rootfs.service" "$rootfs/usr/lib/systemd/system/rave-grow-rootfs.service"
+      ln -s /usr/lib/systemd/system/rave-grow-rootfs.service "$rootfs/etc/systemd/system/multi-user.target.wants/rave-grow-rootfs.service"

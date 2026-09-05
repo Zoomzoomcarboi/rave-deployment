@@ -1,9 +1,15 @@
 import inspect
 import json
 import os
+import sys
 from pathlib import Path
 
+import pytest
 import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from scripts.verify_rave_image import VerificationError, verify_image_configuration
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -23,7 +29,12 @@ def test_image_composes_all_rave_layers() -> None:
     assert config["device"]["layer"] == "rpi5"
     assert config["device"]["hostname"] == "rave-pi"
     assert config["device"]["user1sudo"] == "nopasswd"
-    assert config["image"] == {"layer": "image-rpios", "name": "rave-os-gate2b"}
+    assert config["image"] == {
+        "layer": "image-rpios",
+        "name": "rave-os-gate2b",
+        "boot_part_size": "512M",
+        "root_part_size": "12G",
+    }
     assert config["deploy"] == {"compression": "zstd"}
     assert list(config["layer"].values()) == [
         "rave-base",
@@ -35,6 +46,32 @@ def test_image_composes_all_rave_layers() -> None:
         "rave-web",
         "rave-update",
     ]
+
+
+def test_image_configuration_enforces_single_system_storage_contract() -> None:
+    layout = verify_image_configuration(ROOT / "image/config/rave-os.yaml")
+
+    assert layout == {
+        "architecture": "single-system-mbr",
+        "boot_partition_mib": 512,
+        "system_partition_mib": 12 * 1024,
+        "boot_filesystem_label": "BOOT",
+        "system_filesystem_label": "ROOT",
+        "boot_device_alias": "/dev/disk/by-slot/boot",
+        "system_device_alias": "/dev/disk/by-slot/system",
+        "persistent_data_partition": False,
+        "automatic_expansion": True,
+    }
+
+
+def test_image_configuration_rejects_tiny_system_partition(tmp_path: Path) -> None:
+    config = yaml.safe_load((ROOT / "image/config/rave-os.yaml").read_text())
+    config["image"]["root_part_size"] = "1600M"
+    path = tmp_path / "rave-os.yaml"
+    path.write_text(yaml.safe_dump(config), encoding="utf-8")
+
+    with pytest.raises(VerificationError, match="at least 12 GiB"):
+        verify_image_configuration(path)
 
 
 def test_gate_two_a_builder_is_exactly_pinned() -> None:
@@ -54,6 +91,8 @@ def test_gate_two_a_entrypoint_uses_source_tree_and_relative_config_name() -> No
     script = (ROOT / "scripts/build-rave-os.sh").read_text()
     assert 'resolved_commit == "$builder_commit"' in script
     assert "-S /rave/image -c rave-os.yaml" in script
+    assert "--verify-image-configuration /rave/image/config/rave-os.yaml" in script
+    assert "--image-configuration /rave/image/config/rave-os.yaml" in script
     assert "--device" not in script
     assert "RAVE_ARTIFACT_DENYLIST" in script
 

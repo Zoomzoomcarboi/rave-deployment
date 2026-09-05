@@ -87,6 +87,8 @@ docker run --rm --privileged \
     mountpoint -q /proc/sys/fs/binfmt_misc || mount -t binfmt_misc binfmt_misc /proc/sys/fs/binfmt_misc
     apt-get update
     /builder/install_deps.sh
+    python3 /rave/scripts/verify_rave_image.py \
+      --verify-image-configuration /rave/image/config/rave-os.yaml
     useradd --uid 1000 --home-dir /tmp/rave-builder-home --create-home --shell /bin/bash imagebuilder
     install -d -m 0755 /out/work /out/work/cache
     install -d -m 0700 \
@@ -111,6 +113,7 @@ docker run --rm --privileged \
       --artifact "$artifact" --rave-commit "$2" --rave-dirty "$3" \
       --builder-tag "$4" --builder-commit "$5" --container-image "$6" \
       --configuration image/config/rave-os.yaml \
+      --image-configuration /rave/image/config/rave-os.yaml \
       --engineering-ssh-public-key-fingerprint "$8"
   ' -- "$version" "$rave_commit" "$rave_dirty" "$builder_tag" "$builder_commit" "$container_image" \
     "$engineering_public_key" "$engineering_key_fingerprint"

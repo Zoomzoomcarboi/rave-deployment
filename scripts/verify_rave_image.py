@@ -12,6 +12,8 @@ import stat
 from datetime import UTC, datetime
 from pathlib import Path
 
+import yaml
+
 try:
     from scripts.engineering_ssh_key import PublicKeyError, parse_public_key
 except ModuleNotFoundError:
@@ -68,6 +70,45 @@ def contains_wifi_credential(data: bytes) -> bool:
 def require(condition: bool, message: str) -> None:
     if not condition:
         raise VerificationError(message)
+
+
+def partition_size_mib(value: object, name: str) -> int:
+    require(isinstance(value, str), f"{name} partition size must use explicit M or G units")
+    match = re.fullmatch(r"([1-9][0-9]*)([MG])", value)
+    require(match is not None, f"{name} partition size must use explicit M or G units")
+    amount = int(match.group(1))
+    return amount if match.group(2) == "M" else amount * 1024
+
+
+def verify_image_configuration(path: Path) -> dict[str, object]:
+    require(path.is_file(), "RAVE OS image configuration is missing")
+    try:
+        configuration = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError as error:
+        raise VerificationError(f"RAVE OS image configuration is invalid YAML: {error}") from error
+    require(isinstance(configuration, dict), "RAVE OS image configuration is not a mapping")
+    image = configuration.get("image")
+    require(isinstance(image, dict), "RAVE OS image configuration has no image section")
+    require(image.get("layer") == "image-rpios", "RAVE OS must retain the single-system image layer")
+    require(
+        not ({"system_part_size", "data_part_size"} & image.keys()),
+        "A/B or persistent-data partition settings require a separate architecture review",
+    )
+    boot_mib = partition_size_mib(image.get("boot_part_size"), "boot")
+    system_mib = partition_size_mib(image.get("root_part_size"), "system")
+    require(boot_mib == 512, "boot partition must be exactly 512 MiB")
+    require(system_mib >= 12 * 1024, "system partition must be at least 12 GiB")
+    return {
+        "architecture": "single-system-mbr",
+        "boot_partition_mib": boot_mib,
+        "system_partition_mib": system_mib,
+        "boot_filesystem_label": "BOOT",
+        "system_filesystem_label": "ROOT",
+        "boot_device_alias": "/dev/disk/by-slot/boot",
+        "system_device_alias": "/dev/disk/by-slot/system",
+        "persistent_data_partition": False,
+        "automatic_expansion": True,
+    }
 
 
 def has_usable_shadow_password(password: str) -> bool:
@@ -1008,6 +1049,8 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
         "opt/rave/web/rave_web/static/app.js",
         "opt/rave/web/rave_web/static/navigation.js",
         "usr/share/doc/rave-web/THIRD_PARTY_NOTICES.md",
+        "usr/libexec/rave/rave-grow-rootfs",
+        "usr/lib/systemd/system/rave-grow-rootfs.service",
         "etc/NetworkManager/system-connections/rave-setup.nmconnection",
         "etc/rave/network/dnsmasq.conf",
         "etc/rave/avahi-daemon.conf",
@@ -1038,6 +1081,9 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
         "network-manager",
         "wpasupplicant",
         "dnsmasq-base",
+        "cloud-guest-utils",
+        "e2fsprogs",
+        "util-linux",
     ):
         stanza = next(
             (block for block in package_status.split("\n\n") if block.startswith(f"Package: {package}\n")),
@@ -1057,11 +1103,42 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     )
     wants = rootfs / "etc/systemd/system/multi-user.target.wants"
     for service in (
+        "rave-grow-rootfs.service",
         "rave-networkd.service",
         "NetworkManager.service",
         "systemd-networkd.service",
     ):
         require((wants / service).is_symlink(), f"service is not enabled at boot: {service}")
+    grow_script = (rootfs / "usr/libexec/rave/rave-grow-rootfs").read_text(encoding="utf-8")
+    grow_unit = (rootfs / "usr/lib/systemd/system/rave-grow-rootfs.service").read_text(
+        encoding="utf-8"
+    )
+    for contract in (
+        "/dev/disk/by-slot/system",
+        "/dev/disk/by-slot/boot",
+        "growpart",
+        "resize2fs",
+        "COMPLETION_PATH.unlink(missing_ok=True)",
+        "verify_expanded_geometry",
+        "verify_filesystem_size",
+    ):
+        require(contract in grow_script, f"ROOT expansion contract changed: {contract}")
+    require(
+        effective_systemd_scalar((grow_unit,), "Service", "ProtectSystem") == "full",
+        "ROOT expansion requires ProtectSystem=full for online resize2fs",
+    )
+    require(
+        effective_systemd_words((grow_unit,), "Unit", "After")
+        == ["local-fs.target", "systemd-udev-settle.service"],
+        "ROOT expansion prerequisite ordering changed",
+    )
+    require(
+        "ExecStart=/usr/libexec/rave/rave-grow-rootfs" in grow_unit
+        and "Type=oneshot" in grow_unit
+        and effective_systemd_words((grow_unit,), "Unit", "Before")
+        == ["rave-networkd.service"],
+        "ROOT expansion boot ordering changed",
+    )
     require(
         not (wants / "rave-webd.service").exists()
         and not (wants / "rave-management-dhcp.service").exists(),
@@ -1132,6 +1209,7 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
         "checks": {
             "rave_account": "pass",
             "filesystem_contract": "pass",
+            "full_device_root_expansion": "pass_requires_first_boot_validation",
             "web_content": "pass",
             "management_interface_only_webd": "pass",
             "web_not_exposed_on_eth0": "pass",
@@ -1172,6 +1250,7 @@ def sha256(path: Path) -> str:
 def write_provenance(args: argparse.Namespace) -> None:
     artifact = args.artifact.resolve(strict=True)
     require(artifact.is_file() and artifact.stat().st_size > 0, "provenance artifact is empty")
+    storage_layout = verify_image_configuration(args.image_configuration)
     record = {
         "schema_version": 1,
         "rave_repository_commit": args.rave_commit,
@@ -1180,6 +1259,7 @@ def write_provenance(args: argparse.Namespace) -> None:
         "builder_container": args.container_image,
         "target": {"platform": "raspberry-pi-5", "architecture": "arm64"},
         "configuration": args.configuration,
+        "storage_layout": storage_layout,
         "engineering_ssh_public_key_fingerprint": args.engineering_ssh_public_key_fingerprint,
         "build_timestamp_utc": datetime.now(UTC).isoformat(),
         "artifact": {
@@ -1200,8 +1280,9 @@ def write_provenance(args: argparse.Namespace) -> None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--rootfs", type=Path)
-    parser.add_argument("--artifact", type=Path, required=True)
+    parser.add_argument("--artifact", type=Path)
     parser.add_argument("--report", type=Path)
+    parser.add_argument("--verify-image-configuration", type=Path)
     parser.add_argument("--write-provenance", type=Path)
     parser.add_argument("--rave-commit")
     parser.add_argument("--rave-dirty", choices=("true", "false"))
@@ -1209,6 +1290,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--builder-commit")
     parser.add_argument("--container-image")
     parser.add_argument("--configuration")
+    parser.add_argument("--image-configuration", type=Path)
     parser.add_argument("--engineering-ssh-public-key-fingerprint")
     return parser.parse_args()
 
@@ -1216,20 +1298,26 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     try:
+        if args.verify_image_configuration:
+            print(json.dumps(verify_image_configuration(args.verify_image_configuration), sort_keys=True))
+            return 0
         if args.write_provenance:
             required = (
+                args.artifact,
                 args.rave_commit,
                 args.rave_dirty,
                 args.builder_tag,
                 args.builder_commit,
                 args.container_image,
                 args.configuration,
+                args.image_configuration,
                 args.engineering_ssh_public_key_fingerprint,
             )
             require(all(required), "missing provenance argument")
             write_provenance(args)
             return 0
         require(args.rootfs is not None, "--rootfs is required for verification")
+        require(args.artifact is not None, "--artifact is required for verification")
         require(args.artifact.is_file() and args.artifact.stat().st_size > 0, "missing image artifact")
         with args.artifact.open("rb") as artifact_stream:
             require(artifact_stream.read(4) == b"\x28\xb5\x2f\xfd", "artifact is not zstd data")

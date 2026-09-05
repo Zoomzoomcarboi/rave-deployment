@@ -11,6 +11,8 @@ locale:
 image:
   layer: image-rpios
   name: rave-os-gate2b
+  boot_part_size: 512M
+  root_part_size: 12G
 ieee80211:
   regdom: US
 deploy:
