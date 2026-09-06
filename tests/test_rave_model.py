@@ -293,7 +293,8 @@ def test_generated_image_model_store(tmp_path, monkeypatch, mode, uid, gid, cont
     from scripts.verify_rave_image import VerificationError, verify_model_store
 
     store = tmp_path / "opt/rave/models"
-    store.mkdir(parents=True, mode=mode)
+    store.mkdir(parents=True)
+    store.chmod(mode)
     if content:
         (store / "unexpected.hef").write_bytes(FAKE_HEF)
     original = Path.lstat
