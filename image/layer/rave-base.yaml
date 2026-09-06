@@ -17,6 +17,8 @@ mmdebstrap:
       source_root=${SRCROOT:?missing rpi-image-gen source root}
       repository_root=$(realpath -e -- "$source_root/..")
       mkdir -p "$rootfs/opt/rave" "$rootfs/etc/rave" "$rootfs/var/lib/rave" "$rootfs/var/log/rave" "$rootfs/usr/lib/tmpfiles.d" "$rootfs/usr/libexec/rave" "$rootfs/usr/lib/systemd/system" "$rootfs/etc/systemd/system/multi-user.target.wants"
+      install -d -o 0 -g 0 -m 0755 "$rootfs/opt/rave/models"
+      install -m 0755 "$repository_root/scripts/rave_model.py" "$rootfs/usr/libexec/rave/rave-model"
       chroot "$rootfs" /usr/sbin/groupadd --system rave
       chroot "$rootfs" /usr/sbin/useradd --system --gid rave --home-dir /var/lib/rave --no-create-home --shell /usr/sbin/nologin rave
       chroot "$rootfs" /bin/chown rave:rave /var/lib/rave /var/log/rave

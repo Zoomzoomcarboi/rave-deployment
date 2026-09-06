@@ -1,18 +1,200 @@
 # METABEGIN
 # X-Env-Layer-Name: rave-hailo
-# X-Env-Layer-Desc: Hailo compatibility boundary; runtime packages are not yet integrated
-# X-Env-Layer-Version: 0.1.0
+# X-Env-Layer-Desc: Pinned Hailo-8 runtime and target-kernel PCIe driver integration
+# X-Env-Layer-Version: 0.2.0
 # X-Env-Layer-Requires: rave-base
 # METAEND
+
 ---
+
 mmdebstrap:
+  packages:
+    - build-essential
+    - linux-headers-rpi-2712
+    - hailort
+
+  setup-hooks:
+    - |-
+      set -eu
+      rootfs_input=${1:?missing target rootfs}
+      rootfs=$(realpath -m -- "$rootfs_input")
+      test -n "$rootfs"
+      test "$rootfs" != "/"
+
+      mkdir -p "$rootfs/etc/apt/preferences.d"
+
+      cat > "$rootfs/etc/apt/preferences.d/rave-hailo-stack" <<'PREFS'
+      Package: linux-image-rpi-2712 linux-image-6.18.39+rpt-rpi-2712 linux-headers-rpi-2712 linux-headers-6.18.39+rpt-rpi-2712
+      Pin: version 1:6.18.39-1+rpt1
+      Pin-Priority: 1001
+
+      Package: hailort hailort-pcie-driver
+      Pin: version 4.23.0
+      Pin-Priority: 1001
+      PREFS
+
   customize-hooks:
     - |-
       set -eu
+
       rootfs_input=${1:?missing target rootfs}
       rootfs=$(realpath -e -- "$rootfs_input")
       test -n "$rootfs"
       test "$rootfs" != "/"
       test -d "$rootfs"
+
+      target_kernel="6.18.39+rpt-rpi-2712"
+      kernel_package_version="1:6.18.39-1+rpt1"
+      hailo_version="4.23.0"
+      driver_package="hailort-pcie-driver"
+
+      driver_deb_sha256="ecc4d75bdb3e7e5e8996c5a8569bd328df47a3189838865d2cfaab32c386df7b"
+      driver_preinst_sha256="22e802d5c8809ccf31a47afd4d08f64c1c880cca57b3e54922c2fbf56a7b8066"
+      driver_postinst_sha256="14ca5b281added9363b9a71db27bad0f7e91933cf70c78045a1bcaf48c0d785b"
+      driver_prerm_sha256="9d65f7ed4286791d2b558e8a69d9d4d2b59acbdcd62f0bec49e55eeff153368d"
+
+      test "$(chroot "$rootfs" dpkg-query -W -f='${Version}' linux-image-rpi-2712)" = "$kernel_package_version"
+      test "$(chroot "$rootfs" dpkg-query -W -f='${Version}' linux-headers-rpi-2712)" = "$kernel_package_version"
+      test "$(chroot "$rootfs" dpkg-query -W -f='${Version}' hailort)" = "$hailo_version"
+
+      test -d "$rootfs/lib/modules/$target_kernel"
+      test -d "$rootfs/lib/modules/$target_kernel/build"
+      test -f "$rootfs/lib/modules/$target_kernel/build/Makefile"
+
+      download_dir="/tmp/rave-hailo-driver"
+      rm -rf "$rootfs$download_dir"
+      mkdir -p "$rootfs$download_dir"
+
+      chroot "$rootfs" /bin/sh -c \
+        "cd '$download_dir' && apt-get download '${driver_package}=${hailo_version}' >/tmp/rave-hailo-driver-download.log 2>&1"
+
+      driver_deb=$(
+        find "$rootfs$download_dir" \
+          -maxdepth 1 \
+          -type f \
+          -name 'hailort-pcie-driver_4.23.0_*.deb' \
+          -print \
+          -quit
+      )
+
+      test -n "$driver_deb"
+      test "$(dpkg-deb -f "$driver_deb" Version)" = "$hailo_version"
+      # The vendor package contains portable driver source and is Architecture: all.
+      # The resulting kernel module is compiled explicitly against the Pi target kernel.
+      test "$(dpkg-deb -f "$driver_deb" Architecture)" = "all"
+
+      test "$(sha256sum "$driver_deb" | awk '{print $1}')" = "$driver_deb_sha256"
+
+      control_dir="$rootfs$download_dir/control"
+      mkdir -p "$control_dir"
+      dpkg-deb -e "$driver_deb" "$control_dir"
+
+      # These maintainer scripts were reviewed during Gate M2A. The preinst
+      # only performs a fail-tolerant Secure Boot check. The vendor postinst
+      # is preserved but suppressed during offline image construction because
+      # it builds against uname -r and attempts to modprobe live hardware.
+      test -f "$control_dir/preinst"
+      test -f "$control_dir/postinst"
+      test -f "$control_dir/prerm"
+
+      test "$(sha256sum "$control_dir/preinst" | awk '{print $1}')" = "$driver_preinst_sha256"
+      test "$(sha256sum "$control_dir/postinst" | awk '{print $1}')" = "$driver_postinst_sha256"
+      test "$(sha256sum "$control_dir/prerm" | awk '{print $1}')" = "$driver_prerm_sha256"
+
+      driver_deb_chroot="$download_dir/$(basename "$driver_deb")"
+      chroot "$rootfs" /usr/bin/dpkg --unpack "$driver_deb_chroot" >/dev/null
+
+      vendor_postinst="$rootfs/var/lib/dpkg/info/${driver_package}.postinst"
+      saved_postinst="$rootfs$download_dir/vendor.postinst"
+
+      test -f "$vendor_postinst"
+      cp "$vendor_postinst" "$saved_postinst"
+
+      restore_postinst() {
+        if [ -f "$saved_postinst" ]; then
+          cp "$saved_postinst" "$vendor_postinst"
+          chmod 0755 "$vendor_postinst"
+        fi
+      }
+
+      trap restore_postinst 0 1 2 15
+
+      # Invoke Kbuild directly: the vendor install target ends with bare depmod.
+      # ARCH and the vendor Kbuild UNAME_STR override make this independent of
+      # host uname, including its legacy Raspberry Pi compatibility detection.
+      # Defer Kbuild depmod to the explicit, checked target-kernel call below.
+      build_log="/var/log/rave-hailo-image-build.log"
+
+      if ! chroot "$rootfs" /bin/sh -c "
+        set -eu
+        make -C '/lib/modules/$target_kernel/build' M=/usr/src/hailort-pcie-driver/linux/pcie ARCH=arm64 UNAME_STR=raspi clean
+        make -C '/lib/modules/$target_kernel/build' M=/usr/src/hailort-pcie-driver/linux/pcie ARCH=arm64 UNAME_STR=raspi modules
+        make -C '/lib/modules/$target_kernel/build' M=/usr/src/hailort-pcie-driver/linux/pcie ARCH=arm64 UNAME_STR=raspi INSTALL_MOD_DIR=kernel/drivers/misc DEPMOD=/bin/true modules_install
+        /usr/sbin/depmod -a '$target_kernel'
+        make -C '/lib/modules/$target_kernel/build' M=/usr/src/hailort-pcie-driver/linux/pcie ARCH=arm64 UNAME_STR=raspi clean
+      " > "$rootfs$build_log" 2>&1
+      then
+        echo "Hailo PCIe target-kernel build failed. Last 80 lines:" >&2
+        tail -n 80 "$rootfs$build_log" >&2
+        false
+      fi
+
+      module_path=$(
+        find "$rootfs/lib/modules/$target_kernel/kernel/drivers/misc" \
+          -maxdepth 1 \
+          -type f \
+          -name 'hailo_pci.ko*' \
+          -print \
+          -quit
+      )
+      test -n "$module_path"
+      module_vermagic=$(chroot "$rootfs" /usr/sbin/modinfo -k "$target_kernel" -F vermagic hailo_pci)
+      test "${module_vermagic%% *}" = "$target_kernel"
+      test "$(chroot "$rootfs" /usr/sbin/modinfo -k "$target_kernel" -F version hailo_pci)" = "$hailo_version"
+      grep -q '^kernel/drivers/misc/hailo_pci\.ko[^:]*:' "$rootfs/lib/modules/$target_kernel/modules.dep"
+
+      firmware_dir="$rootfs/lib/firmware/hailo"
+      firmware_versioned="$firmware_dir/hailo8_fw.${hailo_version}.bin"
+      firmware_link="$firmware_dir/hailo8_fw.bin"
+
+      test -f "$firmware_versioned"
+      ln -sfn "hailo8_fw.${hailo_version}.bin" "$firmware_link"
+      test -f "$firmware_link"
+      test -s "$rootfs/lib/udev/rules.d/51-hailo-udev.rules"
+
+      # Mark the vendor package configured without executing its build-host
+      # uname/modprobe postinst. The module was built explicitly above.
+      cat > "$vendor_postinst" <<'POSTINST'
+      #!/bin/sh
+      set -eu
+      true
+      POSTINST
+      chmod 0755 "$vendor_postinst"
+
+      chroot "$rootfs" /usr/bin/dpkg --configure "$driver_package" >/dev/null
+
+      # dpkg activates conffiles during configure, not unpack.
+      test -s "$rootfs/etc/modprobe.d/hailo_pci.conf"
+
+      restore_postinst
+      test "$(sha256sum "$vendor_postinst" | awk '{print $1}')" = "$driver_postinst_sha256"
+      trap - 0 1 2 15
+
+      test "$(chroot "$rootfs" dpkg-query -W -f='${Status}' "$driver_package")" = "install ok installed"
+      test "$(chroot "$rootfs" dpkg-query -W -f='${Version}' "$driver_package")" = "$hailo_version"
+
       mkdir -p "$rootfs/etc/rave/compatibility"
-      touch "$rootfs/etc/rave/compatibility/HAILO_STACK_NOT_INTEGRATED"
+
+      cat > "$rootfs/etc/rave/compatibility/hailo-stack.env" <<EOF
+      RAVE_HAILO_ACCELERATOR=HAILO8
+      RAVE_HAILO_KERNEL_RELEASE=$target_kernel
+      RAVE_HAILO_KERNEL_PACKAGE_VERSION=$kernel_package_version
+      RAVE_HAILORT_VERSION=$hailo_version
+      RAVE_HAILO_PCIE_DRIVER_VERSION=$hailo_version
+      RAVE_HAILO_IMAGE_CONTRACT=M2A
+      EOF
+
+      rm -f "$rootfs/etc/rave/compatibility/HAILO_STACK_NOT_INTEGRATED"
+      rm -f "$rootfs$build_log"
+      rm -f "$rootfs/tmp/rave-hailo-driver-download.log"
+      rm -rf "$rootfs$download_dir"

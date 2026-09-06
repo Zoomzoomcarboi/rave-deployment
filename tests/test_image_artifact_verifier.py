@@ -9,6 +9,7 @@ from scripts.verify_rave_image import (
     VerificationError,
     verify_clone_safety,
     verify_gate2b_us_regulatory_domain,
+    verify_hailo_stack,
     verify_publishable_image_has_no_engineering_ssh,
     verify_rootfs,
 )
@@ -245,3 +246,111 @@ def test_gate2b_us_regulatory_domain_accepts_explicit_us_setting(tmp_path: Path)
 def test_gate2b_us_regulatory_domain_rejects_gb_fallback(tmp_path: Path) -> None:
     with pytest.raises(VerificationError, match="regulatory domain"):
         verify_gate2b_us_regulatory_domain(regulatory_rootfs(tmp_path, regdom="GB"))
+
+
+@pytest.fixture
+def hailo_rootfs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    from scripts import verify_rave_image as verifier
+
+    root = tmp_path / "hailo-rootfs"
+    kernel = "6.18.39+rpt-rpi-2712"
+    version = "1:6.18.39-1+rpt1"
+    files = {
+        "etc/rave/compatibility/hailo-stack.env": (
+            "RAVE_HAILO_ACCELERATOR=HAILO8\n"
+            f"RAVE_HAILO_KERNEL_RELEASE={kernel}\n"
+            f"RAVE_HAILO_KERNEL_PACKAGE_VERSION={version}\n"
+            "RAVE_HAILORT_VERSION=4.23.0\n"
+            "RAVE_HAILO_PCIE_DRIVER_VERSION=4.23.0\n"
+            "RAVE_HAILO_IMAGE_CONTRACT=M2A\n"
+        ),
+        f"lib/modules/{kernel}/kernel/drivers/misc/hailo_pci.ko.xz": "module fixture",
+        f"lib/modules/{kernel}/modules.dep": "kernel/drivers/misc/hailo_pci.ko.xz:\n",
+        "lib/firmware/hailo/hailo8_fw.4.23.0.bin": "firmware fixture",
+        "lib/udev/rules.d/51-hailo-udev.rules": "udev fixture",
+        "etc/modprobe.d/hailo_pci.conf": "configuration fixture",
+        "var/lib/dpkg/info/hailort-pcie-driver.postinst": "reviewed vendor fixture",
+    }
+    files["var/lib/dpkg/status"] = "\n\n".join(
+        f"Package: {name}\nStatus: install ok installed\nVersion: {package_version}\n"
+        f"Architecture: {'all' if name == 'hailort-pcie-driver' else 'arm64'}\n"
+        for name, package_version in (
+            ("linux-image-rpi-2712", version), ("linux-headers-rpi-2712", version),
+            (f"linux-image-{kernel}", version), (f"linux-headers-{kernel}", version),
+            ("hailort", "4.23.0"), ("hailort-pcie-driver", "4.23.0"),
+        )
+    )
+    for relative, content in files.items():
+        path = root / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content)
+    (root / "lib/firmware/hailo/hailo8_fw.bin").symlink_to("hailo8_fw.4.23.0.bin")
+    real_sha256 = verifier.sha256
+    # Avoid embedding vendor source in tests; only this exact fixture has its reviewed digest.
+    monkeypatch.setattr(verifier, "sha256", lambda path: (
+        "14ca5b281added9363b9a71db27bad0f7e91933cf70c78045a1bcaf48c0d785b"
+        if path.read_bytes() == b"reviewed vendor fixture" else real_sha256(path)
+    ))
+    return root
+
+
+def test_hailo_verifier_accepts_complete_offline_stack(hailo_rootfs: Path) -> None:
+    verify_hailo_stack(hailo_rootfs)
+
+
+@pytest.mark.parametrize("defect", (
+    "contract", "package_version", "package_unconfigured", "driver_arch",
+    "missing_kernel", "module_missing", "module_empty", "module_duplicate",
+    "dependencies", "firmware_absolute", "firmware_missing", "udev", "conffile",
+    "postinst", "placeholder",
+))
+def test_hailo_verifier_rejects_incomplete_stack(hailo_rootfs: Path, defect: str) -> None:
+    root = hailo_rootfs
+    modules = root / "lib/modules/6.18.39+rpt-rpi-2712"
+    module = modules / "kernel/drivers/misc/hailo_pci.ko.xz"
+    status = root / "var/lib/dpkg/status"
+    if defect == "contract":
+        (root / "etc/rave/compatibility/hailo-stack.env").write_text("RAVE_HAILORT_VERSION=4.22.0")
+    elif defect == "package_version":
+        status.write_text(status.read_text().replace("Version: 4.23.0", "Version: 4.22.0"))
+    elif defect == "package_unconfigured":
+        status.write_text(status.read_text().replace("install ok installed", "install ok unpacked"))
+    elif defect == "driver_arch":
+        status.write_text(status.read_text().replace("Architecture: all", "Architecture: arm64"))
+    elif defect == "missing_kernel":
+        status.write_text(status.read_text().replace("Package: linux-image-6.18", "Package: other-6.18"))
+    elif defect == "module_missing":
+        module.unlink()
+    elif defect == "module_empty":
+        module.write_text("")
+    elif defect == "module_duplicate":
+        module.with_suffix("").write_text("duplicate")
+    elif defect == "dependencies":
+        (modules / "modules.dep").write_text("other.ko:\n")
+    elif defect == "firmware_absolute":
+        link = root / "lib/firmware/hailo/hailo8_fw.bin"
+        link.unlink()
+        link.symlink_to("/lib/firmware/hailo/hailo8_fw.4.23.0.bin")
+    elif defect == "firmware_missing":
+        (root / "lib/firmware/hailo/hailo8_fw.4.23.0.bin").unlink()
+    elif defect == "udev":
+        (root / "lib/udev/rules.d/51-hailo-udev.rules").unlink()
+    elif defect == "conffile":
+        (root / "etc/modprobe.d/hailo_pci.conf").unlink()
+    elif defect == "postinst":
+        (root / "var/lib/dpkg/info/hailort-pcie-driver.postinst").write_text("#!/bin/sh\ntrue\n")
+    elif defect == "placeholder":
+        (root / "etc/rave/compatibility/HAILO_STACK_NOT_INTEGRATED").touch()
+    with pytest.raises(VerificationError):
+        verify_hailo_stack(root)
+
+
+@pytest.mark.parametrize("package", (
+    "dkms", "hailo-dkms", "hailo-all", "python3-hailort", "hailo-tappas-core", "hailo-model-zoo",
+    "hailo-dataflow-compiler",
+))
+def test_hailo_verifier_rejects_forbidden_packages(hailo_rootfs: Path, package: str) -> None:
+    status = hailo_rootfs / "var/lib/dpkg/status"
+    status.write_text(status.read_text() + f"\n\nPackage: {package}\nStatus: install ok installed\n")
+    with pytest.raises(VerificationError, match="forbidden M2A package"):
+        verify_hailo_stack(hailo_rootfs)

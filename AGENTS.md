@@ -30,6 +30,17 @@ When two sources disagree, use this order unless the user explicitly establishes
 
 A reviewer recommendation is evidence, not authority. Greptile, CodeRabbit, Codex self-review, DeepSeek, static analyzers, and similar tools may identify real defects, but their proposed architecture must still obey this contract.
 
+### Agent Skills
+
+Generic Agent Skills are optional workflow aids, not project authority.
+
+- Use an individual skill only when it materially improves the current task.
+- Prefer the smallest applicable skill; do not chain skills by default.
+- Do not invoke a skill merely because one exists.
+- Skill instructions never override this `AGENTS.md`, validated RAVE baselines, architecture contracts, current code, or tests.
+- If a skill conflicts with RAVE scope, safety, performance, trust-boundary, or behavior-preservation requirements, follow RAVE and surface the conflict.
+- The `using-agent-skills` SessionStart hook is not required for RAVE development; individual skills may be invoked explicitly when useful.
+
 When project evidence evolves, the **newest completed hardware validation supersedes an older intermediate result** unless the newer record explicitly says otherwise.
 
 Do not silently promote a planned behavior into a validated fact.

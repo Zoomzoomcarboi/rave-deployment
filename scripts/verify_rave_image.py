@@ -1006,6 +1006,90 @@ def verify_publishable_image_has_no_engineering_ssh(rootfs: Path) -> None:
     )
 
 
+def verify_hailo_stack(rootfs: Path) -> None:
+    kernel = "6.18.39+rpt-rpi-2712"
+    kernel_version = "1:6.18.39-1+rpt1"
+    version = "4.23.0"
+    contract = {
+        "RAVE_HAILO_ACCELERATOR": "HAILO8",
+        "RAVE_HAILO_KERNEL_RELEASE": kernel,
+        "RAVE_HAILO_KERNEL_PACKAGE_VERSION": kernel_version,
+        "RAVE_HAILORT_VERSION": version,
+        "RAVE_HAILO_PCIE_DRIVER_VERSION": version,
+        "RAVE_HAILO_IMAGE_CONTRACT": "M2A",
+    }
+    compatibility = rootfs / "etc/rave/compatibility"
+    require(not (compatibility / "HAILO_STACK_NOT_INTEGRATED").exists(),
+            "obsolete Hailo placeholder remains")
+    env = compatibility / "hailo-stack.env"
+    require(env.is_file(), "missing Hailo compatibility contract")
+    require(sorted(env.read_text().splitlines()) == sorted(f"{k}={v}" for k, v in contract.items()),
+            "Hailo compatibility contract mismatch")
+    status = rootfs / "var/lib/dpkg/status"
+    require(status.is_file(), "missing package status for Hailo verification")
+    packages = {}
+    for block in status.read_text().split("\n\n"):
+        fields = dict(line.split(": ", 1) for line in block.splitlines()
+                      if line and not line[0].isspace() and ": " in line)
+        if "Package" in fields:
+            packages[fields["Package"]] = fields
+    for name, expected in {
+        "linux-image-rpi-2712": kernel_version,
+        "linux-headers-rpi-2712": kernel_version,
+        f"linux-image-{kernel}": kernel_version,
+        f"linux-headers-{kernel}": kernel_version,
+        "hailort": version,
+        "hailort-pcie-driver": version,
+    }.items():
+        fields = packages.get(name, {})
+        require(fields.get("Status") == "install ok installed"
+                and fields.get("Version") == expected,
+                f"Hailo pinned package missing or mismatched: {name}")
+        expected_arch = "all" if name == "hailort-pcie-driver" else "arm64"
+        require(fields.get("Architecture") == expected_arch,
+                f"Hailo package architecture mismatch: {name}")
+    forbidden = ("dkms", "hailo-dkms", "hailo-all", "python3-hailort", "hailo-tappas",
+                 "tappas", "hailo-model-zoo", "hailo-dataflow-compiler")
+    for name, fields in packages.items():
+        if fields.get("Status", "").endswith(" not-installed"):
+            continue
+        require(not any(name == item or name.startswith(item + "-") for item in forbidden),
+                f"forbidden M2A package: {name}")
+    modules = rootfs / f"lib/modules/{kernel}"
+    matches = list(modules.rglob("hailo_pci.ko*"))
+    expected_dir = modules / "kernel/drivers/misc"
+    require(len(matches) == 1 and matches[0].parent == expected_dir
+            and matches[0].is_file() and matches[0].stat().st_size > 0,
+            "Hailo target module missing, empty, misplaced, or duplicated")
+    dependencies = modules / "modules.dep"
+    require(dependencies.is_file(), "missing Hailo target modules.dep")
+    relative = matches[0].relative_to(modules).as_posix()
+    require(any(line.startswith(relative + ":") for line in dependencies.read_text().splitlines()),
+            "Hailo target module absent from modules.dep")
+    firmware = rootfs / "lib/firmware/hailo"
+    link = firmware / "hailo8_fw.bin"
+    require(link.is_symlink() and os.readlink(link) == f"hailo8_fw.{version}.bin"
+            and link.is_file() and link.stat().st_size > 0,
+            "Hailo firmware link missing or mismatched")
+    for relative in ("lib/udev/rules.d/51-hailo-udev.rules", "etc/modprobe.d/hailo_pci.conf"):
+        path = rootfs / relative
+        require(path.is_file() and path.stat().st_size > 0, f"missing Hailo configuration: {relative}")
+    postinst = rootfs / "var/lib/dpkg/info/hailort-pcie-driver.postinst"
+    require(postinst.is_file() and sha256(postinst)
+            == "14ca5b281added9363b9a71db27bad0f7e91933cf70c78045a1bcaf48c0d785b",
+            "Hailo vendor postinst was not restored")
+
+
+def verify_model_store(rootfs: Path) -> None:
+    store = rootfs / "opt/rave/models"
+    require(store.exists(), "missing model store: /opt/rave/models")
+    info = store.lstat()
+    require(stat.S_ISDIR(info.st_mode), "model store must be a real directory")
+    actual = (stat.S_IMODE(info.st_mode), info.st_uid, info.st_gid)
+    require(actual == (0o755, 0, 0), "model store must be root-owned mode 0755")
+    require(not any(store.iterdir()), "image model store must be empty")
+
+
 def verify_rootfs(rootfs: Path) -> dict[str, object]:
     rootfs = rootfs.resolve(strict=True)
     require(rootfs != Path("/"), "refusing to verify host root")
@@ -1013,6 +1097,8 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     verify_clone_safety(rootfs)
     verify_gate2b_us_regulatory_domain(rootfs)
     verify_timekeeping(rootfs)
+    verify_hailo_stack(rootfs)
+    verify_model_store(rootfs)
     engineering_key_fingerprint = verify_engineering_ethernet_ssh(rootfs)
 
     rave_uid, rave_gid = target_accounts(rootfs)
@@ -1031,6 +1117,7 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
     verify_management_install_ownership(rootfs)
 
     required_files = (
+        "usr/libexec/rave/rave-model",
         "usr/lib/tmpfiles.d/rave.conf",
         "usr/lib/systemd/system/rave-networkd.service",
         "usr/lib/systemd/system/rave-webd.socket",
@@ -1059,7 +1146,6 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
         "etc/NetworkManager/conf.d/10-rave-unmanaged-runtime.conf",
         "etc/NetworkManager/conf.d/20-rave-wifi-backend.conf",
         "opt/rave/web/rave_web/providers.py",
-        "etc/rave/compatibility/HAILO_STACK_NOT_INTEGRATED",
         "opt/rave/runtime/PERCEPTION_NOT_INTEGRATED",
         "var/lib/rave/update/UPDATE_SERVICE_NOT_INTEGRATED",
     )
@@ -1198,6 +1284,7 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
         "engineering_ethernet_ssh_publishable": False,
         "engineering_ssh_public_key_fingerprint": engineering_key_fingerprint,
         "limitations": {
+            "physical_hailo_detection_and_inference": "requires clean-image Raspberry Pi validation",
             "physical_wifi_ap_operation": "requires Raspberry Pi hardware validation",
             "station_scan_connect_and_saved_profile": "requires Raspberry Pi hardware validation",
             "station_failure_ap_recovery": "requires Raspberry Pi hardware validation",
@@ -1207,6 +1294,7 @@ def verify_rootfs(rootfs: Path) -> dict[str, object]:
             "rtc_and_timesync_runtime_behavior": "requires clean-image Raspberry Pi validation",
         },
         "checks": {
+            "hailo_m2a_offline_stack": "pass",
             "rave_account": "pass",
             "filesystem_contract": "pass",
             "full_device_root_expansion": "pass_requires_first_boot_validation",

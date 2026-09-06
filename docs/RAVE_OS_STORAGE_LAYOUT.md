@@ -30,9 +30,10 @@ image:
 
 The fixed system size provides deterministic space for the Debian/Raspberry Pi OS
 base, the future compatible Hailo stack, package metadata, RAVE services, and multiple
-model states. Current, previous known-good, and staged model releases remain under
-`/var/lib/rave` on the system filesystem until a persistent-data/update architecture
-is implemented.
+model states. M2B.1 stores immutable installed model artifacts under
+`/opt/rave/models`, with staging on that same filesystem. Mutable RAVE state remains
+under `/var/lib/rave`. Both paths currently reside on the system/root filesystem;
+a dedicated persistent-data partition remains deferred.
 
 The generated image is deliberately flashable to different supported media sizes. On
 every boot, `rave-grow-rootfs.service` verifies that the mounted root is ext4, labeled
