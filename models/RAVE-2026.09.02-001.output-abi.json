@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "model_id": "RAVE-2026.09.02-001",
+  "artifact": "rave_yolo26n_960.hef",
+  "sha256": "913053bb96815b16b79093924ed563844f8edbc02ef6d40129a290eff3e32aea",
+  "accelerator": "HAILO8",
+  "hailort": "4.23.0",
+  "interface": "application-facing Hailo VStreams (not physical hardware Streams)",
+  "shape_axes": [
+    "height",
+    "width",
+    "features"
+  ],
+  "inputs": [
+    {
+      "name": "rave_yolo26n_960/input_layer1",
+      "shape": [
+        960,
+        960,
+        3
+      ],
+      "type": "UINT8",
+      "order": "NHWC",
+      "quantization": {
+        "qp_zp": 0,
+        "qp_scale": 1,
+        "limvals_min": 0,
+        "limvals_max": 255
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "name": "rave_yolo26n_960/conv61",
+      "shape": [
+        120,
+        120,
+        4
+      ],
+      "type": "UINT16",
+      "order": "NHWC",
+      "quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      }
+    },
+    {
+      "name": "rave_yolo26n_960/conv77",
+      "shape": [
+        60,
+        60,
+        4
+      ],
+      "type": "UINT16",
+      "order": "FCR",
+      "quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      }
+    },
+    {
+      "name": "rave_yolo26n_960/conv91",
+      "shape": [
+        30,
+        30,
+        4
+      ],
+      "type": "UINT16",
+      "order": "FCR",
+      "quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      }
+    },
+    {
+      "name": "rave_yolo26n_960/conv64",
+      "shape": [
+        120,
+        120,
+        2
+      ],
+      "type": "UINT16",
+      "order": "NHWC",
+      "quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      }
+    },
+    {
+      "name": "rave_yolo26n_960/conv80",
+      "shape": [
+        60,
+        60,
+        2
+      ],
+      "type": "UINT16",
+      "order": "FCR",
+      "quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      }
+    },
+    {
+      "name": "rave_yolo26n_960/conv94",
+      "shape": [
+        30,
+        30,
+        2
+      ],
+      "type": "UINT16",
+      "order": "FCR",
+      "quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      }
+    }
+  ],
+  "observed_parse_hef_output_order": [
+    "rave_yolo26n_960/conv61",
+    "rave_yolo26n_960/conv77",
+    "rave_yolo26n_960/conv91",
+    "rave_yolo26n_960/conv64",
+    "rave_yolo26n_960/conv80",
+    "rave_yolo26n_960/conv94"
+  ],
+  "network_groups": [
+    {
+      "name": "rave_yolo26n_960",
+      "networks": [
+        "rave_yolo26n_960/rave_yolo26n_960"
+      ]
+    }
+  ]
+}

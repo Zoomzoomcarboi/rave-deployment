@@ -1,8 +1,8 @@
 # METABEGIN
 # X-Env-Layer-Name: rave-runtime
 # X-Env-Layer-Desc: Production runtime boundary; perception is not yet integrated
-# X-Env-Layer-Version: 0.1.0
-# X-Env-Layer-Requires: rave-base
+# X-Env-Layer-Version: 0.2.0
+# X-Env-Layer-Requires: rave-base,rave-hailo
 # METAEND
 ---
 mmdebstrap:
@@ -16,3 +16,16 @@ mmdebstrap:
       test -d "$rootfs"
       mkdir -p "$rootfs/opt/rave/runtime"
       touch "$rootfs/opt/rave/runtime/PERCEPTION_NOT_INTEGRATED"
+      source_root=${SRCROOT:?missing rpi-image-gen source root}
+      repository_root=$(realpath -e -- "$source_root/..")
+      test "$(chroot "$rootfs" dpkg-query -W -f='${Version}' hailort)" = "4.23.0"
+      mkdir -p "$rootfs/var/tmp" "$rootfs/usr/libexec/rave" "$rootfs/usr/share/rave/models"
+      build_dir=$(mktemp -d "$rootfs/var/tmp/rave-abi-build.XXXXXX")
+      trap 'rm -rf -- "$build_dir"' EXIT
+      target_build_dir=${build_dir#"$rootfs"}
+      install -m 0644 "$repository_root/scripts/rave_hef_abi_check.cpp" "$build_dir/checker.cpp"
+      chroot "$rootfs" g++ -std=c++17 -O2 -Wall -Wextra -Werror \
+        "$target_build_dir/checker.cpp" -lhailort -o "$target_build_dir/rave-hef-abi-check"
+      install -o 0 -g 0 -m 0755 "$build_dir/rave-hef-abi-check" "$rootfs/usr/libexec/rave/rave-hef-abi-check"
+      install -o 0 -g 0 -m 0644 "$repository_root/models/RAVE-2026.09.02-001.output-abi.json" \
+        "$rootfs/usr/share/rave/models/RAVE-2026.09.02-001.output-abi.json"
