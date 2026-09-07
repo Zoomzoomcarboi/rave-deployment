@@ -1,0 +1,72 @@
+{
+  "mode": "quant",
+  "outputs": [
+    {
+      "dtype": "float32",
+      "file": "output_0.npy",
+      "name": "output_0",
+      "shape": [
+        1,
+        120,
+        120,
+        4
+      ]
+    },
+    {
+      "dtype": "float32",
+      "file": "output_1.npy",
+      "name": "output_1",
+      "shape": [
+        1,
+        60,
+        60,
+        4
+      ]
+    },
+    {
+      "dtype": "float32",
+      "file": "output_2.npy",
+      "name": "output_2",
+      "shape": [
+        1,
+        30,
+        30,
+        4
+      ]
+    },
+    {
+      "dtype": "float32",
+      "file": "output_3.npy",
+      "name": "output_3",
+      "shape": [
+        1,
+        120,
+        120,
+        2
+      ]
+    },
+    {
+      "dtype": "float32",
+      "file": "output_4.npy",
+      "name": "output_4",
+      "shape": [
+        1,
+        60,
+        60,
+        2
+      ]
+    },
+    {
+      "dtype": "float32",
+      "file": "output_5.npy",
+      "name": "output_5",
+      "shape": [
+        1,
+        30,
+        30,
+        2
+      ]
+    }
+  ],
+  "schema_version": 1
+}

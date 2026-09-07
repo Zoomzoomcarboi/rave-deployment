@@ -1,0 +1,451 @@
+{
+  "confidence": {
+    "activation": "Sigmoid",
+    "conclusion": "GRAPH CONFIDENCE THRESHOLD: NONE; output0 is score-ranked TopK only.",
+    "objectness_branch": "none",
+    "threshold": null,
+    "threshold_nodes_anywhere_in_graph": []
+  },
+  "graph_output": [
+    "output0"
+  ],
+  "onnx": {
+    "artifact": "rave_yolo26n_960.onnx",
+    "sha256": "8b2c52b2ccae875b1f9a2c9a1a6d21e3a409916c3f771a400469ba2ed4eefa29"
+  },
+  "schema_version": 1,
+  "selected_postprocess_nodes": [
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 218,
+      "inputs": [
+        "/model.23/one2one_cv2.0/one2one_cv2.0.0/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv2.0/one2one_cv2.0.0/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv2.0/one2one_cv2.0.0/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 219,
+      "inputs": [
+        "/model.23/one2one_cv3.0/one2one_cv3.0.0/one2one_cv3.0.0.0/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.0/one2one_cv3.0.0/one2one_cv3.0.0.0/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.0/one2one_cv3.0.0/one2one_cv3.0.0.0/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 227,
+      "inputs": [
+        "/model.23/one2one_cv2.0/one2one_cv2.0.1/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv2.0/one2one_cv2.0.1/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv2.0/one2one_cv2.0.1/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 228,
+      "inputs": [
+        "/model.23/one2one_cv3.0/one2one_cv3.0.0/one2one_cv3.0.0.1/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.0/one2one_cv3.0.0/one2one_cv3.0.0.1/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.0/one2one_cv3.0.0/one2one_cv3.0.0.1/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 237,
+      "inputs": [
+        "/model.23/one2one_cv3.0/one2one_cv3.0.1/one2one_cv3.0.1.0/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.0/one2one_cv3.0.1/one2one_cv3.0.1.0/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.0/one2one_cv3.0.1/one2one_cv3.0.1.0/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 246,
+      "inputs": [
+        "/model.23/one2one_cv3.0/one2one_cv3.0.1/one2one_cv3.0.1.1/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.0/one2one_cv3.0.1/one2one_cv3.0.1.1/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.0/one2one_cv3.0.1/one2one_cv3.0.1.1/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 276,
+      "inputs": [
+        "/model.23/one2one_cv2.1/one2one_cv2.1.0/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv2.1/one2one_cv2.1.0/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv2.1/one2one_cv2.1.0/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 277,
+      "inputs": [
+        "/model.23/one2one_cv3.1/one2one_cv3.1.0/one2one_cv3.1.0.0/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.1/one2one_cv3.1.0/one2one_cv3.1.0.0/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.1/one2one_cv3.1.0/one2one_cv3.1.0.0/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 285,
+      "inputs": [
+        "/model.23/one2one_cv2.1/one2one_cv2.1.1/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv2.1/one2one_cv2.1.1/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv2.1/one2one_cv2.1.1/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 286,
+      "inputs": [
+        "/model.23/one2one_cv3.1/one2one_cv3.1.0/one2one_cv3.1.0.1/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.1/one2one_cv3.1.0/one2one_cv3.1.0.1/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.1/one2one_cv3.1.0/one2one_cv3.1.0.1/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 295,
+      "inputs": [
+        "/model.23/one2one_cv3.1/one2one_cv3.1.1/one2one_cv3.1.1.0/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.1/one2one_cv3.1.1/one2one_cv3.1.1.0/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.1/one2one_cv3.1.1/one2one_cv3.1.1.0/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 301,
+      "inputs": [
+        "/model.23/one2one_cv3.1/one2one_cv3.1.1/one2one_cv3.1.1.1/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.1/one2one_cv3.1.1/one2one_cv3.1.1.1/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.1/one2one_cv3.1.1/one2one_cv3.1.1.1/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 335,
+      "inputs": [
+        "/model.23/one2one_cv2.2/one2one_cv2.2.0/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv2.2/one2one_cv2.2.0/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv2.2/one2one_cv2.2.0/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 336,
+      "inputs": [
+        "/model.23/one2one_cv3.2/one2one_cv3.2.0/one2one_cv3.2.0.0/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.2/one2one_cv3.2.0/one2one_cv3.2.0.0/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.2/one2one_cv3.2.0/one2one_cv3.2.0.0/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 341,
+      "inputs": [
+        "/model.23/one2one_cv2.2/one2one_cv2.2.1/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv2.2/one2one_cv2.2.1/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv2.2/one2one_cv2.2.1/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 342,
+      "inputs": [
+        "/model.23/one2one_cv3.2/one2one_cv3.2.0/one2one_cv3.2.0.1/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.2/one2one_cv3.2.0/one2one_cv3.2.0.1/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.2/one2one_cv3.2.0/one2one_cv3.2.0.1/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 348,
+      "inputs": [
+        "/model.23/one2one_cv3.2/one2one_cv3.2.1/one2one_cv3.2.1.0/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.2/one2one_cv3.2.1/one2one_cv3.2.1.0/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.2/one2one_cv3.2.1/one2one_cv3.2.1.0/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 354,
+      "inputs": [
+        "/model.23/one2one_cv3.2/one2one_cv3.2.1/one2one_cv3.2.1.1/conv/Conv_output_0"
+      ],
+      "name": "/model.23/one2one_cv3.2/one2one_cv3.2.1/one2one_cv3.2.1.1/act/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/one2one_cv3.2/one2one_cv3.2.1/one2one_cv3.2.1.1/act/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {},
+      "index": 363,
+      "inputs": [
+        "/model.23/Concat_1_output_0"
+      ],
+      "name": "/model.23/Sigmoid",
+      "op_type": "Sigmoid",
+      "outputs": [
+        "/model.23/Sigmoid_output_0"
+      ]
+    },
+    {
+      "attributes": {
+        "keepdims": 0
+      },
+      "constant_inputs": {
+        "/model.23/Constant_15_output_0": [
+          -1
+        ]
+      },
+      "index": 367,
+      "inputs": [
+        "/model.23/Split_output_1",
+        "/model.23/Constant_15_output_0"
+      ],
+      "name": "/model.23/ReduceMax",
+      "op_type": "ReduceMax",
+      "outputs": [
+        "/model.23/ReduceMax_output_0"
+      ]
+    },
+    {
+      "attributes": {
+        "axis": -1,
+        "largest": 1,
+        "sorted": 1
+      },
+      "constant_inputs": {
+        "/model.23/Constant_16_output_0": [
+          300
+        ]
+      },
+      "index": 368,
+      "inputs": [
+        "/model.23/ReduceMax_output_0",
+        "/model.23/Constant_16_output_0"
+      ],
+      "name": "/model.23/TopK",
+      "op_type": "TopK",
+      "outputs": [
+        "/model.23/TopK_output_0",
+        "/model.23/TopK_output_1"
+      ]
+    },
+    {
+      "attributes": {
+        "axis": 2
+      },
+      "constant_inputs": {},
+      "index": 371,
+      "inputs": [
+        "/model.23/Unsqueeze_output_0"
+      ],
+      "name": "/model.23/Flatten_1",
+      "op_type": "Flatten",
+      "outputs": [
+        "/model.23/Flatten_1_output_0"
+      ]
+    },
+    {
+      "attributes": {
+        "axis": 1
+      },
+      "constant_inputs": {},
+      "index": 372,
+      "inputs": [
+        "/model.23/Split_output_1",
+        "/model.23/Expand_output_0"
+      ],
+      "name": "/model.23/GatherElements",
+      "op_type": "GatherElements",
+      "outputs": [
+        "/model.23/GatherElements_output_0"
+      ]
+    },
+    {
+      "attributes": {
+        "axis": 1
+      },
+      "constant_inputs": {},
+      "index": 373,
+      "inputs": [
+        "/model.23/GatherElements_output_0"
+      ],
+      "name": "/model.23/Flatten",
+      "op_type": "Flatten",
+      "outputs": [
+        "/model.23/Flatten_output_0"
+      ]
+    },
+    {
+      "attributes": {
+        "axis": -1,
+        "largest": 1,
+        "sorted": 1
+      },
+      "constant_inputs": {
+        "/model.23/Constant_16_output_0": [
+          300
+        ]
+      },
+      "index": 374,
+      "inputs": [
+        "/model.23/Flatten_output_0",
+        "/model.23/Constant_16_output_0"
+      ],
+      "name": "/model.23/TopK_1",
+      "op_type": "TopK",
+      "outputs": [
+        "/model.23/TopK_1_output_0",
+        "/model.23/TopK_1_output_1"
+      ]
+    },
+    {
+      "attributes": {},
+      "constant_inputs": {
+        "/model.23/Constant_22_output_0": 2
+      },
+      "index": 375,
+      "inputs": [
+        "/model.23/TopK_1_output_1",
+        "/model.23/Constant_22_output_0"
+      ],
+      "name": "/model.23/Div_1",
+      "op_type": "Div",
+      "outputs": [
+        "/model.23/Add_2_output_0"
+      ]
+    },
+    {
+      "attributes": {
+        "fmod": 0
+      },
+      "constant_inputs": {
+        "/model.23/Constant_22_output_0": 2
+      },
+      "index": 377,
+      "inputs": [
+        "/model.23/TopK_1_output_1",
+        "/model.23/Constant_22_output_0"
+      ],
+      "name": "/model.23/Mod",
+      "op_type": "Mod",
+      "outputs": [
+        "/model.23/Mod_output_0"
+      ]
+    },
+    {
+      "attributes": {
+        "axis": 0
+      },
+      "constant_inputs": {},
+      "index": 379,
+      "inputs": [
+        "/model.23/Flatten_1_output_0",
+        "/model.23/Add_2_output_0"
+      ],
+      "name": "/model.23/Gather_3",
+      "op_type": "Gather",
+      "outputs": [
+        "/model.23/Reshape_7_output_0"
+      ]
+    },
+    {
+      "attributes": {
+        "axis": 1
+      },
+      "constant_inputs": {},
+      "index": 382,
+      "inputs": [
+        "/model.23/Split_output_0",
+        "/model.23/Expand_1_output_0"
+      ],
+      "name": "/model.23/GatherElements_1",
+      "op_type": "GatherElements",
+      "outputs": [
+        "/model.23/GatherElements_1_output_0"
+      ]
+    }
+  ],
+  "topk": {
+    "k": 300,
+    "largest": 1,
+    "sorted": 1,
+    "stages": 2,
+    "tie_identity_order": "not specified by the selected graph"
+  }
+}

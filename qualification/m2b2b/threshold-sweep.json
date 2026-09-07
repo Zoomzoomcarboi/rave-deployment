@@ -1,0 +1,3285 @@
+{
+  "checkpoint": {
+    "artifact": "rave_yolo26n_960.pt",
+    "sha256": "8c36a616b5ae2b530ed625122e3b079e6d0ea15ff6f514b52efbf660560c70a8"
+  },
+  "dataset": {
+    "ground_truth": {
+      "motorcycle": 2,
+      "vehicle": 963
+    },
+    "images": 134,
+    "inventory": [
+      {
+        "bytes": 137886,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-10-15_frame_000002.jpg",
+        "sha256": "9330d7191995ba3db1e68bf55c3f141feccf60f6fcc5b0608ee1f03fbb09a300"
+      },
+      {
+        "bytes": 171826,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 19
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-10-15_frame_000005.jpg",
+        "sha256": "01b06130962bba806ee87f6b56de7b19c8ade1625d38fb31b413aaceeb4da32f"
+      },
+      {
+        "bytes": 164176,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 1
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-10-15_frame_000007.jpg",
+        "sha256": "487946cf25f64c750dd4115e5c687302fe04fda207f925a86291e02a02c63741"
+      },
+      {
+        "bytes": 195424,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 7
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-10-15_frame_000015.jpg",
+        "sha256": "d0108cd56dbb6cce4c6ee12af68d1de2d0de296c94d119dfa8af1f3550a89c95"
+      },
+      {
+        "bytes": 174076,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 5
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-10-15_frame_000031.jpg",
+        "sha256": "f5c69ae7e3643cc2b747b4e79bea205b20116a6da6c78dd3a7fa1e35684829b2"
+      },
+      {
+        "bytes": 221385,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 12
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-10-15_frame_000040.jpg",
+        "sha256": "9f9b7f44bd8d92f9f5a9489891a1d2be88aff3968997127337f7e3740e9b525b"
+      },
+      {
+        "bytes": 201116,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 15
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-10-15_frame_000044.jpg",
+        "sha256": "8a6c75eb65d5f4cef509e154faf082d5693e9f604bdad12508affa6a79bb376b"
+      },
+      {
+        "bytes": 216416,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000018.jpg",
+        "sha256": "39472405b0acfbb68eef1d8b270c5331e42589459bc8dda76651c5b9922b681f"
+      },
+      {
+        "bytes": 240389,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 15
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000057.jpg",
+        "sha256": "7a50a30774bdc0aa417cf7a14ccff6706020d47c1e27e988311382359812f33c"
+      },
+      {
+        "bytes": 216950,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 17
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000064.jpg",
+        "sha256": "5ce7a3e939dad232d71de91eac8145285f070de8b125671cd02fe1c10f2cc19c"
+      },
+      {
+        "bytes": 217226,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 12
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000071.jpg",
+        "sha256": "fa412129b323461c6247604ab3208d5e19b172d7c9c4b4923845aa7478bc3651"
+      },
+      {
+        "bytes": 177635,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 18
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000072.jpg",
+        "sha256": "b61c80f337416d5956ff6f3c73bbff3710f2115d98dfc462e7441d6d40f14210"
+      },
+      {
+        "bytes": 190144,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 26
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000073.jpg",
+        "sha256": "f2d29b42e74f99954351eb17c6e59c74e631c9ca19aab0a6f8c4838c5e3faf71"
+      },
+      {
+        "bytes": 188447,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 25
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000074.jpg",
+        "sha256": "7d395ff20f69af1e272033bb14d49e3dbf044467e3291f6da71ce4422ce29417"
+      },
+      {
+        "bytes": 182649,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000078.jpg",
+        "sha256": "ee49869d2d68c92007c534d973c0232f2a894e3e0e4a5cec86c73f8682361e59"
+      },
+      {
+        "bytes": 196312,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 8
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000085.jpg",
+        "sha256": "a0406b572f5e30e6416bb5c119ab4a2adab216457eef0ca4f00653a6af8c5953"
+      },
+      {
+        "bytes": 142352,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 12
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000092.jpg",
+        "sha256": "32e5fbcaedfe3b6f0e8111625b1681fabb816652aa320179fe2bf981926650e1"
+      },
+      {
+        "bytes": 203638,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 14
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000095.jpg",
+        "sha256": "61933e2bb28988f9a34c735a2e7344b610591ef9214367c0c16385a1c8631a31"
+      },
+      {
+        "bytes": 214960,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 16
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000099.jpg",
+        "sha256": "80f2ed4eb4ab901653937e703123e4cdff628c3c186e330d7ce9f9e7bc2a8912"
+      },
+      {
+        "bytes": 183063,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 14
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-31-34_frame_000108.jpg",
+        "sha256": "bd2290809daf8943b097a71e3125cf7055b6d28d3c83aca6e2977a7abdb457de"
+      },
+      {
+        "bytes": 225996,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 26
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000009.jpg",
+        "sha256": "3a610b376ef005e87ebd1e4dec19dd1cbe33b7a1ee2cdc2eec4da6ef9fb79837"
+      },
+      {
+        "bytes": 252630,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 5
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000027.jpg",
+        "sha256": "9315112134c7824eb2963e2709029fbd3f883cc94aac1198862fa516179c2540"
+      },
+      {
+        "bytes": 231928,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000034.jpg",
+        "sha256": "2ce0b02af9772858c886ac513631b6c68c1a27aa24e6cbc7dff5121d37168fc4"
+      },
+      {
+        "bytes": 220686,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000035.jpg",
+        "sha256": "cd1583f0a5d4a607322782d7fbbdcf2e5add20fc9ca73a388860d5f722a1e80f"
+      },
+      {
+        "bytes": 169455,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 10
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000051.jpg",
+        "sha256": "7031009b630e19c0c3a8f559f8a1222652278c65d09e90de847a711507d20c73"
+      },
+      {
+        "bytes": 183855,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 9
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000057.jpg",
+        "sha256": "07fcf68c5c1eab13bf10732c86179c1f4d189c8ac9abca658e30fb5f8b9d7888"
+      },
+      {
+        "bytes": 265221,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000063.jpg",
+        "sha256": "91872596a6c6ca92b1ffed7b054f6403de1b77e43a82dd9b42cf1c1c8dabd20e"
+      },
+      {
+        "bytes": 200241,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000081.jpg",
+        "sha256": "8e8d12b706a656d1a62bf8a0e2cea3bf5e8847a0e3498d454906732fa3bf3bcf"
+      },
+      {
+        "bytes": 261829,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 10
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000091.jpg",
+        "sha256": "ff27d4213dcfb67f32574ef2e7f99db3f9b8cc773056e94803e69f991c1d780e"
+      },
+      {
+        "bytes": 235184,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 14
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000096.jpg",
+        "sha256": "5bbcc4a546f35e5d52f0e5f49b5211897b07fc99fcc9d9ceb99a708fa94485be"
+      },
+      {
+        "bytes": 264259,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-41-34_frame_000104.jpg",
+        "sha256": "a64553fdccc8f76f619951878d446c5d27aaf2cf6dfea37b6a06bc8f75ba685c"
+      },
+      {
+        "bytes": 271455,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 9
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-51-34_frame_000001.jpg",
+        "sha256": "2593f28617907ffded4516bbbb9e9ae3c71014da0123f5fe83c8a11a3b6af9a3"
+      },
+      {
+        "bytes": 272996,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 7
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-51-34_frame_000031.jpg",
+        "sha256": "04d90c636a57f1d57d2dd6dfb1da53d4f830b8cd685c1985d6307d3ce249b8d4"
+      },
+      {
+        "bytes": 200487,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-51-34_frame_000037.jpg",
+        "sha256": "2c2cb6d1175eeaa5967c4eba35b6cd488f4e06f2bbe53214bb924beefe17e69b"
+      },
+      {
+        "bytes": 232699,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 20
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-51-34_frame_000044.jpg",
+        "sha256": "a337106f8fcac1af069563c78fab316e439dd6a7faab709ee88f1467a6625d02"
+      },
+      {
+        "bytes": 300034,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 7
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-51-34_frame_000051.jpg",
+        "sha256": "8bb815a0406277b0be338067b09e8eb6898e4de1cb9d9d7f2d9ba30493dcbded"
+      },
+      {
+        "bytes": 328527,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 14
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-51-34_frame_000052.jpg",
+        "sha256": "22258bf457dc1196c2a374bdee3569486b6e0a2a93cd76b20094e9a32e455b8c"
+      },
+      {
+        "bytes": 296551,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 9
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-05_08-51-34_frame_000054.jpg",
+        "sha256": "99335ff5a5755eb48705960c1b4d92fbbfa385ea5fc018af4a2290b41c2c6b5b"
+      },
+      {
+        "bytes": 240100,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 0
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000003.jpg",
+        "sha256": "5211346f8fa774ee4f6fc9f6ef4ae5ab2730d9639a9fc7e2e3db9fed16ea6eb6"
+      },
+      {
+        "bytes": 290632,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 9
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000015.jpg",
+        "sha256": "ee7a2472da84e49b988f6a3fad88b88286fe1a9e757ca43f9005d7e40c5dcaa1"
+      },
+      {
+        "bytes": 410980,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 5
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000028.jpg",
+        "sha256": "7dc87f0bc27809c2805d1c0b81ca0757120b1c4b15587b790b48aaca7a72d413"
+      },
+      {
+        "bytes": 377859,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000029.jpg",
+        "sha256": "290f02b1e18a035fb9003b59bf0ad3e07a77ea64cfd352e6bf3e7232c635e7c4"
+      },
+      {
+        "bytes": 314128,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000032.jpg",
+        "sha256": "9e9223117bac7340c291b0a9fffac0fccff9a8b5bee852f7be58c757229f107a"
+      },
+      {
+        "bytes": 186438,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 11
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000051.jpg",
+        "sha256": "7abc061f112023687bb866ab85365240770bf8bd43ac2450f9a11e9e3506a06c"
+      },
+      {
+        "bytes": 252909,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 10
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000073.jpg",
+        "sha256": "6e15b0e91db0d30a3eddd72666221098dd289f9cfa4d0024cb56b4603518b99d"
+      },
+      {
+        "bytes": 310463,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000077.jpg",
+        "sha256": "c79ef4e36bd3f713ec1fe862cc596e150fa503c7f0b5d62bc9808578f2e0cffb"
+      },
+      {
+        "bytes": 306097,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000078.jpg",
+        "sha256": "549d017aa1fb6a8551fa509a2b0686272e23d82319fa12a6f71c14d4436ce1a2"
+      },
+      {
+        "bytes": 234472,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 10
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000085.jpg",
+        "sha256": "97c7b1ba7bac41dc60257a9b1c4245996b8c23fda0f91736d3f8061b7572ff65"
+      },
+      {
+        "bytes": 323523,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 22
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-07_10-25-32_frame_000100.jpg",
+        "sha256": "583e3005f7e3140952c83dc9a4177c1ea0d0fced2ac901da3be66455a4749f82"
+      },
+      {
+        "bytes": 298078,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 7
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000005.jpg",
+        "sha256": "a52453e5a92a63b547434acb808b614212603c1348ef06f4866980fd96d41fb7"
+      },
+      {
+        "bytes": 295849,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 7
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000008.jpg",
+        "sha256": "45b7a384e7fd12fa7ec886f932d778ea9dea1b8a2181948f0d9e1ce68027261b"
+      },
+      {
+        "bytes": 292315,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000021.jpg",
+        "sha256": "a9c9ab107e68c91d531aac617471c3e66088c2f15cec11f5dedd4f0c5b2d97c0"
+      },
+      {
+        "bytes": 292147,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000024.jpg",
+        "sha256": "0b7212807ea6d20eb74cc53b723f4ae6cb0c71fd513bf905123085d02a641df8"
+      },
+      {
+        "bytes": 274680,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 11
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000027.jpg",
+        "sha256": "bbedf39baac3706ae131a6d7087b8a50be6915bc517730d210c4dc74ebfaaf07"
+      },
+      {
+        "bytes": 252221,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000030.jpg",
+        "sha256": "69cbf75e3d6d860d9da97e03b27effd1a34ad0182d39b61ba5a7225768be54a1"
+      },
+      {
+        "bytes": 216029,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 8
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000034.jpg",
+        "sha256": "1965e7844e5c69af75ab16ea51a5f15f174d1208823c87080713e0ae82875cfa"
+      },
+      {
+        "bytes": 251413,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 0
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000044.jpg",
+        "sha256": "c7514120fa5307cd9f31346f0ce22dc66bfc0b95f8edd50b302d2cc2182a8c59"
+      },
+      {
+        "bytes": 229567,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000046.jpg",
+        "sha256": "eeecc48a1ce7badc6e8af3fba603dfd769dca56cffcfb302f6650e0c4e43376a"
+      },
+      {
+        "bytes": 228753,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 11
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000048.jpg",
+        "sha256": "bb8f8a8f2d4546606d124b4a7099fdae44a066fda3e49e26f8aec2ee6c264864"
+      },
+      {
+        "bytes": 233590,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000076.jpg",
+        "sha256": "6ae98ad6dd519a1b15e5551b3afc3425dd1969cf26ef4f7bc02bacb13d85fcca"
+      },
+      {
+        "bytes": 271901,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 13
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000080.jpg",
+        "sha256": "6e4f9b404d8ea5a6183b373642b76c5fb53cc39eed19d941c84b0a5607039f4d"
+      },
+      {
+        "bytes": 255836,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-44-57_frame_000107.jpg",
+        "sha256": "f72a1c64c7831c70dbc5faca84be9f7809ac30ca1c63d24b91d5b30300ae731a"
+      },
+      {
+        "bytes": 269585,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000001.jpg",
+        "sha256": "a3f32518d4f3f0901f579773f2d881089bc8d9c29ba7f86efa261fb8791531b7"
+      },
+      {
+        "bytes": 254578,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000024.jpg",
+        "sha256": "3011ef35ef86b9708d62837fc9b7d0754b305da4223f65b0f0f4d8a13bca20cd"
+      },
+      {
+        "bytes": 263966,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000028.jpg",
+        "sha256": "c7234b94bb773ef665e2ab26f4b3b7d371dddaee9eb46045ee40f5b8c74c7f72"
+      },
+      {
+        "bytes": 266975,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000046.jpg",
+        "sha256": "39a0263ebe6489e0f2dc78ce0d1a90035e1e32a4e2e2fdc6079fb345ba2b5b4b"
+      },
+      {
+        "bytes": 261464,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000055.jpg",
+        "sha256": "8168bf372e1e8d7f106cace34b701c743b1efc08402af0faba0bbccc3a2b69a5"
+      },
+      {
+        "bytes": 264581,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000059.jpg",
+        "sha256": "d7e12ac968596659624015e57965f66846a0835dcccac7fcf7edae223edb0927"
+      },
+      {
+        "bytes": 247740,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000080.jpg",
+        "sha256": "454a0b54c179df851c4129e7f58d9ea1ad8e7ef305cc75a200ee0e0ada825836"
+      },
+      {
+        "bytes": 246901,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000093.jpg",
+        "sha256": "4d9c04c5e22554ba716c6ea742fc8efba2f8317d448064389d730379e4d64307"
+      },
+      {
+        "bytes": 240949,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000109.jpg",
+        "sha256": "cad661cc54e40541873d0e8112a912351bcde60f8a728a6c736508e880c219b3"
+      },
+      {
+        "bytes": 246259,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 5
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_10-54-57_frame_000111.jpg",
+        "sha256": "d2ae9d8dd01beb5575dd682d40147de61a828bfce2319791a26e4936e7b0d612"
+      },
+      {
+        "bytes": 246846,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 5
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-04-57_frame_000022.jpg",
+        "sha256": "705f1500d4cfd575684bcf66bf86f5f122ba2e83c1487f9f3c5d3c65a4c2d74e"
+      },
+      {
+        "bytes": 237752,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 5
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-04-57_frame_000040.jpg",
+        "sha256": "850250f26656983769abc230cbbc12295608668662529a2ef70edbe97fc30ee2"
+      },
+      {
+        "bytes": 237052,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 5
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-04-57_frame_000061.jpg",
+        "sha256": "062b7bacbbb6b49b9d1c85ef005e6c0b0f7f38676db1a6f2460f25fb2e97a35d"
+      },
+      {
+        "bytes": 236231,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-04-57_frame_000062.jpg",
+        "sha256": "96af3105279b8839a658ce042d1135ca63f919b482e31feaaf9302992247dd2e"
+      },
+      {
+        "bytes": 236132,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-04-57_frame_000073.jpg",
+        "sha256": "04f3b8a36acc80d850b8083f9f465f2d33e83c18655ed5543639dd057c3d5128"
+      },
+      {
+        "bytes": 243156,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-04-57_frame_000096.jpg",
+        "sha256": "000d65e8530d151b9c6cb290ede4d6b15188bd18ca3842abced856b5cdabbe85"
+      },
+      {
+        "bytes": 216966,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 9
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-14-57_frame_000001.jpg",
+        "sha256": "a0c1e6bc4d751c62bc8a67a1323ab50b26a17c39c5ed6b9e9580cfcd42af7894"
+      },
+      {
+        "bytes": 246397,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 12
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-14-57_frame_000009.jpg",
+        "sha256": "142e9473f65401ab6ecc72e4833d21751c09b11e00fe82841b5a906b66fd0921"
+      },
+      {
+        "bytes": 202345,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 10
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-14-57_frame_000010.jpg",
+        "sha256": "45245edaaf4ebecb24f8714e20757ebb99b6703c7362a73c51878694eec7abf4"
+      },
+      {
+        "bytes": 239559,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 12
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_11-14-57_frame_000018.jpg",
+        "sha256": "4c0a03f3500e77fe696660d80109891ad5fbf050c8f5f6869aa531542df5463a"
+      },
+      {
+        "bytes": 227942,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 0
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000003.jpg",
+        "sha256": "4c34314b6be3ecf13af32c9c8fbdbc04f49c0a680e9d91e7a17479ff668f5c66"
+      },
+      {
+        "bytes": 227965,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 0
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000004.jpg",
+        "sha256": "9cdf3ea1562fd5c820e85fcb24d2d4e947427b9bc5ea76b9bf3b50fd76943284"
+      },
+      {
+        "bytes": 285512,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 2,
+          "vehicle": 9
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000020.jpg",
+        "sha256": "798b518cf7b1c9cdbc302552193aa5894fb81559e7807033f8fc1ec2d4568a41"
+      },
+      {
+        "bytes": 305891,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000028.jpg",
+        "sha256": "34d958c84a575b4efbea98631dd16a6b47dc6d4ee0c56efd09a7eddd84748dfe"
+      },
+      {
+        "bytes": 290387,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 1
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000035.jpg",
+        "sha256": "2cc2c29e21be9e950e5c2da46ae3079640717bf5129f7f3b9b5e86bb86374139"
+      },
+      {
+        "bytes": 262920,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000045.jpg",
+        "sha256": "7e47a31d1166970e0b07c1f4c55a37d2703815146b285209a9ce02119850a2e9"
+      },
+      {
+        "bytes": 267861,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 7
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000056.jpg",
+        "sha256": "a6bfbaec204b3e0d2d67d3a83253a1ddf405de6da94fed12467c5a544e4804db"
+      },
+      {
+        "bytes": 279974,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 7
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000062.jpg",
+        "sha256": "116c304367a78ce64db37a780946c8d4a65ebfadee838f79cfde503a2cfcb889"
+      },
+      {
+        "bytes": 276790,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 10
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000067.jpg",
+        "sha256": "e93704e43c91c0ac35e7f76e183bc0fe837ded0998672abf4c8cb2daaed7de20"
+      },
+      {
+        "bytes": 289681,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000069.jpg",
+        "sha256": "d32d4a36f0690520b7a3c04ed78860047d1ba98f56e87c9d270249f7f701ceba"
+      },
+      {
+        "bytes": 252997,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 0
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000085.jpg",
+        "sha256": "5df47964084bfd2f58bfae95e50e59dfd1e91ec4e05f6d0820fa20a8545bade7"
+      },
+      {
+        "bytes": 224463,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000094.jpg",
+        "sha256": "08752dd45b901374c615fdf599c498be55bca3d0d8672ddc723b1ecd0f013a2b"
+      },
+      {
+        "bytes": 205918,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 12
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000106.jpg",
+        "sha256": "45e9b81697647562182d71d2c0f132d88c6c57bdf8960bbaa9376cb47262148a"
+      },
+      {
+        "bytes": 238282,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 18
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-02-36_frame_000111.jpg",
+        "sha256": "22f6ab10053eb09a61c0f75beafde99c70ab8308fdc5a4b333c8a7423e8e3e44"
+      },
+      {
+        "bytes": 232341,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 20
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000003.jpg",
+        "sha256": "06abd72934bf54fffae85bb41017b12989a642d8198e5e0ea887df2a9f8fecd9"
+      },
+      {
+        "bytes": 217016,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000012.jpg",
+        "sha256": "53b936e69de0d0d50149150e13bc4ff363f9d3f40c9d986d179c0c9721f4c4a5"
+      },
+      {
+        "bytes": 206349,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 6
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000013.jpg",
+        "sha256": "a74cb1b8e6f87cffc54d925127ca0da80bbabb629a0bafa04a45130aca1d862a"
+      },
+      {
+        "bytes": 230080,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 7
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000014.jpg",
+        "sha256": "e1e964692565ba0efee9ead47395823415acfc4ee898372446ecabdcc17bc8e9"
+      },
+      {
+        "bytes": 195329,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000018.jpg",
+        "sha256": "2ec57c4f6e6e20034666a21997289e49152a5a34cbdc56911fa5908617f84d6a"
+      },
+      {
+        "bytes": 305310,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000043.jpg",
+        "sha256": "8db5a23e5b6688e78bd79df44ac4eff6e071d469051cbebbc69f5c16ca7c1674"
+      },
+      {
+        "bytes": 255531,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 8
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000057.jpg",
+        "sha256": "21da3c17307be675fd5f3ad6fd720886eae92306c0e0f6ee417836cc727a0d2a"
+      },
+      {
+        "bytes": 277145,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 9
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000070.jpg",
+        "sha256": "ed7114e957af869d5b1772101138af022b4b8918b2c39487d3c7a73523415370"
+      },
+      {
+        "bytes": 242624,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000077.jpg",
+        "sha256": "7428a95c7353b404720bdf225f60f559a0a764a59bd41357f0612f75de92edf1"
+      },
+      {
+        "bytes": 203974,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000098.jpg",
+        "sha256": "a011f4649749879ff667138020949fa119838e4e1564f20b2fcc1412b51e1941"
+      },
+      {
+        "bytes": 260441,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 9
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000104.jpg",
+        "sha256": "3f17a0c03274706b0866662bc4a9f49158f653b3c430027d084b235332e843b4"
+      },
+      {
+        "bytes": 219313,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-12-36_frame_000108.jpg",
+        "sha256": "53ae3d051df8ca8a1f1481bc74902b662045d5d8c01b9e2f3a9df9e2e30d9586"
+      },
+      {
+        "bytes": 131237,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 5
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-22-36_frame_000002.jpg",
+        "sha256": "57c7516eb120d5aa6b03f2a654534611bf3538e6f6effb65045b757446fe499d"
+      },
+      {
+        "bytes": 191814,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 0
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-22-36_frame_000015.jpg",
+        "sha256": "d8884e6323326650f4e1bc22582ec7791fc8a3279c6d323b4ef65ae7c95a00d6"
+      },
+      {
+        "bytes": 193432,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 0
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-22-36_frame_000023.jpg",
+        "sha256": "f13d19fd5976feb1db3134a27a312ff13725970c1764f5f2f61ff58e1b0f6695"
+      },
+      {
+        "bytes": 191726,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 0
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-08_20-22-36_frame_000025.jpg",
+        "sha256": "6468ddcad6084c234a1c2df09de46b9230e46be97f73de068aefbcb45bad3237"
+      },
+      {
+        "bytes": 178560,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 1
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-18_13-27-03_frame_000053.jpg",
+        "sha256": "525ab82d2acd391009160a0f6c50c295f35b23f298b42c83f12f09bf7ec87528"
+      },
+      {
+        "bytes": 212728,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 5
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-18_13-27-03_frame_000058.jpg",
+        "sha256": "494aa9dff22312acfeb0dbed4415e3d578f84e743750ee0ab3b7f9826e182dd1"
+      },
+      {
+        "bytes": 226943,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-18_13-27-03_frame_000059.jpg",
+        "sha256": "a7fe49f851a746c4b20419a3e18a5495a46b5e2828b59263362713a44278d68f"
+      },
+      {
+        "bytes": 223305,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-18_13-27-03_frame_000060.jpg",
+        "sha256": "1c413fa012b1665c0e1aa3c6ed57d7d8374f33c3b8347031577ead861ea0a955"
+      },
+      {
+        "bytes": 184390,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 9
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-18_13-27-03_frame_000072.jpg",
+        "sha256": "5acd5a319a4cc829ec43291102d048ece68580f34c76a1248cc7a0ea1146b3ef"
+      },
+      {
+        "bytes": 185085,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 11
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-18_13-27-03_frame_000073.jpg",
+        "sha256": "f148785dbf5bbe9e7f6c8d6b05cef272dc6853d01d59a34d5d0e0c772d4c3b01"
+      },
+      {
+        "bytes": 152790,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 20
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-18_13-27-03_frame_000112.jpg",
+        "sha256": "7982fcb8c0f0cd720f827b4a0e7378a3752fe74e03513a22b671f14060f594ea"
+      },
+      {
+        "bytes": 166461,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 18
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-18_13-27-03_frame_000114.jpg",
+        "sha256": "0673243aef41104794fc8c31f949cd9e539515c2b57ab5a9bf532211e88ee4e3"
+      },
+      {
+        "bytes": 86824,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_00-24-35_frame_000076.jpg",
+        "sha256": "9d868303d221ba1ec526809255c6547176866fe97830573924285770e6024a2a"
+      },
+      {
+        "bytes": 208623,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_13-34-18_frame_000045.jpg",
+        "sha256": "edb315942a73ad52e2fdcef77c8e79e27155eec492c189df55a53e259b8ac8e1"
+      },
+      {
+        "bytes": 250229,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_13-34-18_frame_000080.jpg",
+        "sha256": "84955ed7a5398d7c17d73cbb1430fc8f734d7bcba7f0dd30ce4288909b8bad39"
+      },
+      {
+        "bytes": 281147,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_13-34-18_frame_000082.jpg",
+        "sha256": "60a3317d56f40aff4559643403db586d226488e19b2cef2af3a691f8018e763f"
+      },
+      {
+        "bytes": 203875,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 7
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_13-34-18_frame_000093.jpg",
+        "sha256": "fad9644377da24368505dea19045a2a75f9f5437a8e2471028c6dda8aead79e4"
+      },
+      {
+        "bytes": 221135,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 2
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_13-34-18_frame_000114.jpg",
+        "sha256": "2bbaa15cf0b90c306a19c9f3d4bef4cb8693bd6b735d3a3a9073ae3f8108a27e"
+      },
+      {
+        "bytes": 227426,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_13-44-18_frame_000009.jpg",
+        "sha256": "e0f2f7ef50931409733a197af46343771addb0aeb156d0b6c38775cb9cc6a80e"
+      },
+      {
+        "bytes": 178944,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_13-44-18_frame_000060.jpg",
+        "sha256": "895c9551f62faa7a68a0dc312f777ab88e7283838984a63b28688bba46c743e8"
+      },
+      {
+        "bytes": 184414,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_13-44-18_frame_000063.jpg",
+        "sha256": "d49d3829c7f697811579a24aa28b6584c8ba779823569a1c2cff5b4cd0e0a6cd"
+      },
+      {
+        "bytes": 175259,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 3
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-19_13-44-18_frame_000066.jpg",
+        "sha256": "93403a5b1e38ba6970e4a4ec7381abb4eda74870ae547c857f1a9b8a41809343"
+      },
+      {
+        "bytes": 85510,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 1
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-20_00-11-31_frame_000026.jpg",
+        "sha256": "5d58f7d364578b4f80191793b2945701512d65d90ec8ed149a098a1f956da912"
+      },
+      {
+        "bytes": 73537,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-20_00-50-44_frame_000035.jpg",
+        "sha256": "196bffbaa7b9fe65b9230148d09644a1d4941c7da468d5c7a167fa877a31dd6f"
+      },
+      {
+        "bytes": 68108,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 4
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-20_00-50-44_frame_000038.jpg",
+        "sha256": "b9ee8866a6b61144fb94692ffdeaa06314fd1e54987cf03385d571aaf09483d9"
+      },
+      {
+        "bytes": 79556,
+        "graph_candidates": 300,
+        "ground_truth": {
+          "motorcycle": 0,
+          "vehicle": 1
+        },
+        "name": "1166317_dataset 2026-08-21 17-52-51_B0589_2026-08-20_00-50-44_frame_000045.jpg",
+        "sha256": "2200b6b810c2020342d8b3773d098d408fb7f07ae6b69582ee4eb61c7f9123af"
+      }
+    ]
+  },
+  "method": {
+    "matching": "per-image, per-class greedy descending-score match at IoU >= 0.50",
+    "model_output": "end-to-end graph top-300, conf=0.0; no IoU NMS",
+    "threshold_operator": "score >= threshold"
+  },
+  "schema_version": 1,
+  "sweep": [
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 300.0,
+        "median_per_image": 300.0,
+        "p95_per_image": 300.0,
+        "total": 40200
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.005405405405405406,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 367,
+          "ground_truth": 2,
+          "precision_iou50": 0.002717391304347826,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.04569187400416718,
+          "false_negatives_iou50": 31,
+          "false_positives_iou50": 38900,
+          "ground_truth": 963,
+          "precision_iou50": 0.02339827274553123,
+          "recall_iou50": 0.9678089304257529,
+          "true_positives_iou50": 932
+        }
+      },
+      "threshold": 0.0
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 269.910447761194,
+        "median_per_image": 300.0,
+        "p95_per_image": 300.0,
+        "total": 36168
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.006802721088435374,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 291,
+          "ground_truth": 2,
+          "precision_iou50": 0.003424657534246575,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.050598550449252155,
+          "false_negatives_iou50": 31,
+          "false_positives_iou50": 34944,
+          "ground_truth": 963,
+          "precision_iou50": 0.025978369940907572,
+          "recall_iou50": 0.9678089304257529,
+          "true_positives_iou50": 932
+        }
+      },
+      "threshold": 1e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 262.7985074626866,
+        "median_per_image": 300.0,
+        "p95_per_image": 300.0,
+        "total": 35215
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.007246376811594202,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 273,
+          "ground_truth": 2,
+          "precision_iou50": 0.0036496350364963502,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.05186051693404634,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 34010,
+          "ground_truth": 963,
+          "precision_iou50": 0.026644915715062535,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 1.2589254117941661e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 255.61940298507463,
+        "median_per_image": 300.0,
+        "p95_per_image": 300.0,
+        "total": 34253
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.007604562737642585,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 260,
+          "ground_truth": 2,
+          "precision_iou50": 0.0038314176245210726,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.0532684880560721,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 33061,
+          "ground_truth": 963,
+          "precision_iou50": 0.027388797364085667,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 1.584893192461114e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 248.58955223880596,
+        "median_per_image": 300.0,
+        "p95_per_image": 300.0,
+        "total": 33311
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.008298755186721992,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 238,
+          "ground_truth": 2,
+          "precision_iou50": 0.0041841004184100415,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.0547083884236815,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 32141,
+          "ground_truth": 963,
+          "precision_iou50": 0.028150701499758103,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 1.9952623149688786e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 241.84328358208955,
+        "median_per_image": 300.0,
+        "p95_per_image": 300.0,
+        "total": 32407
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.008658008658008658,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 228,
+          "ground_truth": 2,
+          "precision_iou50": 0.004366812227074236,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.05618418273437735,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 31247,
+          "ground_truth": 963,
+          "precision_iou50": 0.028932811237491453,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 2.5118864315095822e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 234.6417910447761,
+        "median_per_image": 300.0,
+        "p95_per_image": 300.0,
+        "total": 31442
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.009523809523809525,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 207,
+          "ground_truth": 2,
+          "precision_iou50": 0.004807692307692308,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.057831474982141196,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 30303,
+          "ground_truth": 963,
+          "precision_iou50": 0.029807261317794712,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 3.1622776601683795e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 226.63432835820896,
+        "median_per_image": 293.0,
+        "p95_per_image": 300.0,
+        "total": 30369
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.010526315789473684,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 187,
+          "ground_truth": 2,
+          "precision_iou50": 0.005319148936170213,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.05978679681479579,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 29250,
+          "ground_truth": 963,
+          "precision_iou50": 0.030847221762035717,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 3.9810717055349695e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 218.00746268656715,
+        "median_per_image": 272.5,
+        "p95_per_image": 300.0,
+        "total": 29213
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.011834319526627219,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 166,
+          "ground_truth": 2,
+          "precision_iou50": 0.005988023952095809,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.06204805225099138,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 28115,
+          "ground_truth": 963,
+          "precision_iou50": 0.03205260621083798,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 5.011872336272725e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 208.99253731343285,
+        "median_per_image": 248.0,
+        "p95_per_image": 300.0,
+        "total": 28005
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.01388888888888889,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 141,
+          "ground_truth": 2,
+          "precision_iou50": 0.007042253521126761,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.06459446333171442,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 26932,
+          "ground_truth": 963,
+          "precision_iou50": 0.03341348742059362,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 6.309573444801929e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 199.6865671641791,
+        "median_per_image": 233.0,
+        "p95_per_image": 300.0,
+        "total": 26758
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.01652892561983471,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 118,
+          "ground_truth": 2,
+          "precision_iou50": 0.008403361344537815,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.06745887979131948,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 25708,
+          "ground_truth": 963,
+          "precision_iou50": 0.03494875933781298,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 7.943282347242822e-05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 190.8507462686567,
+        "median_per_image": 217.5,
+        "p95_per_image": 300.0,
+        "total": 25574
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.01886792452830189,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 103,
+          "ground_truth": 2,
+          "precision_iou50": 0.009615384615384616,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.07044225021753112,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 24539,
+          "ground_truth": 963,
+          "precision_iou50": 0.036552807224185316,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 0.0001
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 181.52238805970148,
+        "median_per_image": 197.0,
+        "p95_per_image": 300.0,
+        "total": 24324
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.02247191011235955,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 86,
+          "ground_truth": 2,
+          "precision_iou50": 0.011494252873563218,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.07388888888888889,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 23306,
+          "ground_truth": 963,
+          "precision_iou50": 0.03841234476214053,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 0.00012589254117941674
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 172.3955223880597,
+        "median_per_image": 181.5,
+        "p95_per_image": 300.0,
+        "total": 23101
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.02469135802469136,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 78,
+          "ground_truth": 2,
+          "precision_iou50": 0.012658227848101266,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.07763185324160933,
+          "false_negatives_iou50": 32,
+          "false_positives_iou50": 22091,
+          "ground_truth": 963,
+          "precision_iou50": 0.04043957953262097,
+          "recall_iou50": 0.9667705088265836,
+          "true_positives_iou50": 931
+        }
+      },
+      "threshold": 0.00015848931924611142
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 162.02238805970148,
+        "median_per_image": 164.5,
+        "p95_per_image": 300.0,
+        "total": 21711
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.029850746268656723,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 64,
+          "ground_truth": 2,
+          "precision_iou50": 0.015384615384615385,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.08226812331372463,
+          "false_negatives_iou50": 33,
+          "false_positives_iou50": 20716,
+          "ground_truth": 963,
+          "precision_iou50": 0.04296405802457729,
+          "recall_iou50": 0.9657320872274143,
+          "true_positives_iou50": 930
+        }
+      },
+      "threshold": 0.00019952623149688788
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 151.8507462686567,
+        "median_per_image": 150.5,
+        "p95_per_image": 300.0,
+        "total": 20348
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.03571428571428571,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 53,
+          "ground_truth": 2,
+          "precision_iou50": 0.018518518518518517,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.08740650138777814,
+          "false_negatives_iou50": 34,
+          "false_positives_iou50": 19365,
+          "ground_truth": 963,
+          "precision_iou50": 0.04577707696856213,
+          "recall_iou50": 0.9646936656282451,
+          "true_positives_iou50": 929
+        }
+      },
+      "threshold": 0.0002511886431509582
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 140.83582089552237,
+        "median_per_image": 138.0,
+        "p95_per_image": 300.0,
+        "total": 18872
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0425531914893617,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 44,
+          "ground_truth": 2,
+          "precision_iou50": 0.022222222222222223,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.09388580090955027,
+          "false_negatives_iou50": 34,
+          "false_positives_iou50": 17898,
+          "ground_truth": 963,
+          "precision_iou50": 0.04934402719498592,
+          "recall_iou50": 0.9646936656282451,
+          "true_positives_iou50": 929
+        }
+      },
+      "threshold": 0.00031622776601683794
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 130.3955223880597,
+        "median_per_image": 128.5,
+        "p95_per_image": 299.35,
+        "total": 17473
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.048780487804878044,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 38,
+          "ground_truth": 2,
+          "precision_iou50": 0.02564102564102564,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.10099472740120671,
+          "false_negatives_iou50": 34,
+          "false_positives_iou50": 16505,
+          "ground_truth": 963,
+          "precision_iou50": 0.053286681197659745,
+          "recall_iou50": 0.9646936656282451,
+          "true_positives_iou50": 929
+        }
+      },
+      "threshold": 0.00039810717055349735
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 119.96268656716418,
+        "median_per_image": 118.5,
+        "p95_per_image": 277.7,
+        "total": 16075
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.06666666666666667,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 27,
+          "ground_truth": 2,
+          "precision_iou50": 0.03571428571428571,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.10911228689006468,
+          "false_negatives_iou50": 35,
+          "false_positives_iou50": 15119,
+          "ground_truth": 963,
+          "precision_iou50": 0.05783012401071851,
+          "recall_iou50": 0.9636552440290758,
+          "true_positives_iou50": 928
+        }
+      },
+      "threshold": 0.0005011872336272725
+    },
+    {
+      "candidates": {
+        "images_with_zero": 0,
+        "max_per_image": 300,
+        "mean_per_image": 109.75373134328358,
+        "median_per_image": 105.0,
+        "p95_per_image": 247.54999999999993,
+        "total": 14707
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.08333333333333334,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 21,
+          "ground_truth": 2,
+          "precision_iou50": 0.045454545454545456,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.11835378323108384,
+          "false_negatives_iou50": 37,
+          "false_positives_iou50": 13759,
+          "ground_truth": 963,
+          "precision_iou50": 0.0630575417092271,
+          "recall_iou50": 0.9615784008307373,
+          "true_positives_iou50": 926
+        }
+      },
+      "threshold": 0.000630957344480193
+    },
+    {
+      "candidates": {
+        "images_with_zero": 1,
+        "max_per_image": 300,
+        "mean_per_image": 100.43283582089552,
+        "median_per_image": 94.5,
+        "p95_per_image": 225.04999999999998,
+        "total": 13458
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.09090909090909091,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 19,
+          "ground_truth": 2,
+          "precision_iou50": 0.05,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.12818554267064786,
+          "false_negatives_iou50": 40,
+          "false_positives_iou50": 12515,
+          "ground_truth": 963,
+          "precision_iou50": 0.06868581634171751,
+          "recall_iou50": 0.9584631360332295,
+          "true_positives_iou50": 923
+        }
+      },
+      "threshold": 0.0007943282347242822
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 300,
+        "mean_per_image": 91.6268656716418,
+        "median_per_image": 83.5,
+        "p95_per_image": 206.54999999999993,
+        "total": 12278
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.09999999999999999,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 17,
+          "ground_truth": 2,
+          "precision_iou50": 0.05555555555555555,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.13930273009150723,
+          "false_negatives_iou50": 42,
+          "false_positives_iou50": 11339,
+          "ground_truth": 963,
+          "precision_iou50": 0.07512234910277325,
+          "recall_iou50": 0.956386292834891,
+          "true_positives_iou50": 921
+        }
+      },
+      "threshold": 0.001
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 298,
+        "mean_per_image": 84.30597014925372,
+        "median_per_image": 77.0,
+        "p95_per_image": 189.5999999999999,
+        "total": 11297
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.13333333333333336,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 12,
+          "ground_truth": 2,
+          "precision_iou50": 0.07692307692307693,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.14975095941863314,
+          "false_negatives_iou50": 46,
+          "false_positives_iou50": 10367,
+          "ground_truth": 963,
+          "precision_iou50": 0.08126550868486353,
+          "recall_iou50": 0.952232606438214,
+          "true_positives_iou50": 917
+        }
+      },
+      "threshold": 0.0012589254117941675
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 262,
+        "mean_per_image": 76.74626865671642,
+        "median_per_image": 67.5,
+        "p95_per_image": 176.6499999999999,
+        "total": 10284
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.2,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 7,
+          "ground_truth": 2,
+          "precision_iou50": 0.125,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.16300382596316396,
+          "false_negatives_iou50": 47,
+          "false_positives_iou50": 9360,
+          "ground_truth": 963,
+          "precision_iou50": 0.08913974309069676,
+          "recall_iou50": 0.9511941848390446,
+          "true_positives_iou50": 916
+        }
+      },
+      "threshold": 0.001584893192461114
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 224,
+        "mean_per_image": 69.20149253731343,
+        "median_per_image": 60.5,
+        "p95_per_image": 157.74999999999986,
+        "total": 9273
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.25,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 5,
+          "ground_truth": 2,
+          "precision_iou50": 0.16666666666666666,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.1788856304985337,
+          "false_negatives_iou50": 48,
+          "false_positives_iou50": 8352,
+          "ground_truth": 963,
+          "precision_iou50": 0.09873745548721269,
+          "recall_iou50": 0.9501557632398754,
+          "true_positives_iou50": 915
+        }
+      },
+      "threshold": 0.0019952623149688807
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 200,
+        "mean_per_image": 62.17164179104478,
+        "median_per_image": 55.0,
+        "p95_per_image": 143.04999999999987,
+        "total": 8331
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.28571428571428575,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 4,
+          "ground_truth": 2,
+          "precision_iou50": 0.2,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.19636128754440738,
+          "false_negatives_iou50": 51,
+          "false_positives_iou50": 7414,
+          "ground_truth": 963,
+          "precision_iou50": 0.10953639202498199,
+          "recall_iou50": 0.9470404984423676,
+          "true_positives_iou50": 912
+        }
+      },
+      "threshold": 0.002511886431509582
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 176,
+        "mean_per_image": 55.701492537313435,
+        "median_per_image": 48.5,
+        "p95_per_image": 126.84999999999994,
+        "total": 7464
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.28571428571428575,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 4,
+          "ground_truth": 2,
+          "precision_iou50": 0.2,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.21657563524103537,
+          "false_negatives_iou50": 51,
+          "false_positives_iou50": 6547,
+          "ground_truth": 963,
+          "precision_iou50": 0.12226840058989141,
+          "recall_iou50": 0.9470404984423676,
+          "true_positives_iou50": 912
+        }
+      },
+      "threshold": 0.0031622776601683794
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 156,
+        "mean_per_image": 50.507462686567166,
+        "median_per_image": 43.5,
+        "p95_per_image": 112.49999999999994,
+        "total": 6768
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.3333333333333333,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 3,
+          "ground_truth": 2,
+          "precision_iou50": 0.25,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.23553772486087743,
+          "false_negatives_iou50": 53,
+          "false_positives_iou50": 5854,
+          "ground_truth": 963,
+          "precision_iou50": 0.1345357776463631,
+          "recall_iou50": 0.944963655244029,
+          "true_positives_iou50": 910
+        }
+      },
+      "threshold": 0.003981071705534973
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 145,
+        "mean_per_image": 45.149253731343286,
+        "median_per_image": 38.5,
+        "p95_per_image": 102.49999999999994,
+        "total": 6050
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.3333333333333333,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 3,
+          "ground_truth": 2,
+          "precision_iou50": 0.25,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.25823940647738625,
+          "false_negatives_iou50": 58,
+          "false_positives_iou50": 5141,
+          "ground_truth": 963,
+          "precision_iou50": 0.14968574263976184,
+          "recall_iou50": 0.9397715472481828,
+          "true_positives_iou50": 905
+        }
+      },
+      "threshold": 0.005
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 145,
+        "mean_per_image": 45.09701492537314,
+        "median_per_image": 38.5,
+        "p95_per_image": 102.49999999999994,
+        "total": 6043
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.3333333333333333,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 3,
+          "ground_truth": 2,
+          "precision_iou50": 0.25,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.2584975721222508,
+          "false_negatives_iou50": 58,
+          "false_positives_iou50": 5134,
+          "ground_truth": 963,
+          "precision_iou50": 0.14985924821990396,
+          "recall_iou50": 0.9397715472481828,
+          "true_positives_iou50": 905
+        }
+      },
+      "threshold": 0.005011872336272725
+    },
+    {
+      "candidates": {
+        "images_with_zero": 2,
+        "max_per_image": 129,
+        "mean_per_image": 40.17164179104478,
+        "median_per_image": 34.0,
+        "p95_per_image": 90.04999999999998,
+        "total": 5383
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.5,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 1,
+          "ground_truth": 2,
+          "precision_iou50": 0.5,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.28404791929382095,
+          "false_negatives_iou50": 62,
+          "false_positives_iou50": 4480,
+          "ground_truth": 963,
+          "precision_iou50": 0.16744099609737967,
+          "recall_iou50": 0.9356178608515057,
+          "true_positives_iou50": 901
+        }
+      },
+      "threshold": 0.006309573444801936
+    },
+    {
+      "candidates": {
+        "images_with_zero": 3,
+        "max_per_image": 117,
+        "mean_per_image": 35.69402985074627,
+        "median_per_image": 29.5,
+        "p95_per_image": 82.44999999999996,
+        "total": 4783
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.6666666666666666,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 1.0,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.3115752828546562,
+          "false_negatives_iou50": 68,
+          "false_positives_iou50": 3887,
+          "ground_truth": 963,
+          "precision_iou50": 0.18716018402342116,
+          "recall_iou50": 0.9293873312564901,
+          "true_positives_iou50": 895
+        }
+      },
+      "threshold": 0.00794328234724282
+    },
+    {
+      "candidates": {
+        "images_with_zero": 4,
+        "max_per_image": 110,
+        "mean_per_image": 31.574626865671643,
+        "median_per_image": 26.0,
+        "p95_per_image": 72.49999999999994,
+        "total": 4231
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.6666666666666666,
+          "false_negatives_iou50": 1,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 1.0,
+          "recall_iou50": 0.5,
+          "true_positives_iou50": 1
+        },
+        "vehicle": {
+          "f1_iou50": 0.3427691122665126,
+          "false_negatives_iou50": 73,
+          "false_positives_iou50": 3340,
+          "ground_truth": 963,
+          "precision_iou50": 0.21040189125295508,
+          "recall_iou50": 0.9241952232606438,
+          "true_positives_iou50": 890
+        }
+      },
+      "threshold": 0.01
+    },
+    {
+      "candidates": {
+        "images_with_zero": 4,
+        "max_per_image": 99,
+        "mean_per_image": 27.917910447761194,
+        "median_per_image": 21.0,
+        "p95_per_image": 68.04999999999998,
+        "total": 3741
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.37712585034013607,
+          "false_negatives_iou50": 76,
+          "false_positives_iou50": 2854,
+          "ground_truth": 963,
+          "precision_iou50": 0.23710237904303663,
+          "recall_iou50": 0.9210799584631361,
+          "true_positives_iou50": 887
+        }
+      },
+      "threshold": 0.012589254117941675
+    },
+    {
+      "candidates": {
+        "images_with_zero": 4,
+        "max_per_image": 90,
+        "mean_per_image": 24.970149253731343,
+        "median_per_image": 19.5,
+        "p95_per_image": 66.04999999999998,
+        "total": 3346
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.4098398700394523,
+          "false_negatives_iou50": 80,
+          "false_positives_iou50": 2463,
+          "ground_truth": 963,
+          "precision_iou50": 0.2638971906754334,
+          "recall_iou50": 0.9169262720664589,
+          "true_positives_iou50": 883
+        }
+      },
+      "threshold": 0.01584893192461114
+    },
+    {
+      "candidates": {
+        "images_with_zero": 5,
+        "max_per_image": 82,
+        "mean_per_image": 22.32089552238806,
+        "median_per_image": 16.0,
+        "p95_per_image": 58.0,
+        "total": 2991
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.44157814871016693,
+          "false_negatives_iou50": 90,
+          "false_positives_iou50": 2118,
+          "ground_truth": 963,
+          "precision_iou50": 0.29187562688064195,
+          "recall_iou50": 0.9065420560747663,
+          "true_positives_iou50": 873
+        }
+      },
+      "threshold": 0.01995262314968881
+    },
+    {
+      "candidates": {
+        "images_with_zero": 5,
+        "max_per_image": 75,
+        "mean_per_image": 19.880597014925375,
+        "median_per_image": 14.5,
+        "p95_per_image": 49.349999999999994,
+        "total": 2664
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.47532395919492687,
+          "false_negatives_iou50": 101,
+          "false_positives_iou50": 1802,
+          "ground_truth": 963,
+          "precision_iou50": 0.3235735735735736,
+          "recall_iou50": 0.8951194184839044,
+          "true_positives_iou50": 862
+        }
+      },
+      "threshold": 0.025
+    },
+    {
+      "candidates": {
+        "images_with_zero": 5,
+        "max_per_image": 75,
+        "mean_per_image": 19.82089552238806,
+        "median_per_image": 14.5,
+        "p95_per_image": 49.349999999999994,
+        "total": 2656
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.4763746891406466,
+          "false_negatives_iou50": 101,
+          "false_positives_iou50": 1794,
+          "ground_truth": 963,
+          "precision_iou50": 0.3245481927710843,
+          "recall_iou50": 0.8951194184839044,
+          "true_positives_iou50": 862
+        }
+      },
+      "threshold": 0.025118864315095822
+    },
+    {
+      "candidates": {
+        "images_with_zero": 5,
+        "max_per_image": 69,
+        "mean_per_image": 17.46268656716418,
+        "median_per_image": 13.0,
+        "p95_per_image": 43.69999999999999,
+        "total": 2340
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.5177111716621253,
+          "false_negatives_iou50": 108,
+          "false_positives_iou50": 1485,
+          "ground_truth": 963,
+          "precision_iou50": 0.36538461538461536,
+          "recall_iou50": 0.8878504672897196,
+          "true_positives_iou50": 855
+        }
+      },
+      "threshold": 0.03162277660168379
+    },
+    {
+      "candidates": {
+        "images_with_zero": 5,
+        "max_per_image": 59,
+        "mean_per_image": 15.417910447761194,
+        "median_per_image": 12.0,
+        "p95_per_image": 39.69999999999999,
+        "total": 2066
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.5586001980851766,
+          "false_negatives_iou50": 117,
+          "false_positives_iou50": 1220,
+          "ground_truth": 963,
+          "precision_iou50": 0.409486931268151,
+          "recall_iou50": 0.8785046728971962,
+          "true_positives_iou50": 846
+        }
+      },
+      "threshold": 0.039810717055349734
+    },
+    {
+      "candidates": {
+        "images_with_zero": 5,
+        "max_per_image": 52,
+        "mean_per_image": 13.58955223880597,
+        "median_per_image": 10.5,
+        "p95_per_image": 35.0,
+        "total": 1821
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.6012931034482758,
+          "false_negatives_iou50": 126,
+          "false_positives_iou50": 984,
+          "ground_truth": 963,
+          "precision_iou50": 0.4596375617792422,
+          "recall_iou50": 0.8691588785046729,
+          "true_positives_iou50": 837
+        }
+      },
+      "threshold": 0.05
+    },
+    {
+      "candidates": {
+        "images_with_zero": 5,
+        "max_per_image": 52,
+        "mean_per_image": 13.582089552238806,
+        "median_per_image": 10.5,
+        "p95_per_image": 35.0,
+        "total": 1820
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.6015091627739849,
+          "false_negatives_iou50": 126,
+          "false_positives_iou50": 983,
+          "ground_truth": 963,
+          "precision_iou50": 0.45989010989010987,
+          "recall_iou50": 0.8691588785046729,
+          "true_positives_iou50": 837
+        }
+      },
+      "threshold": 0.05011872336272725
+    },
+    {
+      "candidates": {
+        "images_with_zero": 5,
+        "max_per_image": 47,
+        "mean_per_image": 12.104477611940299,
+        "median_per_image": 9.0,
+        "p95_per_image": 31.349999999999994,
+        "total": 1622
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.6359767891682785,
+          "false_negatives_iou50": 141,
+          "false_positives_iou50": 800,
+          "ground_truth": 963,
+          "precision_iou50": 0.5067817509247842,
+          "recall_iou50": 0.8535825545171339,
+          "true_positives_iou50": 822
+        }
+      },
+      "threshold": 0.06309573444801936
+    },
+    {
+      "candidates": {
+        "images_with_zero": 6,
+        "max_per_image": 39,
+        "mean_per_image": 10.888059701492537,
+        "median_per_image": 8.5,
+        "p95_per_image": 29.0,
+        "total": 1459
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.6663914120561519,
+          "false_negatives_iou50": 156,
+          "false_positives_iou50": 652,
+          "ground_truth": 963,
+          "precision_iou50": 0.5531185743660041,
+          "recall_iou50": 0.838006230529595,
+          "true_positives_iou50": 807
+        }
+      },
+      "threshold": 0.07943282347242822
+    },
+    {
+      "candidates": {
+        "images_with_zero": 6,
+        "max_per_image": 33,
+        "mean_per_image": 9.753731343283581,
+        "median_per_image": 7.5,
+        "p95_per_image": 25.69999999999999,
+        "total": 1307
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7004405286343611,
+          "false_negatives_iou50": 168,
+          "false_positives_iou50": 512,
+          "ground_truth": 963,
+          "precision_iou50": 0.6082631981637338,
+          "recall_iou50": 0.8255451713395638,
+          "true_positives_iou50": 795
+        }
+      },
+      "threshold": 0.1
+    },
+    {
+      "candidates": {
+        "images_with_zero": 7,
+        "max_per_image": 30,
+        "mean_per_image": 8.186567164179104,
+        "median_per_image": 6.0,
+        "p95_per_image": 22.0,
+        "total": 1097
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7446601941747573,
+          "false_negatives_iou50": 196,
+          "false_positives_iou50": 330,
+          "ground_truth": 963,
+          "precision_iou50": 0.699179580674567,
+          "recall_iou50": 0.7964693665628245,
+          "true_positives_iou50": 767
+        }
+      },
+      "threshold": 0.15
+    },
+    {
+      "candidates": {
+        "images_with_zero": 7,
+        "max_per_image": 29,
+        "mean_per_image": 7.335820895522388,
+        "median_per_image": 5.0,
+        "p95_per_image": 19.349999999999994,
+        "total": 983
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7697841726618705,
+          "false_negatives_iou50": 214,
+          "false_positives_iou50": 234,
+          "ground_truth": 963,
+          "precision_iou50": 0.7619532044760936,
+          "recall_iou50": 0.7777777777777778,
+          "true_positives_iou50": 749
+        }
+      },
+      "threshold": 0.2
+    },
+    {
+      "candidates": {
+        "images_with_zero": 8,
+        "max_per_image": 24,
+        "mean_per_image": 6.7164179104477615,
+        "median_per_image": 5.0,
+        "p95_per_image": 18.349999999999994,
+        "total": 900
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7847557702630166,
+          "false_negatives_iou50": 232,
+          "false_positives_iou50": 169,
+          "ground_truth": 963,
+          "precision_iou50": 0.8122222222222222,
+          "recall_iou50": 0.7590861889927311,
+          "true_positives_iou50": 731
+        }
+      },
+      "threshold": 0.25
+    },
+    {
+      "candidates": {
+        "images_with_zero": 9,
+        "max_per_image": 24,
+        "mean_per_image": 6.1716417910447765,
+        "median_per_image": 5.0,
+        "p95_per_image": 16.0,
+        "total": 827
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7910614525139664,
+          "false_negatives_iou50": 255,
+          "false_positives_iou50": 119,
+          "ground_truth": 963,
+          "precision_iou50": 0.8561064087061668,
+          "recall_iou50": 0.735202492211838,
+          "true_positives_iou50": 708
+        }
+      },
+      "threshold": 0.3
+    },
+    {
+      "candidates": {
+        "images_with_zero": 10,
+        "max_per_image": 21,
+        "mean_per_image": 5.7611940298507465,
+        "median_per_image": 4.0,
+        "p95_per_image": 16.0,
+        "total": 772
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7850144092219019,
+          "false_negatives_iou50": 282,
+          "false_positives_iou50": 91,
+          "ground_truth": 963,
+          "precision_iou50": 0.8821243523316062,
+          "recall_iou50": 0.7071651090342679,
+          "true_positives_iou50": 681
+        }
+      },
+      "threshold": 0.35
+    },
+    {
+      "candidates": {
+        "images_with_zero": 11,
+        "max_per_image": 21,
+        "mean_per_image": 5.455223880597015,
+        "median_per_image": 4.0,
+        "p95_per_image": 14.349999999999994,
+        "total": 731
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7792207792207791,
+          "false_negatives_iou50": 303,
+          "false_positives_iou50": 71,
+          "ground_truth": 963,
+          "precision_iou50": 0.9028727770177839,
+          "recall_iou50": 0.6853582554517134,
+          "true_positives_iou50": 660
+        }
+      },
+      "threshold": 0.4
+    },
+    {
+      "candidates": {
+        "images_with_zero": 11,
+        "max_per_image": 19,
+        "mean_per_image": 5.156716417910448,
+        "median_per_image": 4.0,
+        "p95_per_image": 14.0,
+        "total": 691
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7726723095525998,
+          "false_negatives_iou50": 324,
+          "false_positives_iou50": 52,
+          "ground_truth": 963,
+          "precision_iou50": 0.9247467438494935,
+          "recall_iou50": 0.6635514018691588,
+          "true_positives_iou50": 639
+        }
+      },
+      "threshold": 0.44999999999999996
+    },
+    {
+      "candidates": {
+        "images_with_zero": 12,
+        "max_per_image": 19,
+        "mean_per_image": 4.858208955223881,
+        "median_per_image": 4.0,
+        "p95_per_image": 13.0,
+        "total": 651
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7558859975216853,
+          "false_negatives_iou50": 353,
+          "false_positives_iou50": 41,
+          "ground_truth": 963,
+          "precision_iou50": 0.9370199692780338,
+          "recall_iou50": 0.6334371754932503,
+          "true_positives_iou50": 610
+        }
+      },
+      "threshold": 0.5
+    },
+    {
+      "candidates": {
+        "images_with_zero": 12,
+        "max_per_image": 17,
+        "mean_per_image": 4.582089552238806,
+        "median_per_image": 4.0,
+        "p95_per_image": 12.0,
+        "total": 614
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7406467977171846,
+          "false_negatives_iou50": 379,
+          "false_positives_iou50": 30,
+          "ground_truth": 963,
+          "precision_iou50": 0.9511400651465798,
+          "recall_iou50": 0.6064382139148494,
+          "true_positives_iou50": 584
+        }
+      },
+      "threshold": 0.5499999999999999
+    },
+    {
+      "candidates": {
+        "images_with_zero": 12,
+        "max_per_image": 16,
+        "mean_per_image": 4.335820895522388,
+        "median_per_image": 4.0,
+        "p95_per_image": 11.349999999999994,
+        "total": 581
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.7227979274611398,
+          "false_negatives_iou50": 405,
+          "false_positives_iou50": 23,
+          "ground_truth": 963,
+          "precision_iou50": 0.9604130808950087,
+          "recall_iou50": 0.5794392523364486,
+          "true_positives_iou50": 558
+        }
+      },
+      "threshold": 0.6
+    },
+    {
+      "candidates": {
+        "images_with_zero": 14,
+        "max_per_image": 13,
+        "mean_per_image": 3.985074626865672,
+        "median_per_image": 3.0,
+        "p95_per_image": 11.0,
+        "total": 534
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.6973947895791583,
+          "false_negatives_iou50": 441,
+          "false_positives_iou50": 12,
+          "ground_truth": 963,
+          "precision_iou50": 0.9775280898876404,
+          "recall_iou50": 0.5420560747663551,
+          "true_positives_iou50": 522
+        }
+      },
+      "threshold": 0.6499999999999999
+    },
+    {
+      "candidates": {
+        "images_with_zero": 16,
+        "max_per_image": 12,
+        "mean_per_image": 3.7388059701492535,
+        "median_per_image": 3.0,
+        "p95_per_image": 10.349999999999994,
+        "total": 501
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.6707650273224044,
+          "false_negatives_iou50": 472,
+          "false_positives_iou50": 10,
+          "ground_truth": 963,
+          "precision_iou50": 0.9800399201596807,
+          "recall_iou50": 0.509865005192108,
+          "true_positives_iou50": 491
+        }
+      },
+      "threshold": 0.7
+    },
+    {
+      "candidates": {
+        "images_with_zero": 18,
+        "max_per_image": 12,
+        "mean_per_image": 3.425373134328358,
+        "median_per_image": 3.0,
+        "p95_per_image": 8.349999999999994,
+        "total": 459
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.6343178621659634,
+          "false_negatives_iou50": 512,
+          "false_positives_iou50": 8,
+          "ground_truth": 963,
+          "precision_iou50": 0.9825708061002179,
+          "recall_iou50": 0.4683281412253375,
+          "true_positives_iou50": 451
+        }
+      },
+      "threshold": 0.7499999999999999
+    },
+    {
+      "candidates": {
+        "images_with_zero": 21,
+        "max_per_image": 12,
+        "mean_per_image": 3.0223880597014925,
+        "median_per_image": 2.5,
+        "p95_per_image": 8.0,
+        "total": 405
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.584795321637427,
+          "false_negatives_iou50": 563,
+          "false_positives_iou50": 5,
+          "ground_truth": 963,
+          "precision_iou50": 0.9876543209876543,
+          "recall_iou50": 0.4153686396677051,
+          "true_positives_iou50": 400
+        }
+      },
+      "threshold": 0.7999999999999999
+    },
+    {
+      "candidates": {
+        "images_with_zero": 24,
+        "max_per_image": 10,
+        "mean_per_image": 2.5671641791044775,
+        "median_per_image": 2.0,
+        "p95_per_image": 6.0,
+        "total": 344
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.523335883703137,
+          "false_negatives_iou50": 621,
+          "false_positives_iou50": 2,
+          "ground_truth": 963,
+          "precision_iou50": 0.9941860465116279,
+          "recall_iou50": 0.35514018691588783,
+          "true_positives_iou50": 342
+        }
+      },
+      "threshold": 0.8499999999999999
+    },
+    {
+      "candidates": {
+        "images_with_zero": 33,
+        "max_per_image": 7,
+        "mean_per_image": 1.9029850746268657,
+        "median_per_image": 2.0,
+        "p95_per_image": 4.349999999999994,
+        "total": 255
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.41543513957307066,
+          "false_negatives_iou50": 710,
+          "false_positives_iou50": 2,
+          "ground_truth": 963,
+          "precision_iou50": 0.9921568627450981,
+          "recall_iou50": 0.26272066458982346,
+          "true_positives_iou50": 253
+        }
+      },
+      "threshold": 0.8999999999999999
+    },
+    {
+      "candidates": {
+        "images_with_zero": 75,
+        "max_per_image": 3,
+        "mean_per_image": 0.6492537313432836,
+        "median_per_image": 0.0,
+        "p95_per_image": 2.0,
+        "total": 87
+      },
+      "classes": {
+        "motorcycle": {
+          "f1_iou50": 0.0,
+          "false_negatives_iou50": 2,
+          "false_positives_iou50": 0,
+          "ground_truth": 2,
+          "precision_iou50": 0.0,
+          "recall_iou50": 0.0,
+          "true_positives_iou50": 0
+        },
+        "vehicle": {
+          "f1_iou50": 0.16571428571428573,
+          "false_negatives_iou50": 876,
+          "false_positives_iou50": 0,
+          "ground_truth": 963,
+          "precision_iou50": 1.0,
+          "recall_iou50": 0.09034267912772585,
+          "true_positives_iou50": 87
+        }
+      },
+      "threshold": 0.95
+    }
+  ]
+}

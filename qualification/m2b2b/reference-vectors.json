@@ -1,0 +1,2567 @@
+{
+  "schema_version": 1,
+  "vectors": [
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        0,
+        0,
+        0
+      ],
+      "regression_buffer_offsets": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "classification_buffer_offset": 0,
+      "raw_regression_u16": [
+        8895,
+        8488,
+        5992,
+        9856
+      ],
+      "raw_class_u16": 24358,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        0.6482479572296143,
+        0.5711026787757874,
+        0.09799537807703018,
+        0.8304018378257751
+      ],
+      "dequantized_class_logit": -10.025666236877441,
+      "grid_xy": [
+        0,
+        0
+      ],
+      "anchor_xy": [
+        0.5,
+        0.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        -1.185983657836914,
+        -0.5688214302062988,
+        4.7839630246162415,
+        10.643214702606201
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 4.424755024956539e-05,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        0,
+        0,
+        1
+      ],
+      "regression_buffer_offsets": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "classification_buffer_offset": 1,
+      "raw_regression_u16": [
+        8895,
+        8488,
+        5992,
+        9856
+      ],
+      "raw_class_u16": 22436,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        0.6482479572296143,
+        0.5711026787757874,
+        0.09799537807703018,
+        0.8304018378257751
+      ],
+      "dequantized_class_logit": -13.06595230102539,
+      "grid_xy": [
+        0,
+        0
+      ],
+      "anchor_xy": [
+        0.5,
+        0.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        -1.185983657836914,
+        -0.5688214302062988,
+        4.7839630246162415,
+        10.643214702606201
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 2.1160603864700533e-06,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        21,
+        117,
+        0
+      ],
+      "regression_buffer_offsets": [
+        10548,
+        10549,
+        10550,
+        10551
+      ],
+      "classification_buffer_offset": 5274,
+      "raw_regression_u16": [
+        10756,
+        21249,
+        16083,
+        13488
+      ],
+      "raw_class_u16": 18583,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        1.0009933710098267,
+        2.989901542663574,
+        2.0107059478759766,
+        1.5188336372375488
+      ],
+      "dequantized_class_logit": -19.1607608795166,
+      "grid_xy": [
+        117,
+        21
+      ],
+      "anchor_xy": [
+        117.5,
+        21.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        931.9920530319214,
+        148.0807876586914,
+        956.0856475830078,
+        184.1506690979004
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 4.770757122685154e-09,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        21,
+        117,
+        1
+      ],
+      "regression_buffer_offsets": [
+        10548,
+        10549,
+        10550,
+        10551
+      ],
+      "classification_buffer_offset": 5275,
+      "raw_regression_u16": [
+        10756,
+        21249,
+        16083,
+        13488
+      ],
+      "raw_class_u16": 15828,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        1.0009933710098267,
+        2.989901542663574,
+        2.0107059478759766,
+        1.5188336372375488
+      ],
+      "dequantized_class_logit": -23.518712997436523,
+      "grid_xy": [
+        117,
+        21
+      ],
+      "anchor_xy": [
+        117.5,
+        21.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        931.9920530319214,
+        148.0807876586914,
+        956.0856475830078,
+        184.1506690979004
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 6.108755168376945e-11,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        78,
+        19,
+        0
+      ],
+      "regression_buffer_offsets": [
+        37516,
+        37517,
+        37518,
+        37519
+      ],
+      "classification_buffer_offset": 18758,
+      "raw_regression_u16": [
+        18941,
+        19159,
+        17990,
+        12607
+      ],
+      "raw_class_u16": 22368,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        2.552428960800171,
+        2.59375,
+        2.3721706867218018,
+        1.3518434762954712
+      ],
+      "dequantized_class_logit": -13.173517227172852,
+      "grid_xy": [
+        19,
+        78
+      ],
+      "anchor_xy": [
+        19.5,
+        78.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        135.58056831359863,
+        607.25,
+        174.9773654937744,
+        638.8147478103638
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 1.9002612816620967e-06,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        78,
+        19,
+        1
+      ],
+      "regression_buffer_offsets": [
+        37516,
+        37517,
+        37518,
+        37519
+      ],
+      "classification_buffer_offset": 18759,
+      "raw_regression_u16": [
+        18941,
+        19159,
+        17990,
+        12607
+      ],
+      "raw_class_u16": 19541,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        2.552428960800171,
+        2.59375,
+        2.3721706867218018,
+        1.3518434762954712
+      ],
+      "dequantized_class_logit": -17.645362854003906,
+      "grid_xy": [
+        19,
+        78
+      ],
+      "anchor_xy": [
+        19.5,
+        78.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        135.58056831359863,
+        607.25,
+        174.9773654937744,
+        638.8147478103638
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 2.1712821762776002e-08,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        82,
+        0,
+        0
+      ],
+      "regression_buffer_offsets": [
+        39360,
+        39361,
+        39362,
+        39363
+      ],
+      "classification_buffer_offset": 19680,
+      "raw_regression_u16": [
+        8625,
+        21214,
+        5769,
+        13415
+      ],
+      "raw_class_u16": 26499,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        0.5970705151557922,
+        2.9832675457000732,
+        0.05572658032178879,
+        1.5049967765808105
+      ],
+      "dequantized_class_logit": -6.638958930969238,
+      "grid_xy": [
+        0,
+        82
+      ],
+      "anchor_xy": [
+        0.5,
+        82.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        -0.7765641212463379,
+        636.1338596343994,
+        4.44581264257431,
+        672.0399742126465
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 0.0013066790997982025,
+      "hailo_top300_rank": 1
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        82,
+        0,
+        1
+      ],
+      "regression_buffer_offsets": [
+        39360,
+        39361,
+        39362,
+        39363
+      ],
+      "classification_buffer_offset": 19681,
+      "raw_regression_u16": [
+        8625,
+        21214,
+        5769,
+        13415
+      ],
+      "raw_class_u16": 23456,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        0.5970705151557922,
+        2.9832675457000732,
+        0.05572658032178879,
+        1.5049967765808105
+      ],
+      "dequantized_class_logit": -11.452481269836426,
+      "grid_xy": [
+        0,
+        82
+      ],
+      "anchor_xy": [
+        0.5,
+        82.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        -0.7765641212463379,
+        636.1338596343994,
+        4.44581264257431,
+        672.0399742126465
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 1.0622969966789242e-05,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        97,
+        52,
+        0
+      ],
+      "regression_buffer_offsets": [
+        46768,
+        46769,
+        46770,
+        46771
+      ],
+      "classification_buffer_offset": 23384,
+      "raw_regression_u16": [
+        19351,
+        19530,
+        18236,
+        12668
+      ],
+      "raw_class_u16": 22228,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        2.6301429271698,
+        2.664071798324585,
+        2.4187989234924316,
+        1.363405704498291
+      ],
+      "dequantized_class_logit": -13.394973754882812,
+      "grid_xy": [
+        52,
+        97
+      ],
+      "anchor_xy": [
+        52.5,
+        97.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        398.9588565826416,
+        758.6874256134033,
+        439.35039138793945,
+        790.9072456359863
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 1.5227765288727824e-06,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        97,
+        52,
+        1
+      ],
+      "regression_buffer_offsets": [
+        46768,
+        46769,
+        46770,
+        46771
+      ],
+      "classification_buffer_offset": 23385,
+      "raw_regression_u16": [
+        19351,
+        19530,
+        18236,
+        12668
+      ],
+      "raw_class_u16": 19539,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        2.6301429271698,
+        2.664071798324585,
+        2.4187989234924316,
+        1.363405704498291
+      ],
+      "dequantized_class_logit": -17.648527145385742,
+      "grid_xy": [
+        52,
+        97
+      ],
+      "anchor_xy": [
+        52.5,
+        97.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        398.9588565826416,
+        758.6874256134033,
+        439.35039138793945,
+        790.9072456359863
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 2.1644225967065722e-08,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        119,
+        119,
+        0
+      ],
+      "regression_buffer_offsets": [
+        57596,
+        57597,
+        57598,
+        57599
+      ],
+      "classification_buffer_offset": 28798,
+      "raw_regression_u16": [
+        10789,
+        10770,
+        8185,
+        8314
+      ],
+      "raw_class_u16": 23961,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        1.0072484016418457,
+        1.0036470890045166,
+        0.5136701464653015,
+        0.5381216406822205
+      ],
+      "dequantized_class_logit": -10.653655052185059,
+      "grid_xy": [
+        119,
+        119
+      ],
+      "anchor_xy": [
+        119.5,
+        119.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        947.9420127868652,
+        947.9708232879639,
+        960.1093611717224,
+        960.3049731254578
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 2.361381302762311e-05,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv61",
+      "classification_vstream": "conv64",
+      "tensor_index_yxc": [
+        119,
+        119,
+        1
+      ],
+      "regression_buffer_offsets": [
+        57596,
+        57597,
+        57598,
+        57599
+      ],
+      "classification_buffer_offset": 28799,
+      "raw_regression_u16": [
+        10789,
+        10770,
+        8185,
+        8314
+      ],
+      "raw_class_u16": 20902,
+      "regression_quantization": {
+        "qp_zp": 5475,
+        "qp_scale": 0.0001895461901,
+        "limvals_min": -1.037765384,
+        "limvals_max": 5.173094749
+      },
+      "classification_quantization": {
+        "qp_zp": 30696,
+        "qp_scale": 0.001581834396,
+        "limvals_min": -48.55598831,
+        "limvals_max": 3.275979042
+      },
+      "dequantized_ltrb": [
+        1.0072484016418457,
+        1.0036470890045166,
+        0.5136701464653015,
+        0.5381216406822205
+      ],
+      "dequantized_class_logit": -15.492486000061035,
+      "grid_xy": [
+        119,
+        119
+      ],
+      "anchor_xy": [
+        119.5,
+        119.5
+      ],
+      "stride": 8,
+      "decoded_xyxy": [
+        947.9420127868652,
+        947.9708232879639,
+        960.1093611717224,
+        960.3049731254578
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 1.869384931296736e-07,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        0,
+        0,
+        0
+      ],
+      "regression_buffer_offsets": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "classification_buffer_offset": 0,
+      "raw_regression_u16": [
+        3120,
+        3252,
+        4185,
+        6789
+      ],
+      "raw_class_u16": 29959,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        0.5331562161445618,
+        0.5733025670051575,
+        0.8570645451545715,
+        1.649043321609497
+      ],
+      "dequantized_class_logit": -8.59653091430664,
+      "grid_xy": [
+        0,
+        0
+      ],
+      "anchor_xy": [
+        0.5,
+        0.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        -0.5304994583129883,
+        -1.1728410720825195,
+        21.713032722473145,
+        34.38469314575195
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 0.00018471146177034825,
+      "hailo_top300_rank": 150
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        0,
+        0,
+        1
+      ],
+      "regression_buffer_offsets": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "classification_buffer_offset": 1,
+      "raw_regression_u16": [
+        3120,
+        3252,
+        4185,
+        6789
+      ],
+      "raw_class_u16": 29034,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        0.5331562161445618,
+        0.5733025670051575,
+        0.8570645451545715,
+        1.649043321609497
+      ],
+      "dequantized_class_logit": -12.58639144897461,
+      "grid_xy": [
+        0,
+        0
+      ],
+      "anchor_xy": [
+        0.5,
+        0.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        -0.5304994583129883,
+        -1.1728410720825195,
+        21.713032722473145,
+        34.38469314575195
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 3.4182053241238464e-06,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        1,
+        0,
+        0
+      ],
+      "regression_buffer_offsets": [
+        240,
+        241,
+        242,
+        243
+      ],
+      "classification_buffer_offset": 120,
+      "raw_regression_u16": [
+        3020,
+        6130,
+        4222,
+        8143
+      ],
+      "raw_class_u16": 29917,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        0.5027422904968262,
+        1.448615550994873,
+        0.868317723274231,
+        2.0608479976654053
+      ],
+      "dequantized_class_logit": -8.777691841125488,
+      "grid_xy": [
+        0,
+        1
+      ],
+      "anchor_xy": [
+        0.5,
+        1.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        -0.04387664794921875,
+        0.8221511840820312,
+        21.893083572387695,
+        56.973567962646484
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 0.00015410968626383692,
+      "hailo_top300_rank": 168
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        1,
+        0,
+        1
+      ],
+      "regression_buffer_offsets": [
+        240,
+        241,
+        242,
+        243
+      ],
+      "classification_buffer_offset": 121,
+      "raw_regression_u16": [
+        3020,
+        6130,
+        4222,
+        8143
+      ],
+      "raw_class_u16": 29045,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        0.5027422904968262,
+        1.448615550994873,
+        0.868317723274231,
+        2.0608479976654053
+      ],
+      "dequantized_class_logit": -12.538944244384766,
+      "grid_xy": [
+        0,
+        1
+      ],
+      "anchor_xy": [
+        0.5,
+        1.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        -0.04387664794921875,
+        0.8221511840820312,
+        21.893083572387695,
+        56.973567962646484
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 3.584297928682645e-06,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        27,
+        22,
+        0
+      ],
+      "regression_buffer_offsets": [
+        6568,
+        6569,
+        6570,
+        6571
+      ],
+      "classification_buffer_offset": 3284,
+      "raw_regression_u16": [
+        15788,
+        12099,
+        18823,
+        8893
+      ],
+      "raw_class_u16": 28463,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        4.385993003845215,
+        3.2640230655670166,
+        5.309055805206299,
+        2.288952350616455
+      ],
+      "dequantized_class_logit": -15.049321174621582,
+      "grid_xy": [
+        22,
+        27
+      ],
+      "anchor_xy": [
+        22.5,
+        27.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        289.82411193847656,
+        387.77563095092773,
+        444.9448928833008,
+        476.6232376098633
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 2.9118078259671165e-07,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        27,
+        22,
+        1
+      ],
+      "regression_buffer_offsets": [
+        6568,
+        6569,
+        6570,
+        6571
+      ],
+      "classification_buffer_offset": 3285,
+      "raw_regression_u16": [
+        15788,
+        12099,
+        18823,
+        8893
+      ],
+      "raw_class_u16": 27843,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        4.385993003845215,
+        3.2640230655670166,
+        5.309055805206299,
+        2.288952350616455
+      ],
+      "dequantized_class_logit": -17.72360610961914,
+      "grid_xy": [
+        22,
+        27
+      ],
+      "anchor_xy": [
+        22.5,
+        27.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        289.82411193847656,
+        387.77563095092773,
+        444.9448928833008,
+        476.6232376098633
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 2.0078703144577048e-08,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        35,
+        30,
+        0
+      ],
+      "regression_buffer_offsets": [
+        8520,
+        8521,
+        8522,
+        8523
+      ],
+      "classification_buffer_offset": 4260,
+      "raw_regression_u16": [
+        16099,
+        11783,
+        18359,
+        8696
+      ],
+      "raw_class_u16": 28576,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        4.4805803298950195,
+        3.167915105819702,
+        5.167934894561768,
+        2.229037046432495
+      ],
+      "dequantized_class_logit": -14.561911582946777,
+      "grid_xy": [
+        30,
+        35
+      ],
+      "anchor_xy": [
+        30.5,
+        35.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        416.3107147216797,
+        517.3133583068848,
+        570.6869583129883,
+        603.6645927429199
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 4.740694805605017e-07,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        35,
+        30,
+        1
+      ],
+      "regression_buffer_offsets": [
+        8520,
+        8521,
+        8522,
+        8523
+      ],
+      "classification_buffer_offset": 4261,
+      "raw_regression_u16": [
+        16099,
+        11783,
+        18359,
+        8696
+      ],
+      "raw_class_u16": 27769,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        4.4805803298950195,
+        3.167915105819702,
+        5.167934894561768,
+        2.229037046432495
+      ],
+      "dequantized_class_logit": -18.042795181274414,
+      "grid_xy": [
+        30,
+        35
+      ],
+      "anchor_xy": [
+        30.5,
+        35.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        416.3107147216797,
+        517.3133583068848,
+        570.6869583129883,
+        603.6645927429199
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 1.4591960528775871e-08,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        47,
+        5,
+        0
+      ],
+      "regression_buffer_offsets": [
+        11300,
+        11301,
+        11302,
+        11303
+      ],
+      "classification_buffer_offset": 5650,
+      "raw_regression_u16": [
+        16135,
+        10818,
+        17229,
+        8304
+      ],
+      "raw_class_u16": 27265,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        4.49152946472168,
+        2.874420642852783,
+        4.824257850646973,
+        2.109814405441284
+      ],
+      "dequantized_class_logit": -20.21672821044922,
+      "grid_xy": [
+        5,
+        47
+      ],
+      "anchor_xy": [
+        5.5,
+        47.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        16.135528564453125,
+        714.0092697143555,
+        165.18812561035156,
+        793.7570304870605
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 1.6595351759463028e-09,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        47,
+        5,
+        1
+      ],
+      "regression_buffer_offsets": [
+        11300,
+        11301,
+        11302,
+        11303
+      ],
+      "classification_buffer_offset": 5651,
+      "raw_regression_u16": [
+        16135,
+        10818,
+        17229,
+        8304
+      ],
+      "raw_class_u16": 27714,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        4.49152946472168,
+        2.874420642852783,
+        4.824257850646973,
+        2.109814405441284
+      ],
+      "dequantized_class_logit": -18.280029296875,
+      "grid_xy": [
+        5,
+        47
+      ],
+      "anchor_xy": [
+        5.5,
+        47.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        16.135528564453125,
+        714.0092697143555,
+        165.18812561035156,
+        793.7570304870605
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 1.1510233655087632e-08,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        57,
+        1,
+        0
+      ],
+      "regression_buffer_offsets": [
+        13684,
+        13685,
+        13686,
+        13687
+      ],
+      "classification_buffer_offset": 6842,
+      "raw_regression_u16": [
+        6236,
+        14083,
+        16859,
+        8998
+      ],
+      "raw_class_u16": 27594,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        1.4808542728424072,
+        3.8674354553222656,
+        4.711726188659668,
+        2.3208870887756348
+      ],
+      "dequantized_class_logit": -18.797632217407227,
+      "grid_xy": [
+        1,
+        57
+      ],
+      "anchor_xy": [
+        1.5,
+        57.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        0.3063316345214844,
+        858.1210327148438,
+        99.38761901855469,
+        957.1341934204102
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 6.859494305899716e-09,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        57,
+        1,
+        1
+      ],
+      "regression_buffer_offsets": [
+        13684,
+        13685,
+        13686,
+        13687
+      ],
+      "classification_buffer_offset": 6843,
+      "raw_regression_u16": [
+        6236,
+        14083,
+        16859,
+        8998
+      ],
+      "raw_class_u16": 26043,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        1.4808542728424072,
+        3.8674354553222656,
+        4.711726188659668,
+        2.3208870887756348
+      ],
+      "dequantized_class_logit": -25.48765754699707,
+      "grid_xy": [
+        1,
+        57
+      ],
+      "anchor_xy": [
+        1.5,
+        57.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        0.3063316345214844,
+        858.1210327148438,
+        99.38761901855469,
+        957.1341934204102
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 8.528074080249581e-12,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        59,
+        59,
+        0
+      ],
+      "regression_buffer_offsets": [
+        14396,
+        14397,
+        14398,
+        14399
+      ],
+      "classification_buffer_offset": 7198,
+      "raw_regression_u16": [
+        10532,
+        11248,
+        3616,
+        3535
+      ],
+      "raw_class_u16": 28590,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        2.7874367237091064,
+        3.0052003860473633,
+        0.684009313583374,
+        0.6593739986419678
+      ],
+      "dequantized_class_logit": -14.501523971557617,
+      "grid_xy": [
+        59,
+        59
+      ],
+      "anchor_xy": [
+        59.5,
+        59.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        907.4010124206543,
+        903.9167938232422,
+        962.944149017334,
+        962.5499839782715
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 5.035793719798676e-07,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv77",
+      "classification_vstream": "conv80",
+      "tensor_index_yxc": [
+        59,
+        59,
+        1
+      ],
+      "regression_buffer_offsets": [
+        14396,
+        14397,
+        14398,
+        14399
+      ],
+      "classification_buffer_offset": 7199,
+      "raw_regression_u16": [
+        10532,
+        11248,
+        3616,
+        3535
+      ],
+      "raw_class_u16": 27974,
+      "regression_quantization": {
+        "qp_zp": 1367,
+        "qp_scale": 0.0003041393065,
+        "limvals_min": -0.415758431,
+        "limvals_max": 9.549974442
+      },
+      "classification_quantization": {
+        "qp_zp": 31952,
+        "qp_scale": 0.004313362297,
+        "limvals_min": -137.8205566,
+        "limvals_max": 3.515390158
+      },
+      "dequantized_ltrb": [
+        2.7874367237091064,
+        3.0052003860473633,
+        0.684009313583374,
+        0.6593739986419678
+      ],
+      "dequantized_class_logit": -17.15855598449707,
+      "grid_xy": [
+        59,
+        59
+      ],
+      "anchor_xy": [
+        59.5,
+        59.5
+      ],
+      "stride": 16,
+      "decoded_xyxy": [
+        907.4010124206543,
+        903.9167938232422,
+        962.944149017334,
+        962.5499839782715
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 3.532920089810432e-08,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        0,
+        0,
+        0
+      ],
+      "regression_buffer_offsets": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "classification_buffer_offset": 0,
+      "raw_regression_u16": [
+        3148,
+        2702,
+        11973,
+        13724
+      ],
+      "raw_class_u16": 28187,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        0.9602293372154236,
+        0.8241866827011108,
+        3.652104616165161,
+        4.186209201812744
+      ],
+      "dequantized_class_logit": -13.024673461914062,
+      "grid_xy": [
+        0,
+        0
+      ],
+      "anchor_xy": [
+        0.5,
+        0.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        -14.727338790893555,
+        -10.373973846435547,
+        132.86734771728516,
+        149.9586944580078
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 2.20523679672624e-06,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        0,
+        0,
+        1
+      ],
+      "regression_buffer_offsets": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "classification_buffer_offset": 1,
+      "raw_regression_u16": [
+        3148,
+        2702,
+        11973,
+        13724
+      ],
+      "raw_class_u16": 27092,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        0.9602293372154236,
+        0.8241866827011108,
+        3.652104616165161,
+        4.186209201812744
+      ],
+      "dequantized_class_logit": -16.93421745300293,
+      "grid_xy": [
+        0,
+        0
+      ],
+      "anchor_xy": [
+        0.5,
+        0.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        -14.727338790893555,
+        -10.373973846435547,
+        132.86734771728516,
+        149.9586944580078
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 4.421430332968157e-08,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        4,
+        24,
+        0
+      ],
+      "regression_buffer_offsets": [
+        576,
+        577,
+        578,
+        579
+      ],
+      "classification_buffer_offset": 288,
+      "raw_regression_u16": [
+        23608,
+        15018,
+        18420,
+        18165
+      ],
+      "raw_class_u16": 29984,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        7.201109886169434,
+        4.580915927886963,
+        5.618622779846191,
+        5.540840148925781
+      ],
+      "dequantized_class_logit": -6.608736515045166,
+      "grid_xy": [
+        24,
+        4
+      ],
+      "anchor_xy": [
+        24.5,
+        4.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        553.5644836425781,
+        -2.5893096923828125,
+        963.7959289550781,
+        321.306884765625
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 0.0013467188691720366,
+      "hailo_top300_rank": 0
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        4,
+        24,
+        1
+      ],
+      "regression_buffer_offsets": [
+        576,
+        577,
+        578,
+        579
+      ],
+      "classification_buffer_offset": 289,
+      "raw_regression_u16": [
+        23608,
+        15018,
+        18420,
+        18165
+      ],
+      "raw_class_u16": 27274,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        7.201109886169434,
+        4.580915927886963,
+        5.618622779846191,
+        5.540840148925781
+      ],
+      "dequantized_class_logit": -16.284412384033203,
+      "grid_xy": [
+        24,
+        4
+      ],
+      "anchor_xy": [
+        24.5,
+        4.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        553.5644836425781,
+        -2.5893096923828125,
+        963.7959289550781,
+        321.306884765625
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 8.467780077126008e-08,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        7,
+        3,
+        0
+      ],
+      "regression_buffer_offsets": [
+        852,
+        853,
+        854,
+        855
+      ],
+      "classification_buffer_offset": 426,
+      "raw_regression_u16": [
+        11570,
+        16202,
+        26444,
+        19994
+      ],
+      "raw_class_u16": 26364,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        3.5291781425476074,
+        4.9420695304870605,
+        8.066170692443848,
+        6.0987372398376465
+      ],
+      "dequantized_class_logit": -19.53343963623047,
+      "grid_xy": [
+        3,
+        7
+      ],
+      "anchor_xy": [
+        3.5,
+        7.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        -0.9337005615234375,
+        81.85377502441406,
+        370.1174621582031,
+        435.1595916748047
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 3.286509953071004e-09,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        7,
+        3,
+        1
+      ],
+      "regression_buffer_offsets": [
+        852,
+        853,
+        854,
+        855
+      ],
+      "classification_buffer_offset": 427,
+      "raw_regression_u16": [
+        11570,
+        16202,
+        26444,
+        19994
+      ],
+      "raw_class_u16": 23653,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        3.5291781425476074,
+        4.9420695304870605,
+        8.066170692443848,
+        6.0987372398376465
+      ],
+      "dequantized_class_logit": -29.21268653869629,
+      "grid_xy": [
+        3,
+        7
+      ],
+      "anchor_xy": [
+        3.5,
+        7.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        -0.9337005615234375,
+        81.85377502441406,
+        370.1174621582031,
+        435.1595916748047
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 2.0563234546123327e-13,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        8,
+        3,
+        0
+      ],
+      "regression_buffer_offsets": [
+        972,
+        973,
+        974,
+        975
+      ],
+      "classification_buffer_offset": 486,
+      "raw_regression_u16": [
+        11563,
+        16179,
+        26295,
+        19793
+      ],
+      "raw_class_u16": 26339,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        3.527043104171753,
+        4.935053825378418,
+        8.020721435546875,
+        6.037426471710205
+      ],
+      "dequantized_class_logit": -19.622699737548828,
+      "grid_xy": [
+        3,
+        8
+      ],
+      "anchor_xy": [
+        3.5,
+        8.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        -0.8653793334960938,
+        114.07827758789062,
+        368.6630859375,
+        465.19764709472656
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 3.0058668887278372e-09,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        8,
+        3,
+        1
+      ],
+      "regression_buffer_offsets": [
+        972,
+        973,
+        974,
+        975
+      ],
+      "classification_buffer_offset": 487,
+      "raw_regression_u16": [
+        11563,
+        16179,
+        26295,
+        19793
+      ],
+      "raw_class_u16": 23696,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        3.527043104171753,
+        4.935053825378418,
+        8.020721435546875,
+        6.037426471710205
+      ],
+      "dequantized_class_logit": -29.059160232543945,
+      "grid_xy": [
+        3,
+        8
+      ],
+      "anchor_xy": [
+        3.5,
+        8.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        -0.8653793334960938,
+        114.07827758789062,
+        368.6630859375,
+        465.19764709472656
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 2.3975466794182165e-13,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        8,
+        5,
+        0
+      ],
+      "regression_buffer_offsets": [
+        980,
+        981,
+        982,
+        983
+      ],
+      "classification_buffer_offset": 490,
+      "raw_regression_u16": [
+        19467,
+        18992,
+        28660,
+        20136
+      ],
+      "raw_class_u16": 29272,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        5.937987327575684,
+        5.7930989265441895,
+        8.74211311340332,
+        6.1420512199401855
+      ],
+      "dequantized_class_logit": -9.150833129882812,
+      "grid_xy": [
+        5,
+        8
+      ],
+      "anchor_xy": [
+        5.5,
+        8.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        -14.015594482421875,
+        86.62083435058594,
+        455.74761962890625,
+        468.54563903808594
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 0.00010612009646138176,
+      "hailo_top300_rank": 229
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        8,
+        5,
+        1
+      ],
+      "regression_buffer_offsets": [
+        980,
+        981,
+        982,
+        983
+      ],
+      "classification_buffer_offset": 491,
+      "raw_regression_u16": [
+        19467,
+        18992,
+        28660,
+        20136
+      ],
+      "raw_class_u16": 27872,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        5.937987327575684,
+        5.7930989265441895,
+        8.74211311340332,
+        6.1420512199401855
+      ],
+      "dequantized_class_logit": -14.149336814880371,
+      "grid_xy": [
+        5,
+        8
+      ],
+      "anchor_xy": [
+        5.5,
+        8.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        -14.015594482421875,
+        86.62083435058594,
+        455.74761962890625,
+        468.54563903808594
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 7.161776238717721e-07,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        8,
+        9,
+        0
+      ],
+      "regression_buffer_offsets": [
+        996,
+        997,
+        998,
+        999
+      ],
+      "classification_buffer_offset": 498,
+      "raw_regression_u16": [
+        24753,
+        19387,
+        29238,
+        19239
+      ],
+      "raw_class_u16": 27780,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        7.55036735534668,
+        5.913585186004639,
+        8.91841983795166,
+        5.868440628051758
+      ],
+      "dequantized_class_logit": -14.47780990600586,
+      "grid_xy": [
+        9,
+        8
+      ],
+      "anchor_xy": [
+        9.5,
+        8.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        62.38824462890625,
+        82.76527404785156,
+        589.3894348144531,
+        459.79010009765625
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 5.156639417691622e-07,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        8,
+        9,
+        1
+      ],
+      "regression_buffer_offsets": [
+        996,
+        997,
+        998,
+        999
+      ],
+      "classification_buffer_offset": 499,
+      "raw_regression_u16": [
+        24753,
+        19387,
+        29238,
+        19239
+      ],
+      "raw_class_u16": 26505,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        7.55036735534668,
+        5.913585186004639,
+        8.91841983795166,
+        5.868440628051758
+      ],
+      "dequantized_class_logit": -19.030019760131836,
+      "grid_xy": [
+        9,
+        8
+      ],
+      "anchor_xy": [
+        9.5,
+        8.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        62.38824462890625,
+        82.76527404785156,
+        589.3894348144531,
+        459.79010009765625
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 5.437100991656507e-09,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        22,
+        11,
+        0
+      ],
+      "regression_buffer_offsets": [
+        2684,
+        2685,
+        2686,
+        2687
+      ],
+      "classification_buffer_offset": 1342,
+      "raw_regression_u16": [
+        25114,
+        18806,
+        29520,
+        18128
+      ],
+      "raw_class_u16": 27573,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        7.660482406616211,
+        5.736363410949707,
+        9.004437446594238,
+        5.52955436706543
+      ],
+      "dequantized_class_logit": -15.216875076293945,
+      "grid_xy": [
+        11,
+        22
+      ],
+      "anchor_xy": [
+        11.5,
+        22.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        122.86456298828125,
+        536.4363708496094,
+        656.1419982910156,
+        896.9457397460938
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 2.4626066874589014e-07,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        22,
+        11,
+        1
+      ],
+      "regression_buffer_offsets": [
+        2684,
+        2685,
+        2686,
+        2687
+      ],
+      "classification_buffer_offset": 1343,
+      "raw_regression_u16": [
+        25114,
+        18806,
+        29520,
+        18128
+      ],
+      "raw_class_u16": 26444,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        7.660482406616211,
+        5.736363410949707,
+        9.004437446594238,
+        5.52955436706543
+      ],
+      "dequantized_class_logit": -19.247812271118164,
+      "grid_xy": [
+        11,
+        22
+      ],
+      "anchor_xy": [
+        11.5,
+        22.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        122.86456298828125,
+        536.4363708496094,
+        656.1419982910156,
+        896.9457397460938
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 4.373018835934772e-09,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        29,
+        29,
+        0
+      ],
+      "regression_buffer_offsets": [
+        3596,
+        3597,
+        3598,
+        3599
+      ],
+      "classification_buffer_offset": 1798,
+      "raw_regression_u16": [
+        9840,
+        11295,
+        2443,
+        13589
+      ],
+      "raw_class_u16": 28545,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        3.001479148864746,
+        3.4452953338623047,
+        0.7451843023300171,
+        4.145030498504639
+      ],
+      "dequantized_class_logit": -11.746484756469727,
+      "grid_xy": [
+        29,
+        29
+      ],
+      "anchor_xy": [
+        29.5,
+        29.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        847.9526672363281,
+        833.7505493164062,
+        967.8458976745605,
+        1076.6409759521484
+      ],
+      "class_id": 0,
+      "class_name": "vehicle",
+      "sigmoid_score": 7.917044058558531e-06,
+      "hailo_top300_rank": null
+    },
+    {
+      "regression_vstream": "conv91",
+      "classification_vstream": "conv94",
+      "tensor_index_yxc": [
+        29,
+        29,
+        1
+      ],
+      "regression_buffer_offsets": [
+        3596,
+        3597,
+        3598,
+        3599
+      ],
+      "classification_buffer_offset": 1799,
+      "raw_regression_u16": [
+        9840,
+        11295,
+        2443,
+        13589
+      ],
+      "raw_class_u16": 27093,
+      "regression_quantization": {
+        "qp_zp": 0,
+        "qp_scale": 0.0003050283703,
+        "limvals_min": 0,
+        "limvals_max": 9.994864464
+      },
+      "classification_quantization": {
+        "qp_zp": 31835,
+        "qp_scale": 0.003570360132,
+        "limvals_min": -113.6624146,
+        "limvals_max": 3.327575684
+      },
+      "dequantized_ltrb": [
+        3.001479148864746,
+        3.4452953338623047,
+        0.7451843023300171,
+        4.145030498504639
+      ],
+      "dequantized_class_logit": -16.930646896362305,
+      "grid_xy": [
+        29,
+        29
+      ],
+      "anchor_xy": [
+        29.5,
+        29.5
+      ],
+      "stride": 32,
+      "decoded_xyxy": [
+        847.9526672363281,
+        833.7505493164062,
+        967.8458976745605,
+        1076.6409759521484
+      ],
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "sigmoid_score": 4.437245593180705e-08,
+      "hailo_top300_rank": null
+    }
+  ]
+}

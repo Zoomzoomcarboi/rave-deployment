@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "input": {"name": "rave_yolo26n_960/input_layer1", "bytes": 2764800},
+  "outputs": [
+    {"name": "rave_yolo26n_960/conv61", "file": "conv61.u16le", "bytes": 115200, "shape": [120, 120, 4], "format_type": "UINT16", "format_order": "NHWC", "format_flags": 0},
+    {"name": "rave_yolo26n_960/conv77", "file": "conv77.u16le", "bytes": 28800, "shape": [60, 60, 4], "format_type": "UINT16", "format_order": "FCR", "format_flags": 0},
+    {"name": "rave_yolo26n_960/conv91", "file": "conv91.u16le", "bytes": 7200, "shape": [30, 30, 4], "format_type": "UINT16", "format_order": "FCR", "format_flags": 0},
+    {"name": "rave_yolo26n_960/conv64", "file": "conv64.u16le", "bytes": 57600, "shape": [120, 120, 2], "format_type": "UINT16", "format_order": "NHWC", "format_flags": 0},
+    {"name": "rave_yolo26n_960/conv80", "file": "conv80.u16le", "bytes": 14400, "shape": [60, 60, 2], "format_type": "UINT16", "format_order": "FCR", "format_flags": 0},
+    {"name": "rave_yolo26n_960/conv94", "file": "conv94.u16le", "bytes": 3600, "shape": [30, 30, 2], "format_type": "UINT16", "format_order": "FCR", "format_flags": 0}
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "buffer_contract": {
+    "byte_offset_uint16": "2 * element_offset",
+    "byte_order": "little-endian on the qualified aarch64 Clean7 host",
+    "element_offset": "((y * width) + x) * channels + c",
+    "element_order": "NHWC for both reported NHWC and FCR host buffers",
+    "observed_no_padding": true
+  },
+  "capture_files": {
+    "hailo-zero-capture-f32/capture-metadata.json": {
+      "bytes": 1150,
+      "sha256": "a5e0b015f8c9f1940dce85b55fd18f06729a95977e6fb4a03125e3e4c5db99a3"
+    },
+    "hailo-zero-capture-f32/conv61.f32le": {
+      "bytes": 230400,
+      "sha256": "0c915b35200307159d4ea24aa156265af6499bef0fcb6a70e2773e5674049c1a"
+    },
+    "hailo-zero-capture-f32/conv64.f32le": {
+      "bytes": 115200,
+      "sha256": "b0bdffca3f047baf751c22768fc3f35504a8613a0c99a4aa870edd6eaaad1ac8"
+    },
+    "hailo-zero-capture-f32/conv77.f32le": {
+      "bytes": 57600,
+      "sha256": "a4dc0874298ebebefb21b3d4ee0b69810709028752320d8a1ab84839b131f9dd"
+    },
+    "hailo-zero-capture-f32/conv80.f32le": {
+      "bytes": 28800,
+      "sha256": "f408916074f0342556d8432065ee641aeb5003d30ecdac30357c7cac1dd89ff5"
+    },
+    "hailo-zero-capture-f32/conv91.f32le": {
+      "bytes": 14400,
+      "sha256": "89791f7dbca60a3acfde02396e4d923727318a388cb457ca0ba190164df9adac"
+    },
+    "hailo-zero-capture-f32/conv94.f32le": {
+      "bytes": 7200,
+      "sha256": "f1edd1d7a001a7d93ab2ce8123acfab0f6c0b388e5e3ea9a06aab5540b35f8f1"
+    },
+    "hailo-zero-capture/capture-metadata.json": {
+      "bytes": 1142,
+      "sha256": "243930f20d57fe0b72ed14e56b62cdf34676d2076d85aac473c00edbe957e980"
+    },
+    "hailo-zero-capture/conv61.u16le": {
+      "bytes": 115200,
+      "sha256": "e0e16e8ade9a2837e877d087392bf3f81f5b1a50549d6f96d58803043550c58f"
+    },
+    "hailo-zero-capture/conv64.u16le": {
+      "bytes": 57600,
+      "sha256": "17a47b78c3e1d2734322adbb76d73844403bc35f2097220e937702ce8ade799b"
+    },
+    "hailo-zero-capture/conv77.u16le": {
+      "bytes": 28800,
+      "sha256": "60d13150fb3892714e9d7959936e1cdf58d8aa84fc2373fc2c1cb2a92ff41e4a"
+    },
+    "hailo-zero-capture/conv80.u16le": {
+      "bytes": 14400,
+      "sha256": "468772741ecbe8e1ec8c4390b2294cc28dbbe9febd8afccf88caeb590975cd25"
+    },
+    "hailo-zero-capture/conv91.u16le": {
+      "bytes": 7200,
+      "sha256": "bea26e1e3a784cd654c6b4a2df33951e1c01a4ebb2af0a033920eee41ef0d0af"
+    },
+    "hailo-zero-capture/conv94.u16le": {
+      "bytes": 3600,
+      "sha256": "7614740d07a89304c75a173729b62287a975573be7a3cec8d230ba2f7e0965f7"
+    },
+    "har-quant-zero/capture-metadata.json": {
+      "bytes": 1058,
+      "sha256": "f00ae2fca0932d4461ae48352c39c6c6f9c85ac37b02ce1fffcffc79784fecb0"
+    },
+    "har-quant-zero/output_0.npy": {
+      "bytes": 230528,
+      "sha256": "75d3a2df1e9edb311841b30ba62e2a034ed36c4bfef7f294c87da6514f7c8e8d"
+    },
+    "har-quant-zero/output_1.npy": {
+      "bytes": 57728,
+      "sha256": "720aeb130d05adbeade1413651d695abd078fab3e6cdf8ffe14e7f2651805f9f"
+    },
+    "har-quant-zero/output_2.npy": {
+      "bytes": 14528,
+      "sha256": "0bcc719a16a03a1b59b717fb13d4ead0b779fb0e247536caecdef0a83c16be10"
+    },
+    "har-quant-zero/output_3.npy": {
+      "bytes": 115328,
+      "sha256": "b995b1d39b87d30fe105a942341724149f15818fb71267308534e241b5e91409"
+    },
+    "har-quant-zero/output_4.npy": {
+      "bytes": 28928,
+      "sha256": "12378b40bbbbb6db33bc1ad5d88cfcb7caf1d219f3d063a200bd4d676b531eee"
+    },
+    "har-quant-zero/output_5.npy": {
+      "bytes": 7328,
+      "sha256": "6e259a3a0620fabc83c6d8ca5dfe2feeb9251eec0a547ba44c6588354dca66bb"
+    }
+  },
+  "coverage": {
+    "classes": [
+      "vehicle",
+      "motorcycle"
+    ],
+    "strides": [
+      8,
+      16,
+      32
+    ]
+  },
+  "decoded_box_max_abs_error": {
+    "hailo_vs_float_onnx": 56.456451416015625,
+    "hailo_vs_quantized_har": 38.52629852294922
+  },
+  "decoded_uint16_vs_hailort_float32": {
+    "max_abs_error": 0.0,
+    "top300_order_and_membership_equal": true
+  },
+  "head_max_abs_error": {
+    "conv61": {
+      "vs_float_onnx": 2.3838502168655396,
+      "vs_quantized_har": 1.6767255067825317
+    },
+    "conv64": {
+      "vs_float_onnx": 7.413291931152344,
+      "vs_quantized_har": 11.125041961669922
+    },
+    "conv77": {
+      "vs_float_onnx": 2.582681894302368,
+      "vs_quantized_har": 1.7500176429748535
+    },
+    "conv80": {
+      "vs_float_onnx": 7.5346174240112305,
+      "vs_quantized_har": 8.027166366577148
+    },
+    "conv91": {
+      "vs_float_onnx": 1.7642641067504883,
+      "vs_quantized_har": 1.203946828842163
+    },
+    "conv94": {
+      "vs_float_onnx": 10.309536933898926,
+      "vs_quantized_har": 6.962202072143555
+    }
+  },
+  "independent_decode_vs_onnx_output0": {
+    "box_max_abs_error_pixels": 3.0517578125e-05,
+    "class_ids_equal": true,
+    "first_tied_row": 62,
+    "first_tied_score": 5.647540092468262e-05,
+    "row_order": "descending score, then lower flattened input index per ONNX TopK opset 20",
+    "score_max_abs_error": 7.075141184031963e-08,
+    "tolerances": {
+      "box_pixels": 0.0001,
+      "score": 1e-06
+    },
+    "verified_prefix_before_first_tie_rows": 62
+  },
+  "input": {
+    "bytes": 2764800,
+    "file": "zero-960x960.rgbu8",
+    "sha256": "822e3a311bc34185394aeb709bb83310f1243089b95cdadc218eee179b1d6f78"
+  },
+  "manual_dequantization_vs_hailort_float32_max_abs_error": {
+    "conv61": 0.0,
+    "conv64": 0.0,
+    "conv77": 0.0,
+    "conv80": 0.0,
+    "conv91": 0.0,
+    "conv94": 0.0
+  },
+  "qualification_basis": "The independent mathematical decoder reproduces the untied prefix of retained ONNX output0 within float32 operation tolerance. For the selected HEF, every manually dequantized UINT16 head element equals HailoRT's FLOAT32 application output bit-for-bit, and both produce identical decoded output and top-300 identities. Differences from SDK HAR simulation and float ONNX are recorded as non-gating whole-network quantization/compiler diagnostics; an output-LSB bound does not apply across different network implementations.",
+  "remaining_blockers": [
+    "The production application confidence threshold remains unqualified because the exact 134-image validation split contains 963 vehicle boxes but only two motorcycle boxes; representative independent RAVE-domain motorcycle positives and motorcycle-negative scenes are required before rerunning the same versioned sweep."
+  ],
+  "schema_version": 1,
+  "sigmoid_score_max_abs_error": {
+    "hailo_vs_float_onnx": 0.09348400252929423,
+    "hailo_vs_quantized_har": 0.001017684320686385
+  },
+  "status": "OPEN",
+  "top300": {
+    "hailo_vs_float_onnx_membership_overlap": 93,
+    "hailo_vs_quantized_har_membership_overlap": 229,
+    "ordered_identity_equal_hailo_vs_float_onnx": false,
+    "ordered_identity_equal_hailo_vs_quantized_har": false
+  }
+}

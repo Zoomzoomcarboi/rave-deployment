@@ -1,0 +1,789 @@
+{
+  "capture_files": {
+    "hailo-f32/capture-metadata.json": {
+      "bytes": 1150,
+      "sha256": "a5e0b015f8c9f1940dce85b55fd18f06729a95977e6fb4a03125e3e4c5db99a3"
+    },
+    "hailo-f32/conv61.f32le": {
+      "bytes": 230400,
+      "sha256": "fc8b431773d55fe188f90c20937a133a12b807e0add8cee330b137fc858fdf19"
+    },
+    "hailo-f32/conv64.f32le": {
+      "bytes": 115200,
+      "sha256": "7bac1bed79b386ccce65ab0a7cfc6a2c92139eae664dd63954e494bd58633c07"
+    },
+    "hailo-f32/conv77.f32le": {
+      "bytes": 57600,
+      "sha256": "1bc3931987d671ab9a25937ba35c4587807f1ba140ccac701bc18c8a899fbbf0"
+    },
+    "hailo-f32/conv80.f32le": {
+      "bytes": 28800,
+      "sha256": "c84282f42ff9c3d40e71de7ce2b96870be4d688244c2d1f14af7c78fa363dab2"
+    },
+    "hailo-f32/conv91.f32le": {
+      "bytes": 14400,
+      "sha256": "af3ec8466136de21821301254f864ff8a62e60b8e78a82d542c7e8bd4d9cde85"
+    },
+    "hailo-f32/conv94.f32le": {
+      "bytes": 7200,
+      "sha256": "4c8fd253580654adb5b5a9037a1d33e67b134c375c889b2993f4de2e4b2ade2a"
+    },
+    "hailo-u16/capture-metadata.json": {
+      "bytes": 1142,
+      "sha256": "243930f20d57fe0b72ed14e56b62cdf34676d2076d85aac473c00edbe957e980"
+    },
+    "hailo-u16/conv61.u16le": {
+      "bytes": 115200,
+      "sha256": "8b206b2ff91c4c2739c1395756b57dde54b914e8e9a27a1f3b0ce3cefa650e9b"
+    },
+    "hailo-u16/conv64.u16le": {
+      "bytes": 57600,
+      "sha256": "4cb7713521de98e4bec20acb2ce51f1c1c546198d1f43ad0fa397bfeef96e084"
+    },
+    "hailo-u16/conv77.u16le": {
+      "bytes": 28800,
+      "sha256": "4154e1f0a32f0452c702f50a76624fc04a04dc269f544a9acb40b1d9e52ef3ec"
+    },
+    "hailo-u16/conv80.u16le": {
+      "bytes": 14400,
+      "sha256": "67bd72aea9e5f397a64910ad0353835a92a41dea07ae65e2549f3f244b1e745c"
+    },
+    "hailo-u16/conv91.u16le": {
+      "bytes": 7200,
+      "sha256": "fb8519a9432870d44321a1edcd43046c425720910851dcd898468017a2683da6"
+    },
+    "hailo-u16/conv94.u16le": {
+      "bytes": 3600,
+      "sha256": "1831c9f66c30becf247e1673feab61a294e184f75290df3cb9f9180a6b45e3c4"
+    }
+  },
+  "compiled_hef_vs_float_onnx_whole_network": {
+    "decoded_box_max_abs_error_pixels": 113.7774429321289,
+    "head_max_abs_error": {
+      "conv61": 2.1013959646224976,
+      "conv64": 18.161931037902832,
+      "conv77": 4.077813744544983,
+      "conv80": 34.14590120315552,
+      "conv91": 3.5555450916290283,
+      "conv94": 6.774691581726074
+    },
+    "interpretation": "diagnostic whole-network compiler/quantization difference, not decoder error",
+    "sigmoid_score_max_abs_error": 0.20886178314685822,
+    "top300_membership_overlap": 192
+  },
+  "decoded_uint16_vs_hailort_float32": {
+    "max_abs_error": 0.0,
+    "top300_order_and_membership_equal": true
+  },
+  "input": {
+    "file": "ultralytics-bus-960.rgbu8",
+    "preprocess": "BGR decode -> RGB; scale 0.8888888889 to 720x960; pad 120 left/right with 114",
+    "sha256": "6b56c889823ba04a26904fcfd1e6563b31f37b5b563d0a375b892a91561dba9a",
+    "source": "Ultralytics package asset bus.jpg",
+    "source_sha256": "c02019c4979c191eb739ddd944445ef408dad5679acab6fd520ef9d434bfbc63"
+  },
+  "manual_dequantization_vs_hailort_float32_max_abs_error": {
+    "conv61": 0.0,
+    "conv64": 0.0,
+    "conv77": 0.0,
+    "conv80": 0.0,
+    "conv91": 0.0,
+    "conv94": 0.0
+  },
+  "schema_version": 1,
+  "status": "PASS for manual dequantization; admission policy remains OPEN",
+  "top300_class_counts": {
+    "motorcycle": 2,
+    "vehicle": 298
+  },
+  "top300_score_range": [
+    0.0016326444456353784,
+    0.5494415760040283
+  ],
+  "vectors": [
+    {
+      "class_id": 0,
+      "class_name": "vehicle",
+      "classification_vstream": "conv64",
+      "decoded_xyxy": [
+        893.6414966583252,
+        259.9890193939209,
+        915.3452939987183,
+        277.8943109512329
+      ],
+      "dequantized_class_logit": -26.557416915893555,
+      "dequantized_ltrb": [
+        1.7948129177093506,
+        1.0013725757598877,
+        0.9181617498397827,
+        1.2367888689041138
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 4073,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 13907,
+      "raw_regression_u16": [
+        14944,
+        10758,
+        10319,
+        12000
+      ],
+      "regression_vstream": "conv61",
+      "scale": 0,
+      "selection": "minimum",
+      "sigmoid_score": 2.9259060452258012e-12,
+      "stride": 8,
+      "tensor_index_yxc": [
+        33,
+        113,
+        0
+      ]
+    },
+    {
+      "class_id": 0,
+      "class_name": "vehicle",
+      "classification_vstream": "conv64",
+      "decoded_xyxy": [
+        565.0831069946289,
+        855.9494113922119,
+        606.7499084472656,
+        873.6697058677673
+      ],
+      "dequantized_class_logit": -14.331419944763184,
+      "dequantized_ltrb": [
+        2.8646116256713867,
+        1.5063235759735107,
+        2.343738555908203,
+        0.7087132334709167
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 13033,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 21636,
+      "raw_regression_u16": [
+        20588,
+        13422,
+        17840,
+        9214
+      ],
+      "regression_vstream": "conv61",
+      "scale": 0,
+      "selection": "median",
+      "sigmoid_score": 5.969570793240564e-07,
+      "stride": 8,
+      "tensor_index_yxc": [
+        108,
+        73,
+        0
+      ]
+    },
+    {
+      "class_id": 0,
+      "class_name": "vehicle",
+      "classification_vstream": "conv64",
+      "decoded_xyxy": [
+        572.600902557373,
+        17.80696392059326,
+        616.7697124481201,
+        40.88155937194824
+      ],
+      "dequantized_class_logit": -1.0930476188659668,
+      "dequantized_ltrb": [
+        2.924887180328369,
+        1.2741295099258423,
+        2.5962140560150146,
+        1.6101949214935303
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 434,
+      "hailo_top300_rank": 1,
+      "raw_class_u16": 30005,
+      "raw_regression_u16": [
+        20906,
+        12197,
+        19172,
+        13970
+      ],
+      "regression_vstream": "conv61",
+      "scale": 0,
+      "selection": "maximum",
+      "sigmoid_score": 0.2510448396205902,
+      "stride": 8,
+      "tensor_index_yxc": [
+        3,
+        74,
+        0
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "classification_vstream": "conv64",
+      "decoded_xyxy": [
+        430.62713718414307,
+        275.68271350860596,
+        456.73598766326904,
+        289.2178273200989
+      ],
+      "dequantized_class_logit": -27.57453727722168,
+      "dequantized_ltrb": [
+        1.6716078519821167,
+        1.0396608114242554,
+        1.5919984579086304,
+        0.6522284150123596
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 4255,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 13264,
+      "raw_regression_u16": [
+        14294,
+        10960,
+        13874,
+        8916
+      ],
+      "regression_vstream": "conv61",
+      "scale": 0,
+      "selection": "minimum",
+      "sigmoid_score": 1.058109654582251e-12,
+      "stride": 8,
+      "tensor_index_yxc": [
+        35,
+        55,
+        1
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "classification_vstream": "conv64",
+      "decoded_xyxy": [
+        779.8700122833252,
+        726.2219009399414,
+        833.2871608734131,
+        762.0521965026855
+      ],
+      "dequantized_class_logit": -18.986759185791016,
+      "dequantized_ltrb": [
+        3.0162484645843506,
+        2.722262382507324,
+        3.6608951091766357,
+        1.7565245628356934
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 11260,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 18693,
+      "raw_regression_u16": [
+        21388,
+        19837,
+        24789,
+        14742
+      ],
+      "regression_vstream": "conv61",
+      "scale": 0,
+      "selection": "median",
+      "sigmoid_score": 5.6774753787181e-09,
+      "stride": 8,
+      "tensor_index_yxc": [
+        93,
+        100,
+        1
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "classification_vstream": "conv64",
+      "decoded_xyxy": [
+        550.7590618133545,
+        14.945574760437012,
+        579.0408697128296,
+        41.4987211227417
+      ],
+      "dequantized_class_logit": -4.1554789543151855,
+      "dequantized_ltrb": [
+        1.6551172733306885,
+        1.6318031549453735,
+        1.8801087141036987,
+        1.6873401403427124
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 430,
+      "hailo_top300_rank": 57,
+      "raw_class_u16": 28069,
+      "raw_regression_u16": [
+        14207,
+        14084,
+        15394,
+        14377
+      ],
+      "regression_vstream": "conv61",
+      "scale": 0,
+      "selection": "maximum",
+      "sigmoid_score": 0.015436267480254173,
+      "stride": 8,
+      "tensor_index_yxc": [
+        3,
+        70,
+        1
+      ]
+    },
+    {
+      "class_id": 0,
+      "class_name": "vehicle",
+      "classification_vstream": "conv80",
+      "decoded_xyxy": [
+        1.6977500915527344,
+        -0.7935981750488281,
+        121.3777847290039,
+        82.0880126953125
+      ],
+      "dequantized_class_logit": -43.08186340332031,
+      "dequantized_ltrb": [
+        3.393890619277954,
+        2.5495998859405518,
+        4.086111545562744,
+        2.6305007934570312
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 14523,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 21964,
+      "raw_regression_u16": [
+        12526,
+        9750,
+        14802,
+        10016
+      ],
+      "regression_vstream": "conv77",
+      "scale": 1,
+      "selection": "minimum",
+      "sigmoid_score": 1.9488772019949416e-19,
+      "stride": 16,
+      "tensor_index_yxc": [
+        2,
+        3,
+        0
+      ]
+    },
+    {
+      "class_id": 0,
+      "class_name": "vehicle",
+      "classification_vstream": "conv80",
+      "decoded_xyxy": [
+        1.8974266052246094,
+        574.3110160827637,
+        105.29505920410156,
+        658.7206230163574
+      ],
+      "dequantized_class_logit": -14.656805038452148,
+      "dequantized_ltrb": [
+        2.381410837173462,
+        2.6055614948272705,
+        4.080941200256348,
+        2.670038938522339
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 16682,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 28554,
+      "raw_regression_u16": [
+        9197,
+        9934,
+        14785,
+        10146
+      ],
+      "regression_vstream": "conv77",
+      "scale": 1,
+      "selection": "median",
+      "sigmoid_score": 4.3115187509101816e-07,
+      "stride": 16,
+      "tensor_index_yxc": [
+        38,
+        2,
+        0
+      ]
+    },
+    {
+      "class_id": 0,
+      "class_name": "vehicle",
+      "classification_vstream": "conv80",
+      "decoded_xyxy": [
+        773.7659187316895,
+        624.2278289794922,
+        841.8882579803467,
+        762.7255706787109
+      ],
+      "dequantized_class_logit": 0.1984146684408188,
+      "dequantized_ltrb": [
+        3.139630079269409,
+        5.485760688781738,
+        1.1180161237716675,
+        3.1703481674194336
+      ],
+      "diagnostic_score_ge_0_30": true,
+      "flat_location": 17091,
+      "hailo_top300_rank": 0,
+      "raw_class_u16": 31998,
+      "raw_regression_u16": [
+        11690,
+        19404,
+        5043,
+        11791
+      ],
+      "regression_vstream": "conv77",
+      "scale": 1,
+      "selection": "maximum",
+      "sigmoid_score": 0.5494415760040283,
+      "stride": 16,
+      "tensor_index_yxc": [
+        44,
+        51,
+        0
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "classification_vstream": "conv80",
+      "decoded_xyxy": [
+        7.094078063964844,
+        -0.6670761108398438,
+        122.92492294311523,
+        82.75468826293945
+      ],
+      "dequantized_class_logit": -37.93170928955078,
+      "dequantized_ltrb": [
+        5.056620121002197,
+        2.5416922569274902,
+        2.182807683944702,
+        2.672168016433716
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 14525,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 23158,
+      "raw_regression_u16": [
+        17993,
+        9724,
+        8544,
+        10153
+      ],
+      "regression_vstream": "conv77",
+      "scale": 1,
+      "selection": "minimum",
+      "sigmoid_score": 3.360995632714032e-17,
+      "stride": 16,
+      "tensor_index_yxc": [
+        2,
+        5,
+        1
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "classification_vstream": "conv80",
+      "decoded_xyxy": [
+        7.303489685058594,
+        218.8705940246582,
+        121.78152084350586,
+        307.2315788269043
+      ],
+      "dequantized_class_logit": -18.58196449279785,
+      "dequantized_ltrb": [
+        4.043531894683838,
+        2.8205878734588623,
+        3.111345052719116,
+        2.7019736766815186
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 15364,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 27644,
+      "raw_regression_u16": [
+        14662,
+        10641,
+        11597,
+        10251
+      ],
+      "regression_vstream": "conv77",
+      "scale": 1,
+      "selection": "median",
+      "sigmoid_score": 8.510505189462947e-09,
+      "stride": 16,
+      "tensor_index_yxc": [
+        16,
+        4,
+        1
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "classification_vstream": "conv80",
+      "decoded_xyxy": [
+        263.7127323150635,
+        609.1767425537109,
+        297.18752098083496,
+        761.1442031860352
+      ],
+      "dequantized_class_logit": -7.755425453186035,
+      "dequantized_ltrb": [
+        1.0179542303085327,
+        5.426453590393066,
+        1.074220061302185,
+        4.071512699127197
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 16997,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 30154,
+      "raw_regression_u16": [
+        4714,
+        19209,
+        4899,
+        14754
+      ],
+      "regression_vstream": "conv77",
+      "scale": 1,
+      "selection": "maximum",
+      "sigmoid_score": 0.0004282284644432366,
+      "stride": 16,
+      "tensor_index_yxc": [
+        43,
+        17,
+        1
+      ]
+    },
+    {
+      "class_id": 0,
+      "class_name": "vehicle",
+      "classification_vstream": "conv94",
+      "decoded_xyxy": [
+        472.13230895996094,
+        286.3462600708008,
+        702.4311676025391,
+        450.1245346069336
+      ],
+      "dequantized_class_logit": -25.08892059326172,
+      "dequantized_ltrb": [
+        2.7458653450012207,
+        1.5516793727874756,
+        4.450973987579346,
+        3.566391706466675
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 18317,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 24808,
+      "raw_regression_u16": [
+        9002,
+        5087,
+        14592,
+        11692
+      ],
+      "regression_vstream": "conv91",
+      "scale": 2,
+      "selection": "minimum",
+      "sigmoid_score": 1.2706333381296009e-11,
+      "stride": 32,
+      "tensor_index_yxc": [
+        10,
+        17,
+        0
+      ]
+    },
+    {
+      "class_id": 0,
+      "class_name": "vehicle",
+      "classification_vstream": "conv94",
+      "decoded_xyxy": [
+        423.29246520996094,
+        825.9538536071777,
+        756.2175140380859,
+        957.5796966552734
+      ],
+      "dequantized_class_logit": -12.449845314025879,
+      "dequantized_ltrb": [
+        5.272110462188721,
+        1.6889420747756958,
+        5.1317973136901855,
+        2.424365520477295
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 18828,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 28348,
+      "raw_regression_u16": [
+        17284,
+        5537,
+        16824,
+        7948
+      ],
+      "regression_vstream": "conv91",
+      "scale": 2,
+      "selection": "median",
+      "sigmoid_score": 3.918313723261235e-06,
+      "stride": 32,
+      "tensor_index_yxc": [
+        27,
+        18,
+        0
+      ]
+    },
+    {
+      "class_id": 0,
+      "class_name": "vehicle",
+      "classification_vstream": "conv94",
+      "decoded_xyxy": [
+        530.878662109375,
+        1.2122249603271484,
+        805.3944396972656,
+        86.63968658447266
+      ],
+      "dequantized_class_logit": -2.559948205947876,
+      "dequantized_ltrb": [
+        4.910041809082031,
+        0.4621179699897766,
+        3.668576240539551,
+        2.2074902057647705
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 18021,
+      "hailo_top300_rank": 11,
+      "raw_class_u16": 31118,
+      "raw_regression_u16": [
+        16097,
+        1515,
+        12027,
+        7237
+      ],
+      "regression_vstream": "conv91",
+      "scale": 2,
+      "selection": "maximum",
+      "sigmoid_score": 0.07176098972558975,
+      "stride": 32,
+      "tensor_index_yxc": [
+        0,
+        21,
+        0
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "classification_vstream": "conv94",
+      "decoded_xyxy": [
+        124.57726287841797,
+        14.992355346679688,
+        322.4015808105469,
+        199.80538177490234
+      ],
+      "dequantized_class_logit": -27.95591926574707,
+      "dequantized_ltrb": [
+        3.6069605350494385,
+        2.0314888954162598,
+        2.57504940032959,
+        3.7439181804656982
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 18067,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 24005,
+      "raw_regression_u16": [
+        11825,
+        6660,
+        8442,
+        12274
+      ],
+      "regression_vstream": "conv91",
+      "scale": 2,
+      "selection": "minimum",
+      "sigmoid_score": 7.226009612719408e-13,
+      "stride": 32,
+      "tensor_index_yxc": [
+        2,
+        7,
+        1
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "classification_vstream": "conv94",
+      "decoded_xyxy": [
+        121.70006942749023,
+        642.8122100830078,
+        292.0083923339844,
+        938.6653289794922
+      ],
+      "dequantized_class_logit": -19.008596420288086,
+      "dequantized_ltrb": [
+        1.6968728303909302,
+        5.412118434906006,
+        3.6252622604370117,
+        3.833291530609131
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 18755,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 26511,
+      "raw_regression_u16": [
+        5563,
+        17743,
+        11885,
+        12567
+      ],
+      "regression_vstream": "conv91",
+      "scale": 2,
+      "selection": "median",
+      "sigmoid_score": 5.5548388111503755e-09,
+      "stride": 32,
+      "tensor_index_yxc": [
+        25,
+        5,
+        1
+      ]
+    },
+    {
+      "class_id": 1,
+      "class_name": "motorcycle",
+      "classification_vstream": "conv94",
+      "decoded_xyxy": [
+        123.04707336425781,
+        448.5086364746094,
+        279.4070587158203,
+        801.6289978027344
+      ],
+      "dequantized_class_logit": -10.703939437866211,
+      "dequantized_ltrb": [
+        1.6547789573669434,
+        5.484105110168457,
+        3.2314705848693848,
+        5.550906181335449
+      ],
+      "diagnostic_score_ge_0_30": false,
+      "flat_location": 18575,
+      "hailo_top300_rank": null,
+      "raw_class_u16": 28837,
+      "raw_regression_u16": [
+        5425,
+        17979,
+        10594,
+        18198
+      ],
+      "regression_vstream": "conv91",
+      "scale": 2,
+      "selection": "maximum",
+      "sigmoid_score": 2.2455793441622518e-05,
+      "stride": 32,
+      "tensor_index_yxc": [
+        19,
+        5,
+        1
+      ]
+    }
+  ]
+}
